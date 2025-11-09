@@ -1,0 +1,29 @@
+import { lazy } from 'react'
+import type { RouteObject } from 'react-router'
+import { MainLayout } from '@/layouts/MainLayout'
+import { ProtectedRoute } from './ProtectedRoute'
+
+// Lazy pages
+const HomePage = lazy(() => import('@/pages/HomePage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
+const AuthPage = lazy(() => import('@/pages/AuthPage'))
+
+export const routes: RouteObject[] = [
+   {
+      path: '/login',
+      element: <AuthPage />,
+   },
+   {
+      element: <ProtectedRoute />,
+      children: [
+         {
+            path: '/',
+            element: <MainLayout />,
+            children: [
+               { index: true, element: <HomePage /> },
+               { path: '*', element: <NotFoundPage /> },
+            ],
+         },
+      ],
+   },
+]
