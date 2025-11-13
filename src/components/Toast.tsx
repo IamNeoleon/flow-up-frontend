@@ -5,10 +5,10 @@ interface IToastProps {
 	title: string,
 	type: 'success' | 'info' | 'error',
 	description?: string,
-	timeout?: number
+	onClose?: () => void
 }
 
-export const Toast = ({ title, description, type, timeout }: IToastProps) => {
+export const Toast = ({ title, description, type, onClose }: IToastProps) => {
 	let mainColor: string = '';
 	let mainIcon: ReactNode;
 
@@ -30,6 +30,10 @@ export const Toast = ({ title, description, type, timeout }: IToastProps) => {
 	return (
 		<div className="absolute bottom-5 right-5 py-5 px-16 bg-[#e9f5e9] text-black">
 			<div className="text-base font-medium ">{title}</div>
+			{description && <div className='text-sm'>{description}</div>}
+			<div onClick={onClose} className='absolute top-3 right-3 cursor-pointer'>
+				<X size={20} />
+			</div>
 			<div className="absolute top-0 left-0 w-1 h-full" style={{ backgroundColor: mainColor }}></div>
 			<div className="absolute top-3 left-3 w-5 h-5 rounded-full text-white" style={{ backgroundColor: mainColor }}>
 				<div className='flex justify-center -translate-y-0.5'>

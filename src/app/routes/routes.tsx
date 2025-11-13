@@ -10,7 +10,7 @@ const AuthPage = lazy(() => import('@/pages/AuthPage'))
 
 export const routes: RouteObject[] = [
    {
-      path: '/login',
+      path: '/auth',
       element: <AuthPage />,
    },
    {

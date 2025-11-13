@@ -4,13 +4,12 @@ import { RegisterBlock } from "./ui/RegisterBlock";
 import { LoginBlock } from "./ui/LoginBlock";
 import { useLogin } from "./hooks/useLogin";
 import { useRegister } from "./hooks/useRegister";
-import { Toast } from "@/components/Toast";
 
 export const AuthWrapper = () => {
-   const [haveAccount, setHaveAccount] = useState<boolean>(false)
+   const [haveAccount, setHaveAccount] = useState<boolean>(true)
 
-   const { handleLogin, isLoading: isLoadingLogin, isError: isErrorLogin } = useLogin()
-   const { handleRegister, isLoading: isLoadingRegister, isError: isErrorRegister } = useRegister()
+   const { handleLogin } = useLogin()
+   const { handleRegister } = useRegister()
 
    return (
       <>
@@ -39,7 +38,6 @@ export const AuthWrapper = () => {
                )
             }
          </AnimatePresence>
-         <Toast title="Toast 1asdasdasd" type="success" />
       </>
    );
 };
