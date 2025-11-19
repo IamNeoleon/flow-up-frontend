@@ -1,22 +1,21 @@
 import { setTokenToLs } from "@/utils/localStorageUtils"
 import { useLoginMutation } from "../api/authApi"
 import type { ILoginBody } from "../types"
-import { useToast } from "@/app/providers/ToastProvider"
 import { useNavigate } from "react-router"
+import { toast } from "sonner"
 
 export const useLogin = () => {
 	const [login, { isLoading, isError }] = useLoginMutation()
-	const toast = useToast()
 	const navigate = useNavigate()
 
 	const handleLogin = async (formData: ILoginBody) => {
 		try {
 			const res = await login(formData).unwrap()
 			setTokenToLs(res.accessToken)
-			toast({ title: "Успешно!", description: "Вы вошли в систему", type: "success" })
+			toast.success('Вы вошли в систему')
 			navigate('/')
 		} catch {
-			toast({ title: "Ошибка", description: "Неверный email или пароль", type: "error" })
+			toast.error('Неверный email или пароль')
 		}
 	}
 

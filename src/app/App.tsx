@@ -1,13 +1,13 @@
-import { ToastProvider } from "./providers/ToastProvider"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppRouter } from "./routes"
 
 function App() {
 
   return (
     <>
-      <ToastProvider>
+      <SidebarProvider>
         <AppRouter />
-      </ToastProvider>
+      </SidebarProvider>
     </>
   )
 }

@@ -1,19 +1,14 @@
 import { useRegisterMutation } from "../api/authApi"
 import type { IRegisterBody } from "../types"
-import { useToast } from "@/app/providers/ToastProvider"
+import { toast } from "sonner"
 
 export const useRegister = () => {
 	const [register, { isLoading, isError }] = useRegisterMutation()
-	const toast = useToast()
 
 	const handleRegister = async (formData: IRegisterBody) => {
 		try {
 			await register(formData).unwrap()
-			toast({
-				title: "Успешно!",
-				description: "Вы успешно зарегистрировались",
-				type: "success",
-			})
+			toast.success('Вы успешно зарегистрировались')
 		} catch (error: any) {
 			let message = "Произошла ошибка при регистрации"
 
@@ -27,11 +22,7 @@ export const useRegister = () => {
 				}
 			}
 
-			toast({
-				title: "Ошибка",
-				description: message,
-				type: "error",
-			})
+			toast.error(message)
 		}
 	}
 
