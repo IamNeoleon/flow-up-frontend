@@ -1,6 +1,5 @@
 import { Home, Settings, LogOut, User } from "lucide-react"
 import { SidebarItemList } from "../SidebarItemList/SidebarItemList";
-
 import {
 	Sidebar,
 	SidebarContent,
@@ -12,6 +11,9 @@ import {
 	SidebarHeader
 } from "@/components/ui/sidebar"
 import { Link } from "react-router";
+import { useGetWorkspacesQuery } from "@/features/Workspace/api/workspaceApi";
+import { useModal } from "@/app/providers/ModalProvider";
+import { CreateWorkspace } from "@/features/Workspace/CreateWorkspace";
 
 const items = [
 	{
@@ -21,18 +23,30 @@ const items = [
 	}
 ]
 
-const subItems = [
-	{
-		title: 'Home',
-		url: 'home',
-	},
-	{
-		title: 'Settings',
-		url: 'settings',
-	}
-]
-
 export const AppSidebar = () => {
+	const { data, isLoading, isError } = useGetWorkspacesQuery()
+	const { open } = useModal()
+
+	const onOpenModal = () => {
+		open({
+			title: "Create a new workspace",
+			description: "Create workspace, create, create",
+			size: "md",
+			content: <CreateWorkspace />,
+		})
+	}
+	let workspaceItems: { title: string, url: string }[] = []
+	if (data) {
+		data.forEach(item => {
+			workspaceItems.push(
+				{
+					title: item.name,
+					url: item.id
+				}
+			)
+		})
+	}
+
 	return (
 		<>
 			<Sidebar>
@@ -68,9 +82,11 @@ export const AppSidebar = () => {
 								))
 							}
 						</SidebarMenu>
-						<SidebarItemList title="Workspaces" items={subItems}
+						<SidebarItemList
+							title="Workspaces"
+							items={workspaceItems}
 							createElement={{
-								createTitle: 'Create Workspace', createAction: () => console.log("Created workspace")
+								createTitle: 'Create Workspace', createAction: onOpenModal
 							}}
 						/>
 					</SidebarGroup>

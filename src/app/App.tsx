@@ -1,13 +1,16 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
+import { ModalProvider } from "./providers/ModalProvider"
 import { AppRouter } from "./routes"
 
 function App() {
 
   return (
     <>
-      <SidebarProvider>
-        <AppRouter />
-      </SidebarProvider>
+      <ModalProvider>
+        <SidebarProvider>
+          <AppRouter />
+        </SidebarProvider>
+      </ModalProvider>
     </>
   )
 }
