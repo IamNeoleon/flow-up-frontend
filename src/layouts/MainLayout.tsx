@@ -1,6 +1,6 @@
 import { Outlet } from "react-router"
 import { Toaster } from "@/components/ui/sonner"
-import { AppSidebar } from "@/components/AppSidebar/AppSidebar"
+import { AppSidebar } from "@/widgets/AppSidebar"
 
 export const MainLayout = () => {
    return (

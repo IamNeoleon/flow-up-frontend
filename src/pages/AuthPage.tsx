@@ -1,4 +1,4 @@
-import { AuthWrapper } from "@/features/Auth/AuthWrapper";
+import { AuthWrapper } from "@/widgets/AuthWrapper";
 
 const AuthPage = () => {
    return (

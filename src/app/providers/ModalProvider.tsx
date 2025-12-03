@@ -1,65 +1,18 @@
-import {
-	createContext,
-	useContext,
-	useState,
-	type ReactNode,
-	useCallback,
-} from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { type ModalInstance, type ModalOptions } from "@/@types/modal.types"
-import { nanoid } from "nanoid"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
-interface ModalContextType {
-	open: (options: Omit<ModalOptions, "id">) => string
-	close: (id: string) => void
-	closeAll: () => void
+interface IModalOptions {
+	title: string,
+	description: string,
+	content: ReactNode
 }
 
-const ModalContext = createContext<ModalContextType | null>(null)
-
-export const ModalProvider = ({ children }: { children: ReactNode }) => {
-	const [modals, setModals] = useState<ModalInstance[]>([])
-
-	const open = useCallback((options: Omit<ModalOptions, "id">) => {
-		const id = nanoid()
-		setModals((prev) => [...prev, { ...options, id }])
-		return id
-	}, [])
-
-	const close = useCallback((id: string) => {
-		setModals((prev) => prev.filter((m) => m.id !== id))
-	}, [])
-
-	const closeAll = useCallback(() => {
-		setModals([])
-	}, [])
-
-	return (
-		<ModalContext.Provider value={{ open, close, closeAll }}>
-			{children}
-
-			{modals.map((modal) => (
-				<Dialog
-					key={modal.id}
-					open={true}
-					onOpenChange={(state) => {
-						if (!state) close(modal.id)
-					}}
-				>
-					<DialogContent className={sizeToClass(modal.size)}>
-						{modal.title && (
-							<DialogHeader>
-								<DialogTitle>{modal.title}</DialogTitle>
-								<DialogDescription>{modal.description}</DialogDescription>
-							</DialogHeader>
-						)}
-						{modal.content}
-					</DialogContent>
-				</Dialog>
-			))}
-		</ModalContext.Provider>
-	)
+interface IModalContext {
+	open: (modalOptions: IModalOptions) => void
+	close: () => void
 }
+
+const ModalContext = createContext<IModalContext | null>(null)
 
 export const useModal = () => {
 	const ctx = useContext(ModalContext)
@@ -67,13 +20,36 @@ export const useModal = () => {
 	return ctx
 }
 
-function sizeToClass(size?: ModalOptions["size"]) {
-	switch (size) {
-		case "sm": return "max-w-sm"
-		case "md": return "max-w-md"
-		case "lg": return "max-w-lg"
-		case "xl": return "max-w-2xl"
-		case "full": return "max-w-[90vw]"
-		default: return "max-w-md"
+// Modal provider
+
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
+	const [isOpen, setIsOpen] = useState(false)
+	const [modalOptions, setModalOptions] = useState<IModalOptions | null>(null)
+
+	const open = (modalOptions: IModalOptions) => {
+		setModalOptions({ ...modalOptions })
+		setIsOpen(true)
 	}
+
+	const close = () => {
+		setIsOpen(false)
+		setModalOptions(null)
+	}
+
+	return (
+		<ModalContext.Provider value={{ open, close }}>
+			{children}
+			<Dialog open={isOpen} onOpenChange={(state) => { if (!state) close() }}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>{modalOptions?.title}</DialogTitle>
+						<DialogDescription>
+							{modalOptions?.description}
+						</DialogDescription>
+					</DialogHeader>
+					{modalOptions?.content}
+				</DialogContent>
+			</Dialog>
+		</ModalContext.Provider>
+	)
 }

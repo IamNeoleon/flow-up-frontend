@@ -1,6 +1,5 @@
 import { baseApi } from "@/api/baseApi";
-import type { ICreateWorkspaceBody, IWorkspace } from "../types";
-
+import { type IWorkspace, type ICreateWorkspaceBody } from "@/shared/types/workspace.types";
 
 export const workspaceApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({

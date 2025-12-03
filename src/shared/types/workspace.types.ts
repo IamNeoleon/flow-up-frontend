@@ -1,15 +1,12 @@
-export interface ICreateWorkspaceBody {
-	name: string
-}
+import { type IBoard } from './board.types'
 
 export interface IWorkspace {
 	id: string
 	name: string
 	ownerId: string
 	Board: IBoard[]
-
 }
-export interface IBoard {
-	id: string
+
+export interface ICreateWorkspaceBody {
 	name: string
 }

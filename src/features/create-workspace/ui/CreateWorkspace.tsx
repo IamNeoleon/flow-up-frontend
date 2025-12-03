@@ -1,21 +1,17 @@
+import { useState, type FC } from "react"
 import { Button } from "@/components/ui/button"
-import {
-	DialogClose,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import { useCreateWorkspace } from "../hooks/useCreateWorkspace"
 
-interface ICreateDialogProps {
-	onSubmit: (workspaceName: string) => void
-}
-
-export function CreateDialog({ onSubmit }: ICreateDialogProps) {
+export const CreateWorkspace: FC<{ close: () => void }> = ({ close }) => {
+	const { handleCreate } = useCreateWorkspace()
 	const [workspaceName, setWorkspaceName] = useState<string>('')
 
 	const handleSubmit = (e: React.FormEvent) => {
+		handleCreate({ name: workspaceName })
+		close()
 		e.preventDefault()
-		onSubmit(workspaceName)
 	}
 
 	return (
@@ -25,9 +21,7 @@ export function CreateDialog({ onSubmit }: ICreateDialogProps) {
 					<Label htmlFor="name-1">Workspace name</Label>
 					<Input id="name-1" name="Workspace name" value={workspaceName} onChange={e => setWorkspaceName(e.target.value)} />
 				</div>
-				<DialogClose asChild>
-					<Button type="submit">Create</Button>
-				</DialogClose>
+				<Button type="submit">Create</Button>
 			</div>
 		</form>
 	)

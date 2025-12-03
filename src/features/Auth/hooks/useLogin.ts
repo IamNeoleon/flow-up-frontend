@@ -1,5 +1,5 @@
 import { setTokenToLs } from "@/utils/localStorageUtils"
-import { useLoginMutation } from "../api/authApi"
+import { useLoginMutation } from "@/api/endpoints/authApi"
 import type { ILoginBody } from "../types"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"

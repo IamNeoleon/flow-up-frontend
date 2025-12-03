@@ -1,6 +1,6 @@
-import { useRegisterMutation } from "../api/authApi"
-import type { IRegisterBody } from "../types"
 import { toast } from "sonner"
+import { useRegisterMutation } from "@/api/endpoints/authApi"
+import type { IRegisterBody } from "../types"
 
 export const useRegister = () => {
 	const [register, { isLoading, isError }] = useRegisterMutation()
