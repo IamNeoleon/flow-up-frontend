@@ -5,6 +5,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, Sideba
 
 interface ISidebarItemListProps {
 	title: string,
+	mainUrl: string,
 	items: { title: string, url: string }[],
 	createElement?: {
 		createTitle: string,
@@ -12,7 +13,7 @@ interface ISidebarItemListProps {
 	}
 }
 
-export const SidebarItemList = ({ title, items, createElement }: ISidebarItemListProps) => {
+export const SidebarItemList = ({ title, items, createElement, mainUrl }: ISidebarItemListProps) => {
 
 	return (
 		<SidebarMenu>
@@ -34,9 +35,9 @@ export const SidebarItemList = ({ title, items, createElement }: ISidebarItemLis
 					<CollapsibleContent>
 						<SidebarMenuSub>
 							{items.map(item => (
-								<SidebarMenuSubItem key={item.title}>
+								<SidebarMenuSubItem key={item.url}>
 									<SidebarMenuButton asChild>
-										<Link className="font-medium" to={item.url}>
+										<Link className="font-medium" to={`${mainUrl}/${item.url}`}>
 											{item.title}
 										</Link>
 									</SidebarMenuButton >

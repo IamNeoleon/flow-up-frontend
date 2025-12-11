@@ -10,6 +10,11 @@ export const workspaceApi = baseApi.injectEndpoints({
 			}),
 			providesTags: ['Workspace']
 		}),
+		getWorkspace: builder.query<IWorkspace, string>({
+			query: (id) => ({
+				url: `/workspace/${id}`
+			})
+		}),
 		createWorkspace: builder.mutation<boolean, ICreateWorkspaceBody>({
 			query: (body) => ({
 				url: '/workspace',
@@ -22,4 +27,4 @@ export const workspaceApi = baseApi.injectEndpoints({
 	overrideExisting: false
 })
 
-export const { useGetWorkspacesQuery, useCreateWorkspaceMutation } = workspaceApi
+export const { useGetWorkspacesQuery, useGetWorkspaceQuery, useCreateWorkspaceMutation } = workspaceApi

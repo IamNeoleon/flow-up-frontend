@@ -2,6 +2,7 @@ import { lazy } from 'react'
 import type { RouteObject } from 'react-router'
 import { MainLayout } from '@/layouts/MainLayout'
 import { ProtectedRoute } from './ProtectedRoute'
+import { WorkspacePage } from '@/pages/WorkspacePage'
 
 // Lazy pages
 const HomePage = lazy(() => import('@/pages/HomePage'))
@@ -22,6 +23,7 @@ export const routes: RouteObject[] = [
             children: [
                { index: true, element: <HomePage /> },
                { path: '*', element: <NotFoundPage /> },
+               { path: '/workspace/:id', element: <WorkspacePage /> }
             ],
          },
       ],

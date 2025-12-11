@@ -1,4 +1,5 @@
 import { useState, type FC } from "react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,9 +10,10 @@ export const CreateWorkspace: FC<{ close: () => void }> = ({ close }) => {
 	const [workspaceName, setWorkspaceName] = useState<string>('')
 
 	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault()
 		handleCreate({ name: workspaceName })
 		close()
-		e.preventDefault()
+		toast.success('Успешное создание!')
 	}
 
 	return (

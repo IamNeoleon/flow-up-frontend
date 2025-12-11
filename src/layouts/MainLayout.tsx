@@ -1,5 +1,4 @@
 import { Outlet } from "react-router"
-import { Toaster } from "@/components/ui/sonner"
 import { AppSidebar } from "@/widgets/AppSidebar"
 
 export const MainLayout = () => {
@@ -9,7 +8,6 @@ export const MainLayout = () => {
          <main className="flex-1 p-6">
             <Outlet />
          </main>
-         <Toaster />
       </div>
    )
 }

@@ -3,7 +3,7 @@ import { AuthWrapper } from "@/widgets/AuthWrapper";
 const AuthPage = () => {
    return (
       <>
-         <div className="flex justify-center items-center h-screen">
+         <div className="w-full flex justify-center items-center h-screen">
             <AuthWrapper />
          </div>
       </>

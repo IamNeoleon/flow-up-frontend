@@ -1,6 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ModalProvider } from "./providers/ModalProvider"
 import { AppRouter } from "./routes"
+import { Toaster } from "sonner"
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
       <ModalProvider>
         <SidebarProvider>
           <AppRouter />
+          <Toaster theme="system" />
         </SidebarProvider>
       </ModalProvider>
     </>

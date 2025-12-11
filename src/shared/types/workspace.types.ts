@@ -4,7 +4,7 @@ export interface IWorkspace {
 	id: string
 	name: string
 	ownerId: string
-	Board: IBoard[]
+	boards: IBoard[]
 }
 
 export interface ICreateWorkspaceBody {

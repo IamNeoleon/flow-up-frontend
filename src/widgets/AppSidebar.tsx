@@ -1,4 +1,4 @@
-import { Home, Settings, LogOut, User, Divide } from "lucide-react"
+import { Home, Settings, LogOut, User } from "lucide-react"
 import { Link } from "react-router";
 import { useModal } from "@/app/providers/ModalProvider";
 import { useGetWorkspacesQuery } from "@/api/endpoints/workspaceApi";
@@ -25,7 +25,7 @@ const items = [
 ]
 
 export const AppSidebar = () => {
-	const { data, isLoading, isError } = useGetWorkspacesQuery()
+	const { data } = useGetWorkspacesQuery()
 	const { open, close } = useModal()
 	const [workspaceItems, setWorkspaceItems] = useState<{ title: string, url: string }[]>([])
 
@@ -64,17 +64,17 @@ export const AppSidebar = () => {
 					<SidebarGroup>
 						<SidebarMenu className="gap-0">
 							{
-								items.map(item => (
+								items.map((item) => (
 									<SidebarMenuItem key={item.title}>
 										<SidebarMenuButton asChild>
-											<a href="" className="cursor-pointer flex justify-between">
+											<Link to={item.url} className="cursor-pointer flex justify-between">
 												<div className="flex items-center gap-2">
 													<item.icon width={20} />
 													<span className="font-medium">
 														{item.title}
 													</span>
 												</div>
-											</a>
+											</Link>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 								))
@@ -82,6 +82,7 @@ export const AppSidebar = () => {
 						</SidebarMenu>
 						<SidebarItemList
 							title="Workspaces"
+							mainUrl="/workspace"
 							items={workspaceItems}
 							createElement={{
 								createTitle: 'Create Workspace', createAction: onOpenModal
