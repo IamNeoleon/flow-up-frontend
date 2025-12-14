@@ -3,6 +3,7 @@ import { type FC } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { WorkspaceBoards } from './WorkspaceBoards';
 import { useWorkspaceRole } from '@/shared/hooks/useWorkspaceRole';
+import { WorkspaceMembers } from './WorkspaceMembers';
 
 interface IWorkspaceBlockProps {
 	id: string
@@ -34,7 +35,9 @@ export const WorkspaceBlock: FC<IWorkspaceBlockProps> = ({ id }) => {
 					<TabsContent value="boards">
 						<WorkspaceBoards boards={workspace.boards} />
 					</TabsContent>
-					<TabsContent value="members">Change your password here.</TabsContent>
+					<TabsContent value="members">
+						<WorkspaceMembers workspaceId={workspace.id} />
+					</TabsContent>
 					<TabsContent value="settings">Change your settings here.</TabsContent>
 				</Tabs>
 			</div>

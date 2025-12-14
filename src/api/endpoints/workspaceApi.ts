@@ -1,5 +1,5 @@
 import { baseApi } from "@/api/baseApi";
-import { type IWorkspace, type ICreateWorkspaceBody } from "@/shared/types/workspace.types";
+import { type IWorkspace, type ICreateWorkspaceBody, type IWorkspaceMember } from "@/shared/types/workspace.types";
 
 export const workspaceApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -22,9 +22,15 @@ export const workspaceApi = baseApi.injectEndpoints({
 				body
 			}),
 			invalidatesTags: ['Workspace']
-		})
+		}),
+		getWorkspaceMembers: builder.query<IWorkspaceMember[], string>({
+			query: (id) => ({
+				url: `/workspace/${id}/members`
+			}),
+			providesTags: ['WorkspaceMember']
+		}),
 	}),
 	overrideExisting: false
 })
 
-export const { useGetWorkspacesQuery, useGetWorkspaceQuery, useCreateWorkspaceMutation } = workspaceApi
+export const { useGetWorkspacesQuery, useGetWorkspaceQuery, useCreateWorkspaceMutation, useGetWorkspaceMembersQuery } = workspaceApi

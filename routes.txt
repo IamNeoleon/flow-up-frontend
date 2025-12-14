@@ -1,0 +1,177 @@
+🔐 Auth API
+POST /auth/register
+
+Создать нового пользователя.
+Body:
+{
+  "email": "user@example.com",
+  "password": "string",
+  "name": "string"
+}
+(структура зависит от CreateUserDto)
+Response:
+{
+  "id": "string",
+  "email": "string",
+  "name": "string"
+}
+POST /auth/login
+Авторизация. Возвращает JWT.
+Body:
+{
+  "email": "user@example.com",
+  "password": "string"
+}
+Response:
+{
+  "accessToken": "jwt-string"
+}
+Ошибки:
+
+401 Unauthorized — неверный логин или пароль
+
+🔒 Headers для защищённых запросов
+
+Все дальнейшие ручки требуют:
+
+Authorization: Bearer <accessToken>
+
+Workspace API
+GET /workspace
+
+Получить все воркспейсы, в которых состоит пользователь (владелец или участник).
+
+Auth:
+
+✔ требуется
+
+Response:
+[
+  {
+    "id": "string",
+    "name": "string",
+    "ownerId": "string"
+  }
+]
+
+GET /workspace/:id
+
+Получить информацию о воркспейсе + его доски.
+
+Roles: OWNER | EDITOR | MEMBER
+Response:
+{
+  "id": "string",
+  "name": "string",
+  "boards": [ ... ]
+}
+
+POST /workspace
+
+Создать новый workspace.
+
+Body:
+{
+  "name": "string"
+}
+
+Response:
+{
+  "id": "string",
+  "name": "string",
+  "ownerId": "string"
+}
+
+GET /workspace/:id/members
+
+Получить всех участников воркспейса.
+
+Roles: OWNER | EDITOR | MEMBER
+Response:
+[
+  {
+    "userId": "string",
+    "workspaceId": "string",
+    "role": "EDITOR" | "MEMBER"
+  }
+]
+
+PATCH /workspace/:id/members/:memberId
+
+Изменить роль участника в воркспейсе.
+
+Roles: OWNER
+Body:
+{
+  "role": "EDITOR" | "MEMBER"
+}
+
+Response:
+{
+  "userId": "string",
+  "workspaceId": "string",
+  "role": "EDITOR"
+}
+
+DELETE /workspace/:id
+
+Удалить workspace.
+
+Roles: OWNER
+Response:
+{
+  "id": "string",
+  "name": "string"
+}
+
+🔗 Invite Links
+POST /workspace/:id/invite-link
+
+Создать пригласительную ссылку.
+
+Roles: OWNER
+Body:
+{
+  "role": "MEMBER" | "EDITOR",
+  "expiresIn": 24 // в часах
+}
+
+Response:
+{
+  "inviteUrl": "https://frontend.url/invite/<token>"
+}
+
+GET /workspace/invite/:token
+
+Проверить действительность приглашения.
+
+Response:
+{
+  "workspaceId": "string",
+  "role": "MEMBER" | "EDITOR"
+}
+
+
+Ошибки:
+
+404 — токен не найден
+
+400 — срок действия истёк
+
+POST /workspace/invite/:token/accept
+
+Принять приглашение и вступить в workspace.
+
+Auth: ✔ требуется
+Response:
+
+Если уже в workspace:
+
+{ "message": "Already in workspace" }
+
+
+Если успешно:
+
+{ "success": true }
+
+
