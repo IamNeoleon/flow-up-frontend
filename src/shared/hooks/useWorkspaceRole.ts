@@ -1,7 +1,19 @@
-import type { IWorkspace } from "../types/workspace.types";
+import { useGetWorkspaceMembersQuery, useGetWorkspaceQuery } from "@/api/endpoints/workspaceApi";
 
-export const useWorkspaceRole = (workspace: IWorkspace, userId: string) => {
-	const isOwner = workspace.ownerId === userId
+export const useWorkspaceRole = (workspaceId: string, userId: string | undefined) => {
+	const { data: workspace } = useGetWorkspaceQuery(workspaceId)
+	const isOwner = workspace?.ownerId === userId
 
-	return { isOwner }
+	const { data: members } = useGetWorkspaceMembersQuery(workspaceId, {
+		skip: isOwner
+	})
+
+	if (isOwner) return 'OWNER'
+
+	const userRole = members?.find(m => m.userId === userId)?.role
+
+	if (userRole) {
+		return userRole
+	}
 }
+

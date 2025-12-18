@@ -3,21 +3,32 @@ import { useGetWorkspaceMembersQuery } from "@/api/endpoints/workspaceApi";
 import {
    Table,
    TableBody,
-   TableCaption,
    TableCell,
    TableHead,
    TableHeader,
    TableRow,
 } from "@/components/ui/table"
 import { getWorkspaceRole } from "@/lib/utils";
+import { useModal } from "@/app/providers/ModalProvider";
+import { AddMember } from "@/features/add-member-workspace/ui/AddMember";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export const WorkspaceMembers: FC<{ workspaceId: string }> = ({ workspaceId }) => {
    const { data: members, isLoading, isError } = useGetWorkspaceMembersQuery(workspaceId)
+   const { open, close } = useModal()
+
+   const handleAddMember = () => {
+      open({
+         title: 'Добавить участника в воркспейс',
+         description: "Создайте уникальную ссылку-приглашение и отправьте ее тем, кого нужно добавить.",
+         content: <AddMember close={close} workspaceId={workspaceId} />
+      })
+   }
 
    return (
       <>
          <Table className="w-[750px]">
-            <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
                <TableRow>
                   <TableHead>Имя пользователя</TableHead>
@@ -35,6 +46,10 @@ export const WorkspaceMembers: FC<{ workspaceId: string }> = ({ workspaceId }) =
                ))}
             </TableBody>
          </Table>
+         <Button onClick={handleAddMember} className='flex items-center fixed bottom-14 right-10' variant='outline'>
+            <Plus />
+            <span>Добавить участника</span>
+         </Button>
       </>
    );
 };

@@ -1,5 +1,6 @@
 import { baseApi } from "@/api/baseApi";
-import type { IRegisterBody, ILoginBody } from "../types";
+import type { IRegisterBody, ILoginBody } from "@/features/auth/types/";
+import type { IUser } from "@/shared/types/user.types";
 
 export const authApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -17,8 +18,14 @@ export const authApi = baseApi.injectEndpoints({
 				body
 			})
 		}),
+		getMe: builder.query<IUser, void>({
+			query: () => ({
+				url: '/me',
+				method: "GET",
+			})
+		})
 	}),
 	overrideExisting: false
 })
 
-export const { useRegisterMutation, useLoginMutation } = authApi
+export const { useRegisterMutation, useLoginMutation, useGetMeQuery } = authApi

@@ -15,6 +15,8 @@ import {
 	SidebarHeader
 } from "@/components/ui/sidebar"
 import { useEffect, useState } from "react";
+import { useAppSelector } from "@/hooks/redux";
+import { selectUser } from "@/store/slices/userSlice";
 
 const items = [
 	{
@@ -25,6 +27,7 @@ const items = [
 ]
 
 export const AppSidebar = () => {
+	const user = useAppSelector(selectUser)
 	const { data } = useGetWorkspacesQuery()
 	const { open, close } = useModal()
 	const [workspaceItems, setWorkspaceItems] = useState<{ title: string, url: string }[]>([])
@@ -54,7 +57,7 @@ export const AppSidebar = () => {
 							<div className="flex items-center gap-2">
 								<User width={20} />
 								<span className="font-medium">
-									Alex Mason
+									{user?.username}
 								</span>
 							</div>
 						</a>

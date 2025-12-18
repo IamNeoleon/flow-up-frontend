@@ -1,42 +1,30 @@
-import { useEffect, useState, useCallback } from "react"
-import { jwtDecode } from "jwt-decode";
-
-interface JwtPayload {
-	exp: number;
-}
-
-const isTokenExpired = (token: string | null) => {
-	if (!token) return true;
-
-	try {
-		const decoded = jwtDecode<JwtPayload>(token);
-		const now = Date.now() / 1000;
-
-		return decoded.exp < now;
-	} catch (e) {
-		return true;
-	}
-};
-
+import { useGetMeQuery } from "@/api/endpoints/authApi"
+import { useAppDispatch } from "@/hooks/redux"
+import { setUser } from "@/store/slices/userSlice"
+import { useEffect, useState } from "react"
 
 export const useAuth = () => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false)
-	const [isLoading, setIsLoading] = useState(true)
-
-	const checkToken = useCallback(() => {
-		const token = localStorage.getItem("accessToken")
-		if (!token || isTokenExpired(token)) {
-			setIsAuthenticated(false)
-			setIsLoading(false)
-		} else {
-			setIsAuthenticated(true)
-			setIsLoading(false)
-		}
-	}, [])
+	const dispatch = useAppDispatch()
+	const token = localStorage.getItem("accessToken")
+	const { data: user, isError, isLoading } = useGetMeQuery(undefined, { skip: !token })
+	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
 	useEffect(() => {
-		checkToken()
-	}, [])
+		if (!token) {
+			setIsAuthenticated(false)
+			return
+		}
+
+		if (isError) {
+			setIsAuthenticated(false)
+			return
+		}
+
+		if (user) {
+			setIsAuthenticated(true)
+			dispatch(setUser(user))
+		}
+	}, [user, isError, token, dispatch])
 
 	return { isAuthenticated, isLoading }
 }

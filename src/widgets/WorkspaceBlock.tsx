@@ -4,14 +4,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { WorkspaceBoards } from './WorkspaceBoards';
 import { useWorkspaceRole } from '@/shared/hooks/useWorkspaceRole';
 import { WorkspaceMembers } from './WorkspaceMembers';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { useModal } from '@/app/providers/ModalProvider';
+import { AddMember } from '@/features/add-member-workspace/ui/AddMember';
+import { useAppSelector } from '@/hooks/redux';
+import { selectUser } from '@/store/slices/userSlice';
 
 interface IWorkspaceBlockProps {
 	id: string
 }
 
 export const WorkspaceBlock: FC<IWorkspaceBlockProps> = ({ id }) => {
+	const user = useAppSelector(selectUser)
 	const { data: workspace } = useGetWorkspaceQuery(id)
-	// const {} = useWorkspaceRole()
+	const role = useWorkspaceRole(id, user?.id)
+	const isOwner = role === 'OWNER'
 
 	if (!workspace) {
 		return (
@@ -21,7 +29,7 @@ export const WorkspaceBlock: FC<IWorkspaceBlockProps> = ({ id }) => {
 
 	return (
 		<>
-			<div className=''>
+			<div>
 				<div className='mb-4'>
 					<h1 className='text-4xl mb-3 capitalize'>{workspace.name}</h1>
 					<div className='desc'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quia adipisci eos saepe laudantium culpa ad facere incidunt voluptatem nesciunt obcaecati neque, cumque autem consequatur dolore ratione soluta suscipit eveniet aspernatur.</div>
@@ -29,11 +37,17 @@ export const WorkspaceBlock: FC<IWorkspaceBlockProps> = ({ id }) => {
 				<Tabs defaultValue="boards" className="w-full">
 					<TabsList className='py-5 mb-2'>
 						<TabsTrigger className='py-4' value="boards">Доски</TabsTrigger>
-						<TabsTrigger className='py-4' value="members">Участники</TabsTrigger>
-						<TabsTrigger className='py-4' value="settings">Настройки</TabsTrigger>
+						{
+							isOwner && (
+								<>
+									<TabsTrigger className='py-4' value="members">Участники</TabsTrigger>
+									<TabsTrigger className='py-4' value="settings">Настройки</TabsTrigger>
+								</>
+							)
+						}
 					</TabsList>
 					<TabsContent value="boards">
-						<WorkspaceBoards boards={workspace.boards} />
+						<WorkspaceBoards workspaceId={id} boards={workspace.boards} />
 					</TabsContent>
 					<TabsContent value="members">
 						<WorkspaceMembers workspaceId={workspace.id} />
