@@ -1,5 +1,5 @@
 import { useGetMeQuery } from "@/api/endpoints/authApi"
-import { useAppDispatch } from "@/hooks/redux"
+import { useAppDispatch } from "@/shared/hooks/redux"
 import { setUser } from "@/store/slices/userSlice"
 import { useEffect, useState } from "react"
 

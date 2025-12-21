@@ -5,20 +5,20 @@ export const workspaceApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getWorkspaces: builder.query<IWorkspace[], void>({
 			query: () => ({
-				url: '/workspace',
+				url: '/workspaces',
 				method: 'GET'
 			}),
 			providesTags: ['Workspace']
 		}),
 		getWorkspace: builder.query<IWorkspace, string>({
 			query: (id) => ({
-				url: `/workspace/${id}`
+				url: `/workspaces/${id}`
 			}),
 			providesTags: (_, __, id) => [{ type: 'Workspace', id }]
 		}),
 		createWorkspace: builder.mutation<boolean, ICreateWorkspaceBody>({
 			query: (body) => ({
-				url: '/workspace',
+				url: '/workspaces',
 				method: 'POST',
 				body
 			}),
@@ -26,13 +26,13 @@ export const workspaceApi = baseApi.injectEndpoints({
 		}),
 		getWorkspaceMembers: builder.query<IWorkspaceMember[], string>({
 			query: (id) => ({
-				url: `/workspace/${id}/members`
+				url: `/workspaces/${id}/members`
 			}),
 			providesTags: ['WorkspaceMember']
 		}),
 		addMember: builder.mutation<{ inviteUrl: string }, { role: TWorkspaceRole, id: string }>({
 			query: (data) => ({
-				url: `/workspace/${data.id}/invite-link`,
+				url: `/workspaces/${data.id}/invite-link`,
 				method: 'POST',
 				body: {
 					role: data.role,
@@ -43,12 +43,12 @@ export const workspaceApi = baseApi.injectEndpoints({
 		}),
 		checkInvite: builder.query<{ workspaceId: string, role: TWorkspaceRole }, string>({
 			query: (token) => ({
-				url: `/workspace/invite/${token}`
+				url: `/workspaces/invite/${token}`
 			})
 		}),
 		joinWorkspace: builder.mutation<boolean | { message: string }, string>({
 			query: (token) => ({
-				url: `/workspace/invite/${token}/accept`,
+				url: `/workspaces/invite/${token}/accept`,
 				method: 'POST',
 			}),
 			invalidatesTags: ['WorkspaceMember']

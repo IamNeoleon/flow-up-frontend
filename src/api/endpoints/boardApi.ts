@@ -5,13 +5,14 @@ export const boardApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getBoard: builder.query<IBoard, { workspaceId: string, boardId: string }>({
 			query: ({ workspaceId, boardId }) => ({
-				url: `/workspace/${workspaceId}/board/${boardId}`,
+				url: `/workspaces/${workspaceId}/boards/${boardId}`,
 				method: 'GET'
-			})
+			}),
+			providesTags: (_, __, { boardId }) => [{ type: 'Board', id: boardId }]
 		}),
 		createBoard: builder.mutation<IBoard, { workspaceId: string, name: string, description: string }>({
 			query: ({ workspaceId, name, description }) => ({
-				url: `/workspace/${workspaceId}/board`,
+				url: `/workspaces/${workspaceId}/boards`,
 				method: "POST",
 				body: {
 					name,

@@ -1,7 +1,7 @@
 import { Building2, ChevronDown, Plus } from "lucide-react"
 import { Link } from "react-router"
-import { CollapsibleContent, CollapsibleTrigger, Collapsible } from "../ui/collapsible"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem } from "../ui/sidebar"
+import { CollapsibleContent, CollapsibleTrigger, Collapsible } from "../../shared/ui/collapsible"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem } from "../../shared/ui/sidebar"
 
 interface ISidebarItemListProps {
 	title: string,

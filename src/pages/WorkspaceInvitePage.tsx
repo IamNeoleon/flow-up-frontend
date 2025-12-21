@@ -5,12 +5,12 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/shared/ui/dialog"
 import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/api/endpoints/workspaceApi';
 import { useParams } from 'react-router';
-import { Button } from '@/components/ui/button';
-import { getWorkspaceRole } from '@/lib/utils';
-import { Spinner } from '@/components/ui/spinner';
+import { Button } from '@/shared/ui/button';
+import { getWorkspaceRole } from '@/shared/lib/utils/utils';
+import { Spinner } from '@/shared/ui/spinner';
 import { toast } from 'sonner';
 
 export const WorkspaceInvitePage: FC = () => {

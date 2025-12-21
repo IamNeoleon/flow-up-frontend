@@ -25,9 +25,9 @@ export const routes: RouteObject[] = [
             children: [
                { index: true, element: <HomePage /> },
                { path: '*', element: <NotFoundPage /> },
-               { path: '/workspace/:id', element: <WorkspacePage /> },
-               { path: '/invite/:token', element: <WorkspaceInvitePage /> },
-               { path: '/board/:boardId', element: <BoardPage /> }
+               { path: '/workspaces/:id', element: <WorkspacePage /> },
+               { path: '/workspaces/invite/:token', element: <WorkspaceInvitePage /> },
+               { path: '/workspaces/:workspaceId/boards/:boardId', element: <BoardPage /> }
             ],
          },
       ],

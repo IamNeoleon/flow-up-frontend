@@ -2,7 +2,7 @@ import { Home, Settings, LogOut, User } from "lucide-react"
 import { Link } from "react-router";
 import { useModal } from "@/app/providers/ModalProvider";
 import { useGetWorkspacesQuery } from "@/api/endpoints/workspaceApi";
-import { CreateWorkspace } from "@/features/create-workspace/ui/CreateWorkspace";
+import { CreateWorkspace } from "@/features/workspace/components/CreateWorkspace";
 import { SidebarItemList } from "@/components/SidebarItemList/SidebarItemList";
 import {
 	Sidebar,
@@ -13,9 +13,9 @@ import {
 	SidebarMenuButton,
 	SidebarFooter,
 	SidebarHeader
-} from "@/components/ui/sidebar"
+} from "@/shared/ui/sidebar"
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/hooks/redux";
+import { useAppSelector } from "@/shared/hooks/redux";
 import { selectUser } from "@/store/slices/userSlice";
 
 const items = [
@@ -85,7 +85,7 @@ export const AppSidebar = () => {
 						</SidebarMenu>
 						<SidebarItemList
 							title="Workspaces"
-							mainUrl="/workspace"
+							mainUrl="/workspaces"
 							items={workspaceItems}
 							createElement={{
 								createTitle: 'Create Workspace', createAction: onOpenModal

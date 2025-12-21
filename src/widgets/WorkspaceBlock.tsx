@@ -1,14 +1,10 @@
 import { useGetWorkspaceQuery } from '@/api/endpoints/workspaceApi';
 import { type FC } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { WorkspaceBoards } from './WorkspaceBoards';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
+import { BoardList } from '../features/board/components/BoardList';
 import { useWorkspaceRole } from '@/shared/hooks/useWorkspaceRole';
-import { WorkspaceMembers } from './WorkspaceMembers';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useModal } from '@/app/providers/ModalProvider';
-import { AddMember } from '@/features/add-member-workspace/ui/AddMember';
-import { useAppSelector } from '@/hooks/redux';
+import { WorkspaceMembers } from '../features/workspace/components/WorkspaceMembers';
+import { useAppSelector } from '@/shared/hooks/redux';
 import { selectUser } from '@/store/slices/userSlice';
 
 interface IWorkspaceBlockProps {
@@ -47,7 +43,7 @@ export const WorkspaceBlock: FC<IWorkspaceBlockProps> = ({ id }) => {
 						}
 					</TabsList>
 					<TabsContent value="boards">
-						<WorkspaceBoards workspaceId={id} boards={workspace.boards} />
+						<BoardList workspaceId={id} boards={workspace.boards} />
 					</TabsContent>
 					<TabsContent value="members">
 						<WorkspaceMembers workspaceId={workspace.id} />
