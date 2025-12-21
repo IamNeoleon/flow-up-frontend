@@ -16,7 +16,7 @@ import {
 } from "@/shared/ui/sidebar"
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/shared/hooks/redux";
-import { selectUser } from "@/store/slices/userSlice";
+import { selectUser, setUser } from "@/store/slices/userSlice";
 
 const items = [
 	{
@@ -38,6 +38,12 @@ export const AppSidebar = () => {
 			description: "Create workspace, create, create",
 			content: <CreateWorkspace close={close} />
 		})
+	}
+
+	const logout = () => {
+		setUser(null)
+		localStorage.removeItem('accessToken')
+		window.location.reload()
 	}
 
 	useEffect(() => {
@@ -105,7 +111,7 @@ export const AppSidebar = () => {
 						</Link>
 					</SidebarMenuButton>
 					<SidebarMenuButton asChild>
-						<button className="cursor-pointer flex justify-between">
+						<button onClick={logout} className="cursor-pointer flex justify-between">
 							<div className="flex items-center gap-2">
 								<LogOut width={20} />
 								<span className="text-sm font-medium">

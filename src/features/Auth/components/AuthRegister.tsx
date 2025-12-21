@@ -59,11 +59,16 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 	})
 
 	const onSubmit = async (values: FormValues) => {
-		await handleRegister({
-			email: values.email,
-			username: values.username,
-			password: values.password
-		})
+		try {
+			await handleRegister({
+				email: values.email,
+				username: values.username,
+				password: values.password
+			})
+
+			setHaveAccount()
+		} catch (err) {
+		}
 	}
 
 	return (

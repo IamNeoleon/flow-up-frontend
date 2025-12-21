@@ -12,8 +12,8 @@ export const useLogin = () => {
 		try {
 			const res = await login(formData).unwrap()
 			setTokenToLs(res.accessToken)
-			toast.success('Вы вошли в систему')
 			navigate('/')
+			toast.success('Вы вошли в систему')
 		} catch {
 			toast.error('Неверный email или пароль')
 		}

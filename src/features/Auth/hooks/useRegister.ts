@@ -9,14 +9,11 @@ export const useRegister = () => {
 
 	const handleRegister = async (formData: IRegisterBody) => {
 		try {
-
-			await register(formData).unwrap() // unwrap выбрасывает ошибку, если запрос неудачный
+			await register(formData).unwrap()
 			toast.success('Успешная регистрация')
-			console.log('asdasd')
 		} catch (err: any) {
 			const message = err?.data?.message || err?.message || "Произошла ошибка при регистрации"
 			toast.error(message)
-			console.log('asdasd 12e')
 		}
 	}
 
