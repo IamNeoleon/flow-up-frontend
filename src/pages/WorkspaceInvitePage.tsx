@@ -1,17 +1,11 @@
 import { useState, type FC } from 'react';
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from "@/shared/ui/dialog"
-import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/api/endpoints/workspaceApi';
 import { useParams } from 'react-router';
-import { Button } from '@/shared/ui/button';
-import { getWorkspaceRole } from '@/shared/lib/utils/utils';
-import { Spinner } from '@/shared/ui/spinner';
 import { toast } from 'sonner';
+import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/api/endpoints/workspaceApi';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog"
+import { Button } from '@/shared/ui/button';
+import { Spinner } from '@/shared/ui/spinner';
+import { getWorkspaceRole } from '@/shared/lib/utils/utils';
 
 export const WorkspaceInvitePage: FC = () => {
 	const [open, setOpen] = useState(true)
@@ -21,8 +15,8 @@ export const WorkspaceInvitePage: FC = () => {
 		return <div>Не найдено приглашение</div>
 	}
 
-	const { data, isLoading: isLoadingInvite, isError: isErrorInvite, error } = useCheckInviteQuery(token)
-	const [join, { data: dataJoin }] = useJoinWorkspaceMutation()
+	const { data, isLoading: isLoadingInvite, isError: isErrorInvite } = useCheckInviteQuery(token)
+	const [join] = useJoinWorkspaceMutation()
 
 	const handleJoinWorkspace = () => {
 		toast.promise(
@@ -60,7 +54,7 @@ export const WorkspaceInvitePage: FC = () => {
 							</>
 						)}
 					</div>
-					<Button onClick={handleJoinWorkspace} disabled={isErrorInvite}>{isLoadingInvite ? <Spinner /> : 'Принять приглашение'}</Button>
+					<Button onClick={handleJoinWorkspace} disabled={isErrorInvite || isLoadingInvite}>{isLoadingInvite ? <Spinner /> : 'Принять приглашение'}</Button>
 				</DialogContent>
 			</Dialog>
 		</>

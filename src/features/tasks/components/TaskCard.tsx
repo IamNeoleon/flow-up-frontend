@@ -10,6 +10,10 @@ export const TaskCard = ({ task }: ITaskCardProps) => {
    const { attributes, listeners, setNodeRef, transform, isDragging } =
       useDraggable({
          id: task.id,
+         data: {
+            type: 'task',
+            id: task.id
+         }
       });
 
    const style = {

@@ -25,7 +25,7 @@ export const BoardList: FC<IBoardListProps> = ({ boards, workspaceId }) => {
 
 	return (
 		<>
-			<div className='grid grid-cols-4 gap-4'>
+			<div className='flex gap-5 flex-wrap'>
 				{boards.map(board => (
 					<Link key={board.id} to={`/workspaces/${workspaceId}/boards/${board.id}`}>
 						<BoardCard id={board.id} title={board.name} />
