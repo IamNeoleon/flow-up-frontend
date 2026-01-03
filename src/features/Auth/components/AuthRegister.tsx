@@ -9,15 +9,15 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@/shared/ui/form"
+} from "@/shared/ui/shadcn/form"
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
-} from "@/shared/ui/card"
-import { Input } from "@/shared/ui/input"
-import { Button } from "@/shared/ui/button"
+} from "@/shared/ui/shadcn/card"
+import { Input } from "@/shared/ui/shadcn/input"
+import { Button } from "@/shared/ui/shadcn/button"
 import { useRegister } from '../hooks/useRegister';
 
 const formSchema = z.object({

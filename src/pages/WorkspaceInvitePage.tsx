@@ -2,9 +2,9 @@ import { useState, type FC } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
 import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/api/endpoints/workspaceApi';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog"
-import { Button } from '@/shared/ui/button';
-import { Spinner } from '@/shared/ui/spinner';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/shadcn/dialog"
+import { Button } from '@/shared/ui/shadcn/button';
+import { Spinner } from '@/shared/ui/shadcn/spinner';
 import { getWorkspaceRole } from '@/shared/lib/utils/utils';
 
 export const WorkspaceInvitePage: FC = () => {

@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/shared/ui/sidebar"
+import { SidebarProvider } from "@/shared/ui/shadcn/sidebar"
 import { ModalProvider } from "./providers/ModalProvider"
 import { AppRouter } from "./routes"
 import { Toaster } from "sonner"

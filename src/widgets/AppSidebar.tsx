@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { useModal } from "@/app/providers/ModalProvider";
 import { useGetWorkspacesQuery } from "@/api/endpoints/workspaceApi";
 import { CreateWorkspace } from "@/features/workspace/components/CreateWorkspace";
-import { SidebarItemList } from "@/components/SidebarItemList/SidebarItemList";
+import { SidebarItemList } from "@/shared/ui/SidebarItemList";
 import {
 	Sidebar,
 	SidebarContent,
@@ -13,7 +13,7 @@ import {
 	SidebarMenuButton,
 	SidebarFooter,
 	SidebarHeader
-} from "@/shared/ui/sidebar"
+} from "@/shared/ui/shadcn/sidebar"
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectUser, setUser } from "@/store/slices/userSlice";

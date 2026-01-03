@@ -1,8 +1,8 @@
 import { useState, type FC } from "react"
 import { toast } from "sonner"
-import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
-import { Label } from "@/shared/ui/label"
+import { Button } from "@/shared/ui/shadcn/button"
+import { Input } from "@/shared/ui/shadcn/input"
+import { Label } from "@/shared/ui/shadcn/label"
 import { useCreateWorkspace } from "../hooks/useCreateWorkspace"
 
 export const CreateWorkspace: FC<{ close: () => void }> = ({ close }) => {

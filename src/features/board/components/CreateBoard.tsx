@@ -1,8 +1,8 @@
 import { useState, type FC, type FormEvent } from 'react';
-import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/shadcn/input';
+import { Button } from '@/shared/ui/shadcn/button';
 import { useCreateBoardMutation } from '@/api/endpoints/boardApi';
-import { Spinner } from '@/shared/ui/spinner';
+import { Spinner } from '@/shared/ui/shadcn/spinner';
 import { toast } from 'sonner';
 
 export const CreateBoard: FC<{ close: () => void, workspaceId: string }> = ({ close, workspaceId }) => {

@@ -1,9 +1,9 @@
 import { type FC } from 'react';
 import { Link } from 'react-router';
 import { Plus } from 'lucide-react';
-import { BoardCard } from '@/components/BoardCard/BoardCard';
+import { BoardCard } from '@/shared/ui/BoardCard';
 import type { IBoard } from '@/shared/types/board.types';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/shadcn/button';
 import { useModal } from '@/app/providers/ModalProvider';
 import { CreateBoard } from '@/features/board/components/CreateBoard';
 
@@ -32,10 +32,6 @@ export const BoardList: FC<IBoardListProps> = ({ boards, workspaceId }) => {
 					</Link>
 				))}
 			</div>
-			<Button onClick={handleCreateBoard} className='flex items-center fixed bottom-14 right-10' variant='outline'>
-				<Plus />
-				<span>Создать доску</span>
-			</Button>
 		</>
 	);
 };

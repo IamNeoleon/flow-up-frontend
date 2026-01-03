@@ -1,6 +1,6 @@
 import { useCreateColumnMutation } from "@/api/endpoints/columnApi";
-import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/shadcn/button";
+import { Input } from "@/shared/ui/shadcn/input";
 import { useState } from "react";
 import { toast } from "sonner";
 

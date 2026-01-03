@@ -7,11 +7,11 @@ import {
    TableHead,
    TableHeader,
    TableRow,
-} from "@/shared/ui/table"
-import { getWorkspaceRole } from "@/shared/lib/utils/utils";
+} from "@/shared/ui/shadcn/table"
+import { getWorkspaceRole } from "@/shared/lib/getWorkspaceRole";
 import { useModal } from "@/app/providers/ModalProvider";
 import { AddMember } from "@/features/workspace/components/AddMember";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/ui/shadcn/button";
 import { Plus } from "lucide-react";
 
 export const WorkspaceMembers: FC<{ workspaceId: string }> = ({ workspaceId }) => {

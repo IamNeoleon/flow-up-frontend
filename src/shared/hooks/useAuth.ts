@@ -26,5 +26,5 @@ export const useAuth = () => {
 		}
 	}, [user, isError, token, dispatch])
 
-	return { isAuthenticated, isLoading }
+	return { isAuthenticated, isLoading, setIsAuthenticated }
 }

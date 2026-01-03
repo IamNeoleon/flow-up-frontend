@@ -21,8 +21,19 @@ export const boardApi = baseApi.injectEndpoints({
 			}),
 			invalidatesTags: (_, __, { workspaceId }) => [{ type: 'Workspace', id: workspaceId }]
 		}),
+		editBoard: builder.mutation<IBoard, { workspaceId: string, boardId: string, name: string, description: string }>({
+			query: ({ workspaceId, boardId, name, description }) => ({
+				url: `/workspaces/${workspaceId}/boards/${boardId}`,
+				method: "PATCH",
+				body: {
+					name,
+					description
+				}
+			}),
+			invalidatesTags: (_, __, { workspaceId }) => [{ type: 'Workspace', id: workspaceId }]
+		})
 	}),
 	overrideExisting: false
 })
 
-export const { useGetBoardQuery, useCreateBoardMutation } = boardApi
+export const { useGetBoardQuery, useCreateBoardMutation, useEditBoardMutation } = boardApi

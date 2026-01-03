@@ -4,6 +4,7 @@ import type { IUser } from './user.types'
 export interface IWorkspace {
 	id: string
 	name: string
+	description?: string
 	ownerId: string
 	boards: IBoard[]
 }

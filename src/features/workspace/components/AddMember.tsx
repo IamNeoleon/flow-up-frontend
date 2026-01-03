@@ -1,17 +1,17 @@
 import { useState, type FC } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/shadcn/tabs"
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
-} from "@/shared/ui/select"
+} from "@/shared/ui/shadcn/select"
 import type { TWorkspaceRole } from '@/shared/types/workspace.types';
-import { CopyLinkInput } from '@/components/CopyLinkInput/CopyLinkInput';
-import { Button } from '@/shared/ui/button';
+import { CopyLinkInput } from '@/shared/ui/CopyLinkInput';
+import { Button } from '@/shared/ui/shadcn/button';
 import { useAddMemberMutation } from '@/api/endpoints/workspaceApi';
-import { Spinner } from '@/shared/ui/spinner';
+import { Spinner } from '@/shared/ui/shadcn/spinner';
 
 export const AddMember: FC<{ close: () => void, workspaceId: string }> = ({ close, workspaceId }) => {
 	const [role, setRole] = useState<TWorkspaceRole>('MEMBER')
@@ -27,7 +27,7 @@ export const AddMember: FC<{ close: () => void, workspaceId: string }> = ({ clos
 				<Tabs defaultValue="link" className="">
 					<TabsList className='w-full mb-1'>
 						<TabsTrigger value="link">Ссылка-приглашение</TabsTrigger>
-						<TabsTrigger value="friends">Друзья</TabsTrigger>
+						{/* <TabsTrigger value="friends">Друзья</TabsTrigger> */}
 					</TabsList>
 					<TabsContent value="link">
 						<Select value={role} onValueChange={(value: TWorkspaceRole) => setRole(value)}>
