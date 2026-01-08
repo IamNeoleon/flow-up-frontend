@@ -5,7 +5,7 @@ import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/api/endpoints/w
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/shadcn/dialog"
 import { Button } from '@/shared/ui/shadcn/button';
 import { Spinner } from '@/shared/ui/shadcn/spinner';
-import { getWorkspaceRole } from '@/shared/lib/utils/utils';
+import { getWorkspaceRole } from '@/shared/lib/getWorkspaceRole';
 
 export const WorkspaceInvitePage: FC = () => {
 	const [open, setOpen] = useState(true)

@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { baseApi } from '@/api/baseApi'
 import userReducer from './slices/userSlice'
+import boardReducer from './slices/boardSlice'
 
 export const store = configureStore({
    reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
-      user: userReducer
+      user: userReducer,
+      board: boardReducer
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(baseApi.middleware)

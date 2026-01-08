@@ -53,6 +53,12 @@ export const workspaceApi = baseApi.injectEndpoints({
 			}),
 			invalidatesTags: ['WorkspaceMember']
 		}),
+		getMyWorkspaceRole: builder.query<TWorkspaceRole, string>({
+			query: (workspaceId) => ({
+				url: `/workspaces/${workspaceId}/role`,
+				responseHandler: 'text'
+			})
+		}),
 	}),
 	overrideExisting: false
 })
@@ -64,5 +70,6 @@ export const {
 	useGetWorkspaceMembersQuery,
 	useAddMemberMutation,
 	useCheckInviteQuery,
-	useJoinWorkspaceMutation
+	useJoinWorkspaceMutation,
+	useGetMyWorkspaceRoleQuery
 } = workspaceApi

@@ -1,5 +1,6 @@
 import { baseApi } from "@/api/baseApi";
-import type { IBoard } from "@/shared/types/board.types";
+import type { TBoardRole } from "@/shared/constants/board.permissions";
+import type { IBoard, IBoardMember } from "@/shared/types/board.types";
 
 export const boardApi = baseApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -31,9 +32,21 @@ export const boardApi = baseApi.injectEndpoints({
 				}
 			}),
 			invalidatesTags: (_, __, { workspaceId }) => [{ type: 'Workspace', id: workspaceId }]
-		})
+		}),
+		getMyBoardRole: builder.query<TBoardRole, { workspaceId: string, boardId: string }>({
+			query: ({ workspaceId, boardId }) => ({
+				url: `/workspaces/${workspaceId}/boards/${boardId}/role`,
+				method: "GET"
+			}),
+		}),
+		getBoardMembers: builder.query<IBoardMember[], { workspaceId: string, boardId: string }>({
+			query: ({ workspaceId, boardId }) => ({
+				url: `/workspaces/${workspaceId}/boards/${boardId}/members`,
+				method: "GET"
+			}),
+		}),
 	}),
 	overrideExisting: false
 })
 
-export const { useGetBoardQuery, useCreateBoardMutation, useEditBoardMutation } = boardApi
+export const { useGetBoardQuery, useCreateBoardMutation, useEditBoardMutation, useGetMyBoardRoleQuery, useGetBoardMembersQuery } = boardApi

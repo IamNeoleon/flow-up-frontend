@@ -1,6 +1,7 @@
 import { baseApi } from "../baseApi";
 import type { IColumn } from "@/shared/types/column.types";
-import { reorderColumns } from "@/shared/lib/utils/reorderColumns";
+import { reorderColumns } from "@/shared/lib/reorderColumns";
+import type { ICreateColumnDto, TColumnStatus } from "@/features/column/types";
 
 export const columnApi = baseApi.injectEndpoints({
    endpoints: (builder) => ({
@@ -15,12 +16,14 @@ export const columnApi = baseApi.injectEndpoints({
                { type: 'Columns', id: `LIST-${boardId}` },
             ] : [{ type: 'Columns', id: `LIST-${boardId}` }],
       }),
-      createColumn: builder.mutation<IColumn, { boardId: string, name: string }>({
-         query: ({ boardId, name }) => ({
+      createColumn: builder.mutation<IColumn, ICreateColumnDto>({
+         query: ({ boardId, name, color, status }) => ({
             url: `/boards/${boardId}/columns`,
             method: "POST",
             body: {
-               name
+               name,
+               color,
+               status
             }
          }),
          invalidatesTags: (_, __, { boardId }) => [
@@ -49,14 +52,24 @@ export const columnApi = baseApi.injectEndpoints({
             }
          },
       }),
-      editColumn: builder.mutation<IColumn, { boardId: string, colId: string, name: string, color?: string }>({
-         query: ({ boardId, colId, name, color }) => ({
+      editColumn: builder.mutation<IColumn, { boardId: string, colId: string, name: string, status: TColumnStatus, color?: string }>({
+         query: ({ boardId, colId, name, color, status }) => ({
             url: `/boards/${boardId}/columns/${colId}`,
             method: "PATCH",
             body: {
                name,
-               color
+               color,
+               status
             }
+         }),
+         invalidatesTags: (_, __, { colId }) => [
+            { type: 'Columns', id: colId }
+         ]
+      }),
+      deleteColumn: builder.mutation<boolean, { boardId: string, colId: string }>({
+         query: ({ boardId, colId }) => ({
+            url: `/boards/${boardId}/columns/${colId}`,
+            method: "DELETE",
          }),
          invalidatesTags: (_, __, { colId }) => [
             { type: 'Columns', id: colId }
@@ -66,4 +79,10 @@ export const columnApi = baseApi.injectEndpoints({
    overrideExisting: false
 })
 
-export const { useCreateColumnMutation, useChangeOrderMutation, useEditColumnMutation, useGetAllColumnsQuery } = columnApi;
+export const {
+   useCreateColumnMutation,
+   useChangeOrderMutation,
+   useEditColumnMutation,
+   useGetAllColumnsQuery,
+   useDeleteColumnMutation
+} = columnApi;

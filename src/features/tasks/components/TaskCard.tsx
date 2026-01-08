@@ -5,6 +5,8 @@ import { GripVertical } from "lucide-react";
 import type { ITaskPreview } from "@/shared/types/task.types";
 import { Sheet, SheetTrigger, SheetContent } from "@/shared/ui/shadcn/sheet";
 import { TaskDetails } from "./TaskDetails";
+import { useAppSelector } from "@/shared/hooks/redux";
+import { selectPermissions } from "@/store/slices/boardSlice";
 
 interface ITaskCardProps {
    task: ITaskPreview;
@@ -12,6 +14,7 @@ interface ITaskCardProps {
 }
 
 export const TaskCard = ({ task, color }: ITaskCardProps) => {
+   const permissions = useAppSelector(selectPermissions)
    const [openSheet, setOpenSheet] = useState(false);
    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
       id: task.id,
@@ -37,12 +40,16 @@ export const TaskCard = ({ task, color }: ITaskCardProps) => {
             >
                <div style={{ backgroundColor: color }} className="absolute inset-0 rounded-lg brightness-50" />
                <h3 className="font-medium relative z-10 pr-5">{task.name}</h3>
-               <div {...attributes} {...listeners}
-                  className={clsx("group-hover:opacity-100 hover:cursor-grab opacity-0 transition-opacity absolute top-1/2 -translate-y-1/2 right-2 z-10",
-                     { 'hover:cursor-grabbing cursor-grabbing': isDragging })}
-               >
-                  <GripVertical width={21} />
-               </div>
+               {
+                  permissions?.canMoveTask && (
+                     <div {...attributes} {...listeners}
+                        className={clsx("group-hover:opacity-100 hover:cursor-grab opacity-0 transition-opacity absolute top-1/2 -translate-y-1/2 right-2 z-10",
+                           { 'hover:cursor-grabbing cursor-grabbing': isDragging })}
+                     >
+                        <GripVertical width={21} />
+                     </div>
+                  )
+               }
             </div>
          </SheetTrigger>
          <SheetContent style={{ width: "50%", maxWidth: '100%' }}>

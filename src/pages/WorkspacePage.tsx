@@ -1,26 +1,25 @@
 import { type FC } from 'react';
 import { useParams } from 'react-router';
-import { WorkspaceHeader } from '@/features/workspace/components/WorkspaceHeader';
-import { useAppSelector } from '@/shared/hooks/redux';
-import { selectUser } from '@/store/slices/userSlice';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useGetWorkspaceQuery } from '@/api/endpoints/workspaceApi';
-import { useWorkspaceRole } from '@/shared/hooks/useWorkspaceRole';
+import { useWorkspacePermissions } from '@/shared/hooks/useWorkspacePermissions';
+import { WorkspaceHeader } from '@/features/workspace/components/WorkspaceHeader';
 import { WorkspaceStats } from '@/features/workspace/components/WorkspaceStat';
 import { BoardList } from '@/features/board/components/BoardList';
 import { WorkspaceRecent } from '@/features/workspace/components/WorkspaceRecent';
-import { WorkspaceMembers } from '@/features/workspace/components/WorkspaceMembers2';
+import { WorkspaceMembers } from '@/features/workspace/components/WorkspaceMembers';
 
 export const WorkspacePage: FC = () => {
 	const { id } = useParams()
+	const { data: workspace } = useGetWorkspaceQuery(id ?? skipToken)
+	const { permissions } = useWorkspacePermissions(id)
+
+
 	if (!id) {
 		return (
 			<div>Не найден воркспейс с таким id</div>
 		)
 	}
-	const user = useAppSelector(selectUser)
-	const { data: workspace } = useGetWorkspaceQuery(id)
-	const role = useWorkspaceRole(id, user?.id)
-	const isOwner = role === 'OWNER'
 
 	if (!workspace) {
 		return (
@@ -30,7 +29,7 @@ export const WorkspacePage: FC = () => {
 
 	return (
 		<>
-			<WorkspaceHeader isOwner={isOwner} workspaceId={id} workspaceName={workspace.name} workspaceDescription={workspace.description} />
+			<WorkspaceHeader permissions={permissions} workspaceId={id} workspaceName={workspace.name} workspaceDescription={workspace.description} />
 			<WorkspaceStats />
 			<div className='pb-10 border-b'>
 				<h2 className='text-2xl font-medium mb-5'>Доски</h2>
@@ -44,7 +43,6 @@ export const WorkspacePage: FC = () => {
 					<WorkspaceMembers workspaceId={workspace.id} />
 				</div>
 			</div>
-			{/* <WorkspaceBlock id={id} /> */}
 		</>
 	);
 };

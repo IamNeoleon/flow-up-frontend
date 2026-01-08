@@ -3,6 +3,9 @@ import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { GripVertical } from "lucide-react";
 import clsx from "clsx";
 import { EditColumn } from "./EditColumn";
+import { useAppSelector } from "@/shared/hooks/redux";
+import { selectPermissions } from "@/store/slices/boardSlice";
+import { DeleteColumn } from "./DeleteColumn";
 
 interface IColumnProps {
    column: IColumn;
@@ -11,6 +14,7 @@ interface IColumnProps {
 
 export const Column = ({ column, children }: IColumnProps) => {
    const columnApiColor = column.color ? column.color : '#3c3c3c';
+   const permissions = useAppSelector(selectPermissions)
 
    const { setNodeRef: setDroppableRef } = useDroppable({
       id: column.id,
@@ -48,10 +52,23 @@ export const Column = ({ column, children }: IColumnProps) => {
                <div className="group flex items-center justify-between w-full border-b mb-2 pb-1" style={{ borderColor: columnApiColor }}>
                   <h2 className="text-lg font-semibold">{column.name}</h2>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                     <EditColumn color={columnApiColor} colId={column.id} boardId={column.boardId} title={column.name} />
-                     <div {...listeners} {...attributes} className="cursor-grab">
-                        <GripVertical size={20} />
-                     </div>
+                     {
+                        permissions?.canEditBoard && (
+                           <EditColumn status={column.status} color={columnApiColor} colId={column.id} boardId={column.boardId} title={column.name} />
+                        )
+                     }
+                     {
+                        permissions?.canDeleteColumn && (
+                           <DeleteColumn boardId={column.boardId} colId={column.id} />
+                        )
+                     }
+                     {
+                        permissions?.canMoveColumn && (
+                           <div {...listeners} {...attributes} className="cursor-grab">
+                              <GripVertical size={20} />
+                           </div>
+                        )
+                     }
                   </div>
                </div>
                {children}
