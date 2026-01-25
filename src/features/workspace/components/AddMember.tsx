@@ -7,18 +7,20 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/shared/ui/shadcn/select"
-import type { TWorkspaceRole } from '@/shared/types/workspace.types';
+import type { TWorkspaceRole } from '../types/workspace-role';
 import { CopyLinkInput } from '@/shared/ui/CopyLinkInput';
 import { Button } from '@/shared/ui/shadcn/button';
-import { useAddMemberMutation } from '@/api/endpoints/workspaceApi';
+import { useAddMemberMutation } from '@/features/workspace/api/workspaceApi';
 import { Spinner } from '@/shared/ui/shadcn/spinner';
 
-export const AddMember: FC<{ close: () => void, workspaceId: string }> = ({ close, workspaceId }) => {
+export const AddMember: FC<{ close: () => void, workspaceId: string }> = ({ workspaceId }) => {
 	const [role, setRole] = useState<TWorkspaceRole>('MEMBER')
 	const [addMember, { data, isLoading }] = useAddMemberMutation()
 
 	const handleAddMember = () => {
-		addMember({ role, id: workspaceId })
+		if (!data) {
+			addMember({ role, id: workspaceId })
+		}
 	}
 
 	return (
@@ -42,7 +44,7 @@ export const AddMember: FC<{ close: () => void, workspaceId: string }> = ({ clos
 						<div className='mt-2'>
 							<CopyLinkInput link={data?.inviteUrl ? `${data.inviteUrl}` : 'Ваша ссылка будет здесь'} />
 						</div>
-						<Button onClick={handleAddMember} className='mt-3 w-full'>
+						<Button disabled={data ? true : false} onClick={handleAddMember} className='mt-3 w-full'>
 							{
 								isLoading ? (
 									<Spinner />

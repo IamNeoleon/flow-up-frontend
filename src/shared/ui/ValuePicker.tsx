@@ -7,7 +7,7 @@ interface IValuePickerProps {
 export const ValuePicker = ({ children }: IValuePickerProps) => {
    return (
       <>
-         <div className="rounded inline-block py-1 px-1  cursor-pointer hover:bg-[#272727]">
+         <div className="rounded inline-block py-1 px-2  cursor-pointer hover:bg-[#272727]">
             {children ? (
                children
             ) : (

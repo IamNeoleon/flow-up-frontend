@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { Link } from 'react-router';
 import { BoardCard } from '@/shared/ui/BoardCard';
-import type { IBoard } from '@/shared/types/board.types';
+import type { IBoard } from '../types/board';
 
 interface IBoardListProps {
 	boards: IBoard[],

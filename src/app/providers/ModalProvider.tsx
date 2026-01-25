@@ -40,7 +40,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 		<ModalContext.Provider value={{ open, close }}>
 			{children}
 			<Dialog open={isOpen} onOpenChange={(state) => { if (!state) close() }}>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{modalOptions?.title}</DialogTitle>
 						<DialogDescription>

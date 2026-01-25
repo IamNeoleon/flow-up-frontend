@@ -1,21 +1,23 @@
-import { setTokenToLs } from "@/shared/lib/localStorage"
-import { useLoginMutation } from "@/api/endpoints/authApi"
+import { useLoginMutation } from "@/features/auth/api/authApi"
 import type { ILoginBody } from "../types"
-import { useNavigate } from "react-router"
 import { toast } from "sonner"
-import { useAuth } from "@/shared/hooks/useAuth"
+import { useLocation, useNavigate } from "react-router"
+import { useAppDispatch } from "@/shared/hooks/redux"
+import { setToken } from "@/store/slices/authSlice"
 
 export const useLogin = () => {
 	const [login, { isLoading, isError }] = useLoginMutation()
-	const { setIsAuthenticated } = useAuth()
+	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
+	const location = useLocation()
+
+	const from = location.state?.from?.pathname || '/'
 
 	const handleLogin = async (formData: ILoginBody) => {
 		try {
 			const res = await login(formData).unwrap()
-			setTokenToLs(res.accessToken)
-			setIsAuthenticated(true)
-			navigate('/')
+			dispatch(setToken(res.accessToken))
+			navigate(from, { replace: true })
 			toast.success('Вы вошли в систему')
 		} catch {
 			toast.error('Неверный email или пароль')

@@ -1,4 +1,4 @@
-import { useTitle } from "@/shared/hooks/useTitle";
+import { useTitle } from "@/shared/hooks/use-title";
 
 const HomePage = () => {
    useTitle("Home")

@@ -1,0 +1,137 @@
+import { Check, Users } from "lucide-react";
+import { ValuePicker } from "@/shared/ui/ValuePicker";
+import type { IUser } from "@/features/user/types/user";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/shadcn/avatar"
+import { useState } from "react";
+import {
+   Command,
+   CommandEmpty,
+   CommandGroup,
+   CommandInput,
+   CommandItem,
+   CommandList,
+} from "@/shared/ui/shadcn/command"
+import {
+   Popover,
+   PopoverContent,
+   PopoverTrigger,
+} from "@/shared/ui/shadcn/popover"
+import { cn } from "@/shared/utils/cn";
+import { useLazyGetWorkspaceMembersQuery } from "@/features/workspace/api/workspaceApi";
+import { Spinner } from "@/shared/ui/shadcn/spinner";
+import { useParams } from "react-router";
+
+interface ITaskAssigneeProps {
+   taskAssignee?: Pick<IUser, 'id' | 'username' | 'avatar'> | null;
+   handleAssigneeChange: (assignee: Pick<IUser, 'id' | 'username' | 'avatar'> | null) => void;
+}
+
+export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssigneeProps) => {
+   const { workspaceId } = useParams()
+
+   const [open, setOpen] = useState(false);
+   const [assigneeId, setAssigneeId] = useState("");
+
+   const [getWorkspaceMembers, { data: members, isLoading, isError }] = useLazyGetWorkspaceMembersQuery();
+
+   const handleGetMembers = () => {
+      if (!workspaceId) return
+
+      getWorkspaceMembers(workspaceId);
+   }
+
+   return (
+      <>
+         <div>
+            <div className="flex mb-1 gap-1 items-center text-base text-[#ada9a3] font-medium">
+               <Users width={18} />
+               <span>Исполнитель</span>
+            </div>
+            <Popover open={open} onOpenChange={(nextOpen) => {
+               setOpen(nextOpen)
+               handleGetMembers()
+            }}>
+               <PopoverTrigger>
+                  <ValuePicker>
+                     {
+                        taskAssignee && (
+                           <>
+                              <div className="flex items-center gap-2">
+                                 <Avatar className="w-6 h-6">
+                                    <AvatarImage src={taskAssignee.avatar || ""} />
+                                    <AvatarFallback className="text-[10px]">CN</AvatarFallback>
+                                 </Avatar>
+                                 <span className="font-medium">
+                                    {taskAssignee.username}
+                                 </span>
+                              </div>
+                           </>
+                        )
+                     }
+                  </ValuePicker>
+               </PopoverTrigger>
+               <PopoverContent>
+                  <Command>
+                     <CommandInput placeholder="Поиск участников..." className="h-9" />
+                     <CommandList>
+                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandGroup>
+                           {
+                              isLoading ? (
+                                 <Spinner />
+                              ) : (
+                                 !isError ? (
+                                    <>
+                                       <CommandItem
+                                          onSelect={() => {
+                                             handleAssigneeChange(null);
+                                             setOpen(false);
+                                          }}
+                                          className="text-red-500"
+                                       >
+                                          Убрать исполнителя
+                                       </CommandItem>
+                                       {
+                                          members?.map(member => (
+                                             <CommandItem
+                                                key={member.id}
+                                                value={member.user.username}
+                                                onSelect={(_) => {
+                                                   setAssigneeId(member.userId === assigneeId ? "" : member.userId)
+                                                   handleAssigneeChange(member.user)
+                                                   setOpen(false)
+                                                }}
+                                             >
+                                                <div className="flex items-center gap-2">
+                                                   <Avatar className="w-6 h-6">
+                                                      <AvatarImage src={member.user.avatar || ""} />
+                                                      <AvatarFallback className="text-[10px]">CN</AvatarFallback>
+                                                   </Avatar>
+                                                   <span className="font-medium">
+                                                      {member.user.username}
+                                                   </span>
+                                                </div>
+                                                <Check
+                                                   className={cn(
+                                                      "ml-auto",
+                                                      assigneeId === member.userId ? "opacity-100" : "opacity-0"
+                                                   )}
+                                                />
+                                             </CommandItem>
+                                          ))
+                                       }
+                                    </>
+                                 ) : (
+                                    <div>Ошибка загрузки участников</div>
+                                 )
+                              )
+                           }
+                        </CommandGroup>
+                     </CommandList>
+                  </Command>
+               </PopoverContent>
+            </Popover>
+         </div>
+      </>
+   );
+};

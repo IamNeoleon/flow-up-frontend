@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { toast } from "sonner";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import { useMoveTaskMutation } from "@/api/endpoints/taskApi";
-import { Column } from "./Column";
-import { TaskList } from "@/features/tasks/components/TaskList";
-import { useChangeOrderMutation, useGetAllColumnsQuery } from "@/api/endpoints/columnApi";
-import { ColumnSkeleton } from "./ColumnSkeleton";
-import { getErrorMessage } from "@/shared/utils";
 import clsx from "clsx";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { useMoveTaskMutation } from "@/features/tasks/api/taskApi";
+import { TaskList } from "@/features/tasks/components/TaskList";
+import { useChangeOrderMutation, useGetAllColumnsQuery } from "../api/columnApi";
+import { ColumnSkeleton } from "./ColumnSkeleton";
+import { getErrorMessage } from "@/shared/utils/get-error-message";
+import { Column } from "./Column";
 
 interface IColumnListProps {
    boardId: string
@@ -15,8 +15,8 @@ interface IColumnListProps {
 
 export const ColumnList = ({ boardId }: IColumnListProps) => {
    const { data: columns, isLoading, isError, error } = useGetAllColumnsQuery(boardId)
-   const [updateTask] = useMoveTaskMutation()
-   const [changeOrder] = useChangeOrderMutation()
+   const [moveTask] = useMoveTaskMutation()
+   const [changeOrderCol] = useChangeOrderMutation()
    const sortedColumns = useMemo(() => {
       if (!columns) return [];
       return [...columns].sort((a, b) => a.order - b.order);
@@ -37,7 +37,7 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
          if (!oldCol) return
 
          try {
-            updateTask({
+            moveTask({
                colId: oldCol.id,
                targetColId: over.id as string,
                taskId: active.id as string,
@@ -51,7 +51,7 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
 
       if (activeType === 'column' && overType === 'column') {
          try {
-            changeOrder({
+            changeOrderCol({
                boardId,
                colId: active.id as string,
                newOrder: overCol.order,

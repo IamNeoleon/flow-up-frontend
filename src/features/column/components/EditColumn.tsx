@@ -6,10 +6,10 @@ import { useState } from "react";
 import { HexColorPicker as ColorPicker } from "react-colorful";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/shared/ui/shadcn/select"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/shadcn/tooltip"
-import { useEditColumnMutation } from "@/api/endpoints/columnApi";
+import { useEditColumnMutation } from "../api/columnApi";
 import { toast } from "sonner";
-import type { TColumnStatus } from "../types";
-import { TASK_STATUS_LABELS } from "../constants";
+import type { TColumnStatus } from "../types/column-status";
+import { COLUMN_STATUS_LABELS } from "../constants/column-status";
 import { Label } from "@/shared/ui/shadcn/label";
 
 interface IEditColumnProps {
@@ -93,7 +93,7 @@ export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumn
                         </SelectTrigger>
                         <SelectContent>
                            {
-                              Object.entries(TASK_STATUS_LABELS).map(([value, label]) => (
+                              Object.entries(COLUMN_STATUS_LABELS).map(([value, label]) => (
                                  <SelectItem key={value} value={value}>{label}</SelectItem>
                               ))
                            }

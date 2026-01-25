@@ -1,13 +1,13 @@
 import { useState, type FC } from 'react';
 import { useParams } from 'react-router';
 import { toast } from 'sonner';
-import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/api/endpoints/workspaceApi';
+import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/features/workspace/api/workspaceApi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/shadcn/dialog"
 import { Button } from '@/shared/ui/shadcn/button';
 import { Spinner } from '@/shared/ui/shadcn/spinner';
-import { getWorkspaceRole } from '@/shared/lib/getWorkspaceRole';
+import { getWorkspaceRole } from '@/shared/lib/get-workspace-role';
 
-export const WorkspaceInvitePage: FC = () => {
+const WorkspaceInvitePage: FC = () => {
 	const [open, setOpen] = useState(true)
 
 	const { token } = useParams()
@@ -60,3 +60,5 @@ export const WorkspaceInvitePage: FC = () => {
 		</>
 	);
 };
+
+export default WorkspaceInvitePage

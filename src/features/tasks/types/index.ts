@@ -3,4 +3,5 @@ export interface IUpdateTaskDto {
    dueDate?: string,
    priorityId?: string,
    description?: string,
+   assigneeId?: string,
 }

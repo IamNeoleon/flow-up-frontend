@@ -1,16 +1,16 @@
-import { useCreateColumnMutation } from "@/api/endpoints/columnApi";
-import { Button } from "@/shared/ui/shadcn/button";
-import { Input } from "@/shared/ui/shadcn/input";
 import { useState } from "react";
 import { HexColorPicker as ColorPicker } from "react-colorful";
 import { CircleQuestionMark } from "lucide-react";
 import { toast } from "sonner";
+import { useCreateColumnMutation } from "../api/columnApi";
+import { Button } from "@/shared/ui/shadcn/button";
+import { Input } from "@/shared/ui/shadcn/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/shared/ui/shadcn/select"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/shadcn/tooltip"
 import { Label } from "@/shared/ui/shadcn/label";
-import type { TColumnStatus } from "../types";
-import { TASK_STATUS_LABELS } from "../constants";
-import { getErrorMessage } from "@/shared/utils";
+import { COLUMN_STATUS_LABELS } from "../constants/column-status";
+import { getErrorMessage } from "@/shared/utils/get-error-message";
+import type { TColumnStatus } from "../types/column-status";
 
 interface ICreateColumnProps {
    boardId: string,
@@ -83,7 +83,7 @@ export const CreateColumn = ({ boardId, close }: ICreateColumnProps) => {
                         </SelectTrigger>
                         <SelectContent>
                            {
-                              Object.entries(TASK_STATUS_LABELS).map(([value, label]) => (
+                              Object.entries(COLUMN_STATUS_LABELS).map(([value, label]) => (
                                  <SelectItem key={value} value={value}>{label}</SelectItem>
                               ))
                            }

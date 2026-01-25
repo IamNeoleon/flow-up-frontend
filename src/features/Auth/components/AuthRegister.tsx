@@ -75,7 +75,7 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 		<>
 			<Card className='w-[350px]'>
 				<CardHeader>
-					<CardTitle className='text-center text-xl'>Register</CardTitle>
+					<CardTitle className='text-center text-xl'>Регистрация</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<Form {...form}>

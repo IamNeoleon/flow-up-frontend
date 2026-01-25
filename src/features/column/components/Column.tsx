@@ -1,4 +1,4 @@
-import type { IColumn } from "@/shared/types/column.types";
+import type { IColumn } from "../types/column";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { GripVertical } from "lucide-react";
 import clsx from "clsx";

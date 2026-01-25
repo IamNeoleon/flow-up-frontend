@@ -1,5 +1,5 @@
-import type { IUser } from '@/shared/types/user.types';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IUser } from '@/features/user/types/user';
 import type { RootState } from '..';
 
 interface userState {

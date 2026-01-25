@@ -1,7 +1,7 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { Input } from '@/shared/ui/shadcn/input';
 import { Button } from '@/shared/ui/shadcn/button';
-import { useCreateBoardMutation } from '@/api/endpoints/boardApi';
+import { useCreateBoardMutation } from '@/features/board/api/boardApi';
 import { Spinner } from '@/shared/ui/shadcn/spinner';
 import { toast } from 'sonner';
 

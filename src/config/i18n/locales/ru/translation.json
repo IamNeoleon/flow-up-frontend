@@ -1,0 +1,105 @@
+{
+   "common": {
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "delete": "Удалить",
+      "edit": "Редактировать",
+      "create": "Создать",
+      "close": "Закрыть",
+      "confirm": "Подтвердить",
+      "loading": "Загрузка...",
+      "search": "Поиск",
+      "yes": "Да",
+      "no": "Нет",
+      "welcome": "Добро пожаловать"
+   },
+   "auth": {
+      "login": "Вход",
+      "logout": "Выйти",
+      "register": "Регистрация",
+      "email": "Почта",
+      "password": "Пароль",
+      "username": "Имя пользователя",
+      "google": "Войти через Google",
+      "noAccount": "Нет аккаунта?",
+      "haveAccount": "Уже есть аккаунт?",
+      "description": "Войдите с помощью своего Google или Github аккаунта",
+      "loginUsing": "Войти с помощью"
+   },
+   "workspace": {
+      "title": "Рабочее пространство",
+      "create": "Создать воркспейс",
+      "rename": "Переименовать воркспейс",
+      "delete": "Удалить воркспейс",
+      "members": "Участники",
+      "invite": "Пригласить участника",
+      "leave": "Покинуть воркспейс"
+   },
+   "board": {
+      "title": "Доска",
+      "create": "Создать доску",
+      "rename": "Переименовать доску",
+      "delete": "Удалить доску",
+      "empty": "Задач пока нет",
+      "filters": "Фильтры"
+   },
+   "column": {
+      "todo": "Сделать",
+      "inProgress": "В процессе",
+      "done": "Готово",
+      "create": "Добавить колонку",
+      "rename": "Переименовать колонку",
+      "delete": "Удалить колонку"
+   },
+   "task": {
+      "title": "Задача",
+      "create": "Создать задачу",
+      "edit": "Редактировать задачу",
+      "delete": "Удалить задачу",
+      "description": "Описание",
+      "assignee": "Исполнитель",
+      "priority": "Приоритет",
+      "dueDate": "Срок",
+      "noAssignee": "Не назначен",
+      "count": "{{count}} задач",
+      "count_one": "{{count}} задача",
+      "count_few": "{{count}} задачи",
+      "count_many": "{{count}} задач"
+   },
+   "priority": {
+      "low": "Низкий",
+      "medium": "Средний",
+      "high": "Высокий"
+   },
+   "role": {
+      "owner": "Владелец",
+      "admin": "Администратор",
+      "member": "Участник",
+      "viewer": "Наблюдатель"
+   },
+   "permission": {
+      "boardCreate": "Создание досок",
+      "boardDelete": "Удаление досок",
+      "taskCreate": "Создание задач",
+      "taskEdit": "Редактирование задач",
+      "taskDelete": "Удаление задач",
+      "manageMembers": "Управление участниками"
+   },
+   "errors": {
+      "required": "Обязательное поле",
+      "minLength": "Минимум {{count}} символов",
+      "maxLength": "Максимум {{count}} символов",
+      "invalidEmail": "Неверный email",
+      "unauthorized": "Вы не авторизованы",
+      "forbidden": "Недостаточно прав",
+      "notFound": "Не найдено",
+      "server": "Ошибка сервера"
+   },
+   "activity": {
+      "taskCreated": "создал задачу",
+      "taskUpdated": "обновил задачу",
+      "taskMoved": "переместил задачу",
+      "taskDeleted": "удалил задачу",
+      "boardCreated": "создал доску"
+   }
+}

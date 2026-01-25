@@ -1,7 +1,7 @@
 import { Home, Settings, LogOut, User } from "lucide-react"
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useModal } from "@/app/providers/ModalProvider";
-import { useGetWorkspacesQuery } from "@/api/endpoints/workspaceApi";
+import { useGetWorkspacesQuery } from "@/features/workspace/api/workspaceApi";
 import { CreateWorkspace } from "@/features/workspace/components/CreateWorkspace";
 import { SidebarItemList } from "@/shared/ui/SidebarItemList";
 import {
@@ -15,13 +15,15 @@ import {
 	SidebarHeader
 } from "@/shared/ui/shadcn/sidebar"
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/shared/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/redux";
 import { selectUser, setUser } from "@/store/slices/userSlice";
+import { logout } from "@/store/slices/authSlice";
+import { UserProfile } from "@/features/user/components/UserProfile";
 
 const items = [
 	{
 		title: 'Home',
-		url: 'home',
+		url: '/',
 		icon: Home
 	}
 ]
@@ -31,19 +33,29 @@ export const AppSidebar = () => {
 	const { data } = useGetWorkspacesQuery()
 	const { open, close } = useModal()
 	const [workspaceItems, setWorkspaceItems] = useState<{ title: string, url: string }[]>([])
+	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
 
-	const onOpenModal = () => {
+	const onCreateWorkspace = () => {
 		open({
-			title: 'Create a new workspace',
-			description: "Create workspace, create, create",
+			title: 'Создание воркспейса',
+			description: "Введите название, а все остальное вы сможете отредактировать на самой странице воркспейса.",
 			content: <CreateWorkspace close={close} />
 		})
 	}
 
-	const logout = () => {
-		setUser(null)
-		localStorage.removeItem('accessToken')
-		window.location.reload()
+	const handleOpenProfile = () => {
+		open({
+			title: 'Мой профиль',
+			description: "Здесь вы можете редактировать настройки профиля, а также личную информацию о себе.",
+			content: <UserProfile close={close} />
+		})
+	}
+
+	const handleLogout = () => {
+		dispatch(setUser(null))
+		dispatch(logout())
+		navigate('/auth', { replace: true })
 	}
 
 	useEffect(() => {
@@ -55,18 +67,15 @@ export const AppSidebar = () => {
 
 	return (
 		<>
-
 			<Sidebar>
 				<SidebarHeader>
 					<SidebarMenuButton asChild>
-						<a href="" className="cursor-pointer flex justify-between">
-							<div className="flex items-center gap-2">
-								<User width={20} />
-								<span className="font-medium">
-									{user?.username}
-								</span>
-							</div>
-						</a>
+						<button onClick={handleOpenProfile} className="cursor-pointer flex items-center gap-2">
+							<User width={20} />
+							<span className="font-medium">
+								{user?.username}
+							</span>
+						</button>
 					</SidebarMenuButton>
 				</SidebarHeader>
 				<SidebarContent>
@@ -94,7 +103,7 @@ export const AppSidebar = () => {
 							mainUrl="/workspaces"
 							items={workspaceItems}
 							createElement={{
-								createTitle: 'Create Workspace', createAction: onOpenModal
+								createTitle: 'Create Workspace', createAction: onCreateWorkspace
 							}}
 						/>
 					</SidebarGroup>
@@ -111,7 +120,7 @@ export const AppSidebar = () => {
 						</Link>
 					</SidebarMenuButton>
 					<SidebarMenuButton asChild>
-						<button onClick={logout} className="cursor-pointer flex justify-between">
+						<button onClick={handleLogout} className="cursor-pointer flex justify-between">
 							<div className="flex items-center gap-2">
 								<LogOut width={20} />
 								<span className="text-sm font-medium">

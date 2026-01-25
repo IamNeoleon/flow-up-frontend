@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ContentEditable from "react-contenteditable";
-import { useEditBoardMutation } from "@/api/endpoints/boardApi";
+import { useEditBoardMutation } from "@/features/board/api/boardApi";
 import { toast } from "sonner";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectPermissions } from "@/store/slices/boardSlice";
@@ -9,7 +9,6 @@ import { useModal } from '@/app/providers/ModalProvider'
 import {
    Breadcrumb,
    BreadcrumbItem,
-   BreadcrumbLink,
    BreadcrumbList,
    BreadcrumbPage,
    BreadcrumbSeparator,
@@ -17,7 +16,7 @@ import {
 import { Button } from "@/shared/ui/shadcn/button";
 import { Ellipsis, Users, Plus } from "lucide-react";
 import { BoardMembers } from "./BoardMembers";
-import type { IWorkspace } from "@/shared/types/workspace.types";
+import type { IWorkspace } from "@/features/workspace/types/workspace";
 import { Link } from "react-router";
 
 interface IBoardHeaderProps {

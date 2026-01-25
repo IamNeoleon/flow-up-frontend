@@ -1,4 +1,4 @@
-import { useDeleteColumnMutation } from "@/api/endpoints/columnApi";
+import { useDeleteColumnMutation } from "../api/columnApi";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Trash2 } from "lucide-react";
 import {
@@ -13,6 +13,9 @@ import {
 } from "@/shared/ui/shadcn/alert-dialog"
 import { useState } from "react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/shared/utils/get-error-message";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type { SerializedError } from "@reduxjs/toolkit";
 
 interface IDeleteColumnProps {
    boardId: string,
@@ -29,7 +32,8 @@ export const DeleteColumn = ({ boardId, colId }: IDeleteColumnProps) => {
          await deleteCol({ colId, boardId }).unwrap()
          toast.success('Успешное удаление')
       } catch (error) {
-         toast.error("Произошла ошибка при удаление Колонки")
+         const err = getErrorMessage(error as FetchBaseQueryError | SerializedError | undefined)
+         toast.error(`Произошла ошибка при удаление колонки: ${err}`)
       }
    }
 

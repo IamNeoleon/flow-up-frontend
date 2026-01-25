@@ -1,4 +1,4 @@
-import { useCreateTaskMutation } from "@/api/endpoints/taskApi";
+import { useCreateTaskMutation } from "@/features/tasks/api/taskApi";
 import { Button } from "@/shared/ui/shadcn/button";
 import { Input } from "@/shared/ui/shadcn/input";
 import { useState } from "react";

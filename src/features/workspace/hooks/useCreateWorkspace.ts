@@ -1,10 +1,9 @@
-import { useCreateWorkspaceMutation } from "@/api/endpoints/workspaceApi"
-import type { ICreateWorkspaceBody } from "@/shared/types/workspace.types"
+import { useCreateWorkspaceMutation } from "@/features/workspace/api/workspaceApi"
 
 export const useCreateWorkspace = () => {
 	const [create, { isLoading, isError }] = useCreateWorkspaceMutation()
 
-	const handleCreate = (data: ICreateWorkspaceBody) => {
+	const handleCreate = (data: { name: string }) => {
 		create(data)
 	}
 

@@ -20,10 +20,10 @@ export const CreateWorkspace: FC<{ close: () => void }> = ({ close }) => {
 		<form onSubmit={handleSubmit}>
 			<div className="grid gap-4">
 				<div className="grid gap-3">
-					<Label htmlFor="name-1">Workspace name</Label>
+					<Label htmlFor="name-1">Название воркспейса</Label>
 					<Input id="name-1" name="Workspace name" value={workspaceName} onChange={e => setWorkspaceName(e.target.value)} />
 				</div>
-				<Button type="submit">Create</Button>
+				<Button type="submit">Создать</Button>
 			</div>
 		</form>
 	)

@@ -1,8 +1,8 @@
-import type { TBoardRole } from "@/shared/constants/board.permissions";
-import { BOARD_MEMBER_STATUS_LABELS } from "@/shared/constants/boardMemberStatus";
+import type { TBoardRole } from "../types/board-role";
+import { BOARD_MEMBER_STATUS_LABELS } from "../constants/board-member-status";
 import { useAppSelector } from "@/shared/hooks/redux";
-import { useWorkspaceRole } from "@/shared/hooks/useWorkspaceRole";
-import type { IBoardMember } from "@/shared/types/board.types";
+import { useWorkspaceRole } from "@/shared/hooks/use-workspace-role";
+import type { IBoardMember } from "../types/board-member";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/shadcn/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/shadcn/select";
 import { selectPermissions } from "@/store/slices/boardSlice";

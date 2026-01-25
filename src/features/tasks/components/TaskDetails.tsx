@@ -3,16 +3,22 @@ import ContentEditable from "react-contenteditable";
 import { Trash2 as DeleteIcon } from "lucide-react";
 import { toast } from "sonner";
 import clsx from "clsx";
-import { useAppDispatch } from "@/shared/hooks/redux";
+
+import type { IUpdateTaskDto } from "../types";
+import type { IUser } from "@/features/user/types/user";
+
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/redux";
 import { SheetHeader, SheetTitle } from "@/shared/ui/shadcn/sheet";
-import { taskApi, useCreateSubtaskMutation, useDeleteTaskMutation, useGetTaskByIdQuery, useUpdateTaskMutation } from "@/api/endpoints/taskApi";
-import { getErrorMessage } from "@/shared/utils";
+import { taskApi, useCreateSubtaskMutation, useDeleteTaskMutation, useGetTaskByIdQuery, useUpdateTaskMutation } from "@/features/tasks/api/taskApi";
+import { getErrorMessage } from "@/shared/utils/get-error-message";
 import { TaskPriority } from "./TaskPriority";
 import { TaskDueDate } from "./TaskDueDate";
 import { TaskSubtask } from "./TaskSubtask";
 import { InlineSubtaskTextarea } from "./InlineSubtaskTextarea";
-import type { IUpdateTaskDto } from "../types";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, } from "@/shared/ui/shadcn/alert-dialog"
+import { selectCurrentBoardId, selectPermissions } from "@/store/slices/boardSlice";
+import { TaskAttachments } from "./TaskAttachments";
+import { TaskAssignee } from "./TaskAssignee";
 
 interface ITaskDetailsProps {
    taskId: string;
@@ -21,8 +27,10 @@ interface ITaskDetailsProps {
 }
 
 export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
+   const permissions = useAppSelector(selectPermissions)
+   const boardId = useAppSelector(selectCurrentBoardId)
    const [deleteTask] = useDeleteTaskMutation();
-   const { data: task, isLoading, isError, error } = useGetTaskByIdQuery({ colId, taskId });
+   const { data: task, isLoading, isError, error } = useGetTaskByIdQuery({ boardId, colId, taskId });
    const [updateTask] = useUpdateTaskMutation();
    const [createSubtask] = useCreateSubtaskMutation();
    const dispatch = useAppDispatch()
@@ -33,7 +41,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
 
    useEffect(() => {
       if (!task) {
-         return
+         return;
       }
 
       setTitle(task.name)
@@ -55,6 +63,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
    const handleCreateSubtask = async (title: string) => {
       try {
          const createdSubtask = await createSubtask({
+            boardId,
             colId: task.colId,
             taskId: task.id,
             title,
@@ -63,28 +72,34 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
          dispatch(
             taskApi.util.updateQueryData(
                "getTaskById",
-               { colId, taskId },
+               { boardId, colId, taskId, },
                (draft) => {
                   draft.todos.push(createdSubtask)
                }
             )
          )
       } catch (error) {
-         toast.error('Не удалось создЯать подзадачу')
+         toast.error('Не удалось создать подзадачу')
       }
    };
 
-   const handleUpdateDetails = (fields: Partial<IUpdateTaskDto>) => {
+   const handleUpdateDetails = (fields: Partial<IUpdateTaskDto>, assignee?: Pick<IUser, 'id' | 'username' | 'avatar'> | null) => {
       updateTask({
+         boardId,
          colId: task.colId,
          taskId: task.id,
+         assignee: assignee,
          data: fields,
       });
    };
 
-   const handleDeleteTask = () => {
+   const handleDeleteTask = async () => {
       try {
-         deleteTask({ colId: task.colId, taskId: task.id }).unwrap();
+         await deleteTask({
+            boardId,
+            colId: task.colId,
+            taskId: task.id
+         }).unwrap();
          toast.success("Задача удалена");
       } catch (error) {
          toast.error("Не удалось удалить задачу");
@@ -94,7 +109,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
    return (
       <div className="py-14 px-16">
          <SheetHeader>
-            <SheetTitle className="text-4xl">
+            <SheetTitle className="text-4xl mb-3">
                <ContentEditable
                   html={title}
                   onChange={e => setTitle(e.target.value)}
@@ -108,6 +123,11 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                />
             </SheetTitle>
             <div className="flex gap-5">
+               <TaskAssignee taskAssignee={task.assignee}
+                  handleAssigneeChange={assignee => {
+                     handleUpdateDetails({ assigneeId: assignee?.id }, assignee);
+                  }}
+               />
                <TaskPriority
                   taskPriorityId={task.priorityId}
                   colId={task.colId}
@@ -127,15 +147,18 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                <ContentEditable
                   html={description || ""}
                   onChange={e => setDescription(e.target.value)}
-                  onBlur={(e: React.FocusEvent<HTMLElement>) =>
-                     handleUpdateDetails({
-                        description: e.currentTarget.textContent || "",
-                     })
-                  }
+                  onBlur={(e: React.FocusEvent<HTMLElement>) => {
+                     const next = (e.currentTarget.textContent ?? "").trim();
+                     const prev = (task.description ?? "").trim();
+
+                     if (next !== prev) {
+                        handleUpdateDetails({ description: next });
+                     }
+                  }}
                   className={clsx(
                      "text-lg outline-none border-b border-transparent pb-1",
                      "focus:border-blue-500",
-                     !description && "text-muted-foreground"
+                     !description && "text-muted-foreground italic"
                   )}
                />
             </div>
@@ -153,10 +176,20 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                   <InlineSubtaskTextarea onCreate={handleCreateSubtask} />
                </div>
             </div>
+            <div className="mt-5">
+               <h2 className="text-2xl font-medium mb-2">Вложения</h2>
+               <div className="">
+                  <TaskAttachments attachments={task.attachments} boardId={boardId} colId={colId} taskId={taskId} />
+               </div>
+            </div>
          </SheetHeader>
-         <div onClick={() => setOpenAlert(true)} className="fixed bottom-20 right-20 z-10">
-            <DeleteIcon size={48} className="hover:-translate-y-1 cursor-pointer transition-transform" />
-         </div>
+         {
+            permissions?.canDeleteTask && (
+               <div onClick={() => setOpenAlert(true)} className="fixed bottom-20 right-20 z-10">
+                  <DeleteIcon size={48} className="hover:-translate-y-1 cursor-pointer transition-transform" />
+               </div>
+            )
+         }
          <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
             <AlertDialogContent>
                <AlertDialogHeader>

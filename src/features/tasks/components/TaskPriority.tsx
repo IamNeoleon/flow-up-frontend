@@ -3,8 +3,11 @@ import { Goal } from "lucide-react";
 import { ValuePicker } from "@/shared/ui/ValuePicker";
 import { Badge } from "@/shared/ui/shadcn/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/shared/ui/shadcn/dropdown-menu"
-import type { ITaskPriority } from "@/shared/types/task.types";
-import { useGetPrioritiesQuery } from "@/api/endpoints/taskApi";
+import type { ITaskPriority } from "../types/task-priority";
+import { useGetPrioritiesQuery } from "@/features/tasks/api/taskApi";
+import { useAppSelector } from "@/shared/hooks/redux";
+import { selectCurrentBoardId } from "@/store/slices/boardSlice";
+
 
 interface ITaskPriorityProps {
    taskPriorityId?: string,
@@ -13,7 +16,8 @@ interface ITaskPriorityProps {
 }
 
 export const TaskPriority = ({ taskPriorityId, onChange, colId }: ITaskPriorityProps) => {
-   const { data: priorities } = useGetPrioritiesQuery(colId);
+   const boardId = useAppSelector(selectCurrentBoardId)
+   const { data: priorities } = useGetPrioritiesQuery({ boardId, colId });
    const [priority, setPriority] = useState<ITaskPriority | null>(null)
    const [open, setOpen] = useState(false)
 

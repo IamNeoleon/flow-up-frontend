@@ -4,9 +4,11 @@ import ContentEditable from "react-contenteditable";
 import { useDebouncedCallback } from "use-debounce";
 import { Trash2 as DeleteIcon } from "lucide-react";
 import { toast } from "sonner";
-import type { ITaskTodo } from "@/shared/types/task.types";
+import type { ITaskTodo } from "../types/task-todo";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
-import { useDeleteSubtaskMutation, useUpdateSubtaskMutation } from "@/api/endpoints/taskApi";
+import { useDeleteSubtaskMutation, useUpdateSubtaskMutation } from "@/features/tasks/api/taskApi";
+import { selectCurrentBoardId } from "@/store/slices/boardSlice";
+import { useAppSelector } from "@/shared/hooks/redux";
 
 interface ITaskSubtaskProps {
    taskId: string;
@@ -15,6 +17,7 @@ interface ITaskSubtaskProps {
 }
 
 export const TaskSubtask = ({ subtask, colId, taskId }: ITaskSubtaskProps) => {
+   const boardId = useAppSelector(selectCurrentBoardId)
    const [localSubtask, setLocalSubtask] = useState(subtask);
    const [updateSubtask] = useUpdateSubtaskMutation();
    const [deleteSubtask] = useDeleteSubtaskMutation()
@@ -23,6 +26,7 @@ export const TaskSubtask = ({ subtask, colId, taskId }: ITaskSubtaskProps) => {
       async (updated: ITaskTodo) => {
          try {
             await updateSubtask({
+               boardId,
                colId,
                taskId,
                subtaskId: updated.id,
@@ -49,7 +53,12 @@ export const TaskSubtask = ({ subtask, colId, taskId }: ITaskSubtaskProps) => {
 
    const handleDeleteSubtask = () => {
       try {
-         deleteSubtask({ colId, taskId, subtaskId: subtask.id }).unwrap()
+         deleteSubtask({
+            boardId,
+            colId,
+            taskId,
+            subtaskId: subtask.id
+         }).unwrap()
       } catch (error) {
          toast.error('Не удалось удалить подзадачу')
       }

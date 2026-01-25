@@ -2,7 +2,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/ui/shadcn/dropdown-menu"
 import { useState } from "react";
 import { ValuePicker } from "@/shared/ui/ValuePicker";
-import { formatDate } from "@/shared/utils";
+import { formatDate } from "@/shared/utils/formate-date";
 import { Calendar } from "@/shared/ui/shadcn/calendar";
 
 interface ITaskDueDateProps {

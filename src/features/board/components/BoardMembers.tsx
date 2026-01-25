@@ -1,4 +1,4 @@
-import { useGetBoardMembersQuery } from "@/api/endpoints/boardApi";
+import { useGetBoardMembersQuery } from "@/features/board/api/boardApi";
 import { Spinner } from "@/shared/ui/shadcn/spinner";
 import { BoardMember } from "./BoardMember";
 

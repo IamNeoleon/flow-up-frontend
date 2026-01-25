@@ -1,0 +1,1 @@
+export type TBoardRole = 'OWNER' | 'EDITOR' | 'VIEWER'

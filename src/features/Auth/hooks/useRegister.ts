@@ -1,7 +1,7 @@
 import { toast } from "sonner"
-import { useRegisterMutation } from "@/api/endpoints/authApi"
+import { useRegisterMutation } from "@/features/auth/api/authApi"
 import type { IRegisterBody } from "../types"
-import { getErrorMessage } from "@/shared/utils/"
+import { getErrorMessage } from "@/shared/utils/get-error-message"
 
 export const useRegister = () => {
 	const [register, { isLoading, isError, error, isSuccess }] = useRegisterMutation()

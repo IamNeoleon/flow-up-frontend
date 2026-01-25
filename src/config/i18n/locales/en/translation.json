@@ -1,0 +1,103 @@
+{
+   "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "create": "Create",
+      "close": "Close",
+      "confirm": "Confirm",
+      "loading": "Loading...",
+      "search": "Search",
+      "yes": "Yes",
+      "no": "No",
+      "welcome": "Welcome back"
+   },
+   "auth": {
+      "login": "Login",
+      "logout": "Logout",
+      "register": "Register",
+      "email": "Email",
+      "password": "Password",
+      "username": "Username",
+      "google": "Sign in with Google",
+      "noAccount": "Don't have an account?",
+      "haveAccount": "Already have an account?",
+      "description": "Sign in with your Google or Github account",
+      "loginUsing": "Login using"
+   },
+   "workspace": {
+      "title": "Workspace",
+      "create": "Create workspace",
+      "rename": "Rename workspace",
+      "delete": "Delete workspace",
+      "members": "Members",
+      "invite": "Invite member",
+      "leave": "Leave workspace"
+   },
+   "board": {
+      "title": "Board",
+      "create": "Create board",
+      "rename": "Rename board",
+      "delete": "Delete board",
+      "empty": "No tasks yet",
+      "filters": "Filters"
+   },
+   "column": {
+      "todo": "To Do",
+      "inProgress": "In Progress",
+      "done": "Done",
+      "create": "Add column",
+      "rename": "Rename column",
+      "delete": "Delete column"
+   },
+   "task": {
+      "title": "Task",
+      "create": "Create task",
+      "edit": "Edit task",
+      "delete": "Delete task",
+      "description": "Description",
+      "assignee": "Assignee",
+      "priority": "Priority",
+      "dueDate": "Due date",
+      "noAssignee": "Unassigned",
+      "count": "{{count}} tasks",
+      "count_one": "{{count}} task"
+   },
+   "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+   },
+   "role": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+   },
+   "permission": {
+      "boardCreate": "Create boards",
+      "boardDelete": "Delete boards",
+      "taskCreate": "Create tasks",
+      "taskEdit": "Edit tasks",
+      "taskDelete": "Delete tasks",
+      "manageMembers": "Manage members"
+   },
+   "errors": {
+      "required": "This field is required",
+      "minLength": "Minimum {{count}} characters",
+      "maxLength": "Maximum {{count}} characters",
+      "invalidEmail": "Invalid email",
+      "unauthorized": "Unauthorized",
+      "forbidden": "Access denied",
+      "notFound": "Not found",
+      "server": "Server error"
+   },
+   "activity": {
+      "taskCreated": "created a task",
+      "taskUpdated": "updated a task",
+      "taskMoved": "moved a task",
+      "taskDeleted": "deleted a task",
+      "boardCreated": "created a board"
+   }
+}
