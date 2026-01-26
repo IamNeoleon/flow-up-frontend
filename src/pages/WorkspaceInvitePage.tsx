@@ -6,13 +6,15 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/shared/ui/shadcn/button';
 import { Spinner } from '@/shared/ui/shadcn/spinner';
 import { getWorkspaceRole } from '@/shared/lib/get-workspace-role';
+import { useTranslation } from 'react-i18next';
 
 const WorkspaceInvitePage: FC = () => {
 	const [open, setOpen] = useState(true)
+	const { t } = useTranslation()
 
 	const { token } = useParams()
 	if (!token) {
-		return <div>Не найдено приглашение</div>
+		return <div>{t("errors.inviteNotFound")}</div>
 	}
 
 	const { data, isLoading: isLoadingInvite, isError: isErrorInvite } = useCheckInviteQuery(token)
@@ -22,15 +24,15 @@ const WorkspaceInvitePage: FC = () => {
 		toast.promise(
 			join(token).unwrap(),
 			{
-				loading: 'Добавляемся...',
+				loading: t("workspace.inviteLoading"),
 				success: (result) => {
 					setOpen(false)
 					if (typeof result === 'object' && 'message' in result) {
 						return result.message
 					}
-					return 'Вы были успешно добавлены в воркспейс!'
+					return t("workspace.inviteSuccess")
 				},
-				error: 'Не удалось вступить в воркспейс',
+				error: t("workspace.inviteError"),
 			}
 		)
 	}
@@ -40,21 +42,22 @@ const WorkspaceInvitePage: FC = () => {
 			<Dialog open={open}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Добавление в воркспейс</DialogTitle>
+						<DialogTitle>{t("workspace.inviteTitle")}</DialogTitle>
 						<DialogDescription>
-							Вы были приглашены по ссылке-приглашению в воркспейс.
-							Если вам это интересно, то вступайте.
+							{t("workspace.inviteDescription")}
 						</DialogDescription>
 					</DialogHeader>
 					<div>
 						{data && (
 							<>
-								<div>Workspace: </div>
-								<div>Роль: {getWorkspaceRole(data.role)}</div>
+								<div>{t("workspace.inviteWorkspaceLabel")}: </div>
+								<div>{t("workspace.inviteRoleLabel")}: {getWorkspaceRole(data.role)}</div>
 							</>
 						)}
 					</div>
-					<Button onClick={handleJoinWorkspace} disabled={isErrorInvite || isLoadingInvite}>{isLoadingInvite ? <Spinner /> : 'Принять приглашение'}</Button>
+					<Button onClick={handleJoinWorkspace} disabled={isErrorInvite || isLoadingInvite}>
+						{isLoadingInvite ? <Spinner /> : t("workspace.inviteAccept")}
+					</Button>
 				</DialogContent>
 			</Dialog>
 		</>

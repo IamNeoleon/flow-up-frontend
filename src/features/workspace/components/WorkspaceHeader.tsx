@@ -6,9 +6,16 @@ import { Settings, Plus } from "lucide-react";
 import { WorkspaceSettingsModal } from "./WorkspaceSettings";
 import type { IWorkspace } from "../types/workspace";
 import { useGetIcon } from "@/shared/hooks/use-get-icon";
-import { WORKSPACE_STATUSES } from "../constants/workspace-statuses";
 import clsx from "clsx";
 import type { IWorkspacePermission } from "../types/workspace-permission";
+import { useTranslation } from "react-i18next";
+import { useLeaveWorkspaceMutation } from "../api/workspaceApi";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/shared/utils/get-error-message";
+
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { AlertDialogBlock } from "@/shared/ui/AlertDialogBlock";
+import { useNavigate } from "react-router";
 
 interface IWorkspaceHeaderProps {
    workspace: IWorkspace;
@@ -16,13 +23,18 @@ interface IWorkspaceHeaderProps {
 }
 
 export const WorkspaceHeader = ({ workspace, permissions }: IWorkspaceHeaderProps) => {
+   const [leaveWorkspace] = useLeaveWorkspaceMutation()
+
+   const navigate = useNavigate()
+
+   const { t } = useTranslation()
    const workspaceStatus = workspace.isArchived ? 'ARCHIVED' : 'ACTIVE';
    const { open, close } = useModal()
    const Icon = useGetIcon(workspace.icon);
 
    const handleCreateBoard = () => {
       open({
-         title: 'Создать новую доску',
+         title: t("board.createNew"),
          description: "",
          content: <CreateBoard close={close} workspaceId={workspace.id} />
       })
@@ -30,7 +42,7 @@ export const WorkspaceHeader = ({ workspace, permissions }: IWorkspaceHeaderProp
 
    const handleOpenSettings = () => {
       open({
-         title: 'Настройки воркспейса',
+         title: t("workspace.settingsTitle"),
          description: "",
          content: <WorkspaceSettingsModal
             workspaceId={workspace.id}
@@ -40,6 +52,18 @@ export const WorkspaceHeader = ({ workspace, permissions }: IWorkspaceHeaderProp
             close={close}
          />
       })
+   }
+
+   const handleLeaveWorkspace = async () => {
+      try {
+         await leaveWorkspace(workspace.id).unwrap()
+
+         toast.success(t('workspace.leaveSuccess'))
+
+         navigate("/")
+      } catch (error) {
+         toast.error(getErrorMessage(error as FetchBaseQueryError))
+      }
    }
 
    return (
@@ -54,37 +78,54 @@ export const WorkspaceHeader = ({ workspace, permissions }: IWorkspaceHeaderProp
                      </h1>
                   </div>
                   <div className="flex items-center gap-2">
-                     <span className="text-lg font-medium">Статус:</span>
-                     <div className={clsx(
-                        "px-2 py-1 rounded-md text-sm font-semibold inline-block",
-                        workspace.isArchived
-                           ? "bg-gray-300 text-gray-600"
-                           : "bg-emerald-300 text-emerald-900"
-                     )}>
-                        {WORKSPACE_STATUSES[workspaceStatus]}
+                     <span className="text-lg font-medium">
+                        {t("workspace.statusLabel")}:
+                     </span>
+
+                     <div
+                        className={clsx(
+                           "px-2 py-1 rounded-md text-sm font-semibold inline-flex items-center",
+                           "border",
+                           workspace.isArchived
+                              ? "bg-muted text-muted-foreground border-border"
+                              : "bg-accent text-primary border-primary/20"
+                        )}
+                     >
+                        {t(`workspace.status.${workspaceStatus.toLowerCase()}`)}
                      </div>
                   </div>
                </div>
                <div className="flex gap-3">
+                  <AlertDialogBlock
+                     title={t('workspace.leaveWarningTitle')}
+                     description={t('workspace.leaveWarningDescription')}
+                     cancelLabel={t('common.cancel')}
+                     actionLabel={t('common.yes')}
+                     onClickAction={handleLeaveWorkspace}
+                  >
+                     <Button className="bg-red-700 dark:bg-red-800 hover:bg-red-400 dark:hover:bg-red-400 transition-colors">
+                        {t(`workspace.leave`)}
+                     </Button>
+                  </AlertDialogBlock>
                   {
                      permissions.canEditWorkspace && (
-                        <Button onClick={handleOpenSettings} variant="outline" size="sm" className="flex items-center gap-2">
+                        <Button onClick={handleOpenSettings} variant="outline" className="flex items-center gap-2">
                            <Settings />
-                           Настройки
+                           {t("sidebar.settings")}
                         </Button>
                      )
                   }
                   {
                      permissions.canCreateBoard && (
-                        <Button onClick={handleCreateBoard} variant="default" size="sm" className="flex items-center gap-2 ">
+                        <Button onClick={handleCreateBoard} className="flex items-center gap-2 ">
                            <Plus />
-                           Создать новую доску
+                           {t("board.createNew")}
                         </Button>
                      )
                   }
                </div>
             </div>
-         </div>
+         </div >
       </>
    );
 };

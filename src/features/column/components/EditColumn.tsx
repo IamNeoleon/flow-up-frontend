@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import type { TColumnStatus } from "../types/column-status";
 import { COLUMN_STATUS_LABELS } from "../constants/column-status";
 import { Label } from "@/shared/ui/shadcn/label";
+import { useTranslation } from "react-i18next";
 
 interface IEditColumnProps {
    title: string
@@ -21,6 +22,7 @@ interface IEditColumnProps {
 }
 
 export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumnProps) => {
+   const { t } = useTranslation()
    const [edit] = useEditColumnMutation();
    const [draftTitle, setDraftTitle] = useState(title);
    const [draftColor, setDraftColor] = useState(color);
@@ -28,7 +30,7 @@ export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumn
    const [open, setOpen] = useState(false)
 
    const handleEdit = async () => {
-      const toastId = toast.loading('Создание задачи...')
+      const toastId = toast.loading(t("column.editLoading"))
 
       try {
          await edit({
@@ -39,10 +41,10 @@ export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumn
             status: draftStatus
          }).unwrap();
 
-         toast.success("Успешное редактирование", { id: toastId });
+         toast.success(t("column.editSuccess"), { id: toastId });
          setOpen(false)
       } catch (err) {
-         toast.error("Ошибка при редактировании", { id: toastId });
+         toast.error(t("column.editError"), { id: toastId });
       }
    }
 
@@ -50,38 +52,38 @@ export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumn
       <>
          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-               <Button size="icon" variant="ghost">
-                  <Pencil />
+               <Button className="group" size="icon" variant="ghost">
+                  <Pencil className="text-white hover:text-black" />
                </Button>
             </PopoverTrigger>
 
             <PopoverContent className="w-56 space-y-2">
                <div>
-                  <Label htmlFor="edit-column-name" className="mb-1">Название</Label>
-                  <Input id="edit-column-name" placeholder="Название" value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} />
+                  <Label htmlFor="edit-column-name" className="mb-1">{t("column.nameLabel")}</Label>
+                  <Input id="edit-column-name" placeholder={t("column.namePlaceholder")} value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} />
                </div>
                <div>
                   <div className="flex items-center justify-between">
-                     <Label htmlFor="edit-column-status" className="mb-1">Системный статус</Label>
+                     <Label htmlFor="edit-column-status" className="mb-1">{t("column.statusLabel")}</Label>
                      <Tooltip>
                         <TooltipTrigger asChild>
                            <CircleQuestionMark size={18} className="text-[#8d8d8d]" />
                         </TooltipTrigger>
                         <TooltipContent side="top" className="max-w-[250px] space-y-2 font-medium">
                            <p>
-                              Системный статус колонки определяет, как система учитывает задачи внутри неё.
+                              {t("column.statusHelp1")}
                            </p>
                            <p>
-                              Он влияет на подсчёт прогресса, фильтрацию и автоматические действия на доске.
+                              {t("column.statusHelp2")}
                            </p>
                            <p>
-                              Колонки со статусом «Не начато» считаются исходными, «В работе» — активными, а «Готово» — завершёнными.
+                              {t("column.statusHelp3")}
                            </p>
                            <p>
-                              Вы можете менять название колонки, но сам системный статус определяет её роль в логике доски.
+                              {t("column.statusHelp4")}
                            </p>
                            <p>
-                              Изменение этого статуса может повлиять на отображение и обработку задач.
+                              {t("column.statusHelp5")}
                            </p>
                         </TooltipContent>
                      </Tooltip>
@@ -89,12 +91,12 @@ export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumn
                   <div id="edit-column-status">
                      <Select value={draftStatus} onValueChange={(value) => setDraftStatus(value as TColumnStatus)}>
                         <SelectTrigger className="w-[180px]">
-                           <SelectValue placeholder="Статус" />
+                           <SelectValue placeholder={t("column.statusPlaceholder")} />
                         </SelectTrigger>
                         <SelectContent>
                            {
                               Object.entries(COLUMN_STATUS_LABELS).map(([value, label]) => (
-                                 <SelectItem key={value} value={value}>{label}</SelectItem>
+                                 <SelectItem key={value} value={value}>{t(label)}</SelectItem>
                               ))
                            }
                         </SelectContent>
@@ -102,10 +104,10 @@ export const EditColumn = ({ title, boardId, colId, color, status }: IEditColumn
                   </div>
                </div>
                <div>
-                  <Label htmlFor="edit-column-color" className="mb-1">Цвет колонки</Label>
+                  <Label htmlFor="edit-column-color" className="mb-1">{t("column.colorLabel")}</Label>
                   <ColorPicker id="edit-column-color" style={{ width: "100%" }} color={draftColor} onChange={setDraftColor} />
                </div>
-               <Button onClick={handleEdit} size="sm" className="w-full">Сохранить</Button>
+               <Button onClick={handleEdit} size="sm" className="w-full">{t("common.save")}</Button>
             </PopoverContent>
          </Popover>
 

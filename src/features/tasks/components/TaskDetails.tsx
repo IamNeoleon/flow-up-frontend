@@ -19,6 +19,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { selectCurrentBoardId, selectPermissions } from "@/store/slices/boardSlice";
 import { TaskAttachments } from "./TaskAttachments";
 import { TaskAssignee } from "./TaskAssignee";
+import { useTranslation } from "react-i18next";
 
 interface ITaskDetailsProps {
    taskId: string;
@@ -27,6 +28,7 @@ interface ITaskDetailsProps {
 }
 
 export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
+   const { t } = useTranslation()
    const permissions = useAppSelector(selectPermissions)
    const boardId = useAppSelector(selectCurrentBoardId)
    const [deleteTask] = useDeleteTaskMutation();
@@ -49,7 +51,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
    }, [task])
 
    if (isLoading) {
-      return <div className="p-6">Загрузка...</div>;
+      return <div className="p-6">{t("common.loading")}</div>;
    }
 
    if (isError) {
@@ -57,7 +59,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
    }
 
    if (!task) {
-      return <div className="p-6">Не удалось получить задачу</div>;
+      return <div className="p-6">{t("task.loadError")}</div>;
    }
 
    const handleCreateSubtask = async (title: string) => {
@@ -79,7 +81,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
             )
          )
       } catch (error) {
-         toast.error('Не удалось создать подзадачу')
+         toast.error(t("task.subtaskCreateError"))
       }
    };
 
@@ -100,9 +102,9 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
             colId: task.colId,
             taskId: task.id
          }).unwrap();
-         toast.success("Задача удалена");
+         toast.success(t("task.deleteSuccess"));
       } catch (error) {
-         toast.error("Не удалось удалить задачу");
+         toast.error(t("task.deleteError"));
       }
    }
 
@@ -143,7 +145,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                />
             </div>
             <div className="mt-5">
-               <h2 className="text-2xl font-medium mb-2">Описание</h2>
+               <h2 className="text-2xl font-medium mb-2">{t("task.description")}</h2>
                <ContentEditable
                   html={description || ""}
                   onChange={e => setDescription(e.target.value)}
@@ -163,7 +165,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                />
             </div>
             <div className="mt-5">
-               <h2 className="text-2xl font-medium mb-2">Подзадачи</h2>
+               <h2 className="text-2xl font-medium mb-2">{t("task.subtasksTitle")}</h2>
                <div className="space-y-1">
                   {task.todos?.map(todo => (
                      <TaskSubtask
@@ -177,7 +179,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                </div>
             </div>
             <div className="mt-5">
-               <h2 className="text-2xl font-medium mb-2">Вложения</h2>
+               <h2 className="text-2xl font-medium mb-2">{t("task.attachmentsTitle")}</h2>
                <div className="">
                   <TaskAttachments attachments={task.attachments} boardId={boardId} colId={colId} taskId={taskId} />
                </div>
@@ -193,12 +195,12 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
          <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
             <AlertDialogContent>
                <AlertDialogHeader>
-                  <AlertDialogTitle>Вы действительно хотите удалить задачу?</AlertDialogTitle>
-                  <AlertDialogDescription>Это действие необратимо.</AlertDialogDescription>
+                  <AlertDialogTitle>{t("task.deleteConfirmTitle")}</AlertDialogTitle>
+                  <AlertDialogDescription>{t("task.deleteConfirmDescription")}</AlertDialogDescription>
                </AlertDialogHeader>
                <AlertDialogFooter>
-                  <AlertDialogCancel>Нет</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteTask}>Да</AlertDialogAction>
+                  <AlertDialogCancel>{t("common.no")}</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteTask}>{t("common.yes")}</AlertDialogAction>
                </AlertDialogFooter>
             </AlertDialogContent>
          </AlertDialog>

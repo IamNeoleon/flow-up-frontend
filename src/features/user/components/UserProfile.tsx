@@ -15,12 +15,14 @@ import { useState } from "react";
 import { isImage } from "@/shared/utils/is-image";
 import { MAX_SIZE_AVATAR } from "@/features/user/constants/max-size-avatar";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface IUserProfileProps {
    close: () => void;
 }
 
 export const UserProfile = ({ close }: IUserProfileProps) => {
+   const { t } = useTranslation()
    const { data: user, isLoading, isError, error } = useGetMeQuery()
    const [loading, setLoading] = useState(false);
 
@@ -33,13 +35,13 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
       if (!file) return;
 
       if (!isImage(file)) {
-         toast.error('Загруженный файл не является изображением')
+         toast.error(t("user.avatarNotImage"))
 
          return
       }
 
       if (file.size > MAX_SIZE_AVATAR) {
-         toast.error('Загруженный файл превышает размер 2 МБ')
+         toast.error(t("user.avatarTooLarge"))
 
          return
       }
@@ -63,10 +65,10 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
             key: presigned.key
          }).unwrap();
 
-         toast.success('Аватарка успешно обновлена')
+         toast.success(t("user.avatarUpdateSuccess"))
       } catch (err) {
          console.error(err);
-         toast.error("Ошибка загрузки аватарки");
+         toast.error(t("user.avatarUpdateError"));
       } finally {
          setLoading(false);
          e.currentTarget.value = "";
@@ -81,7 +83,7 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
       <div>{getErrorMessage(error)}</div>
    )
 
-   if (!user) return <div>No user</div>
+   if (!user) return <div>{t("user.notFound")}</div>
 
    return (
       <>
@@ -106,15 +108,15 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
          </div>
          <div className="flex flex-col gap-2">
             <div>
-               <Label className="mb-1">Имя пользователя</Label>
+               <Label className="mb-1">{t("auth.username")}</Label>
                <Input value={user.username} disabled={true} />
             </div>
             <div>
-               <Label className="mb-1">Email</Label>
+               <Label className="mb-1">{t("auth.email")}</Label>
                <Input value={user.email} disabled={true} />
             </div>
          </div>
-         <Button onClick={close}>Сохранить</Button>
+         <Button onClick={close}>{t("common.save")}</Button>
       </>
    );
 };

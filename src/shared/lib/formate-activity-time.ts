@@ -1,4 +1,5 @@
 import dayjs from "./day-js"
+import i18n from "i18next"
 
 export const formatActivityTime = (date: string) => {
     const now = dayjs()
@@ -7,7 +8,7 @@ export const formatActivityTime = (date: string) => {
     const diffInHours = now.diff(created, "hour")
 
     if (now.diff(created, "day") === 1) {
-        return "вчера"
+        return i18n.t("common.yesterday")
     }
 
     if (diffInHours >= 24) {

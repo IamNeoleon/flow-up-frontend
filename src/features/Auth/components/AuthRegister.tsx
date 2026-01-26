@@ -19,24 +19,26 @@ import {
 import { Input } from "@/shared/ui/shadcn/input"
 import { Button } from "@/shared/ui/shadcn/button"
 import { useRegister } from '../hooks/useRegister';
+import { useTranslation } from 'react-i18next';
+import i18n from "i18next";
 
 const formSchema = z.object({
 	email: z
 		.string()
 		.trim()
-		.pipe(z.email({ message: "Введите корректный email" })),
+		.pipe(z.email({ message: i18n.t("errors.invalidEmail") })),
 	username: z
 		.string()
-		.min(4, { message: "Имя пользователя должно быть минимум 6 символов" })
-		.max(12, { message: "Максимальная длина имени пользователя — 32 символа" }),
+		.min(4, { message: i18n.t("errors.minLength", { count: 4 }) })
+		.max(12, { message: i18n.t("errors.maxLength", { count: 12 }) }),
 	password: z
 		.string()
-		.min(6, { message: "Пароль должен быть минимум 6 символов" })
-		.max(32, { message: "Максимальная длина пароля — 32 символа" }),
+		.min(6, { message: i18n.t("errors.minLength", { count: 6 }) })
+		.max(32, { message: i18n.t("errors.maxLength", { count: 32 }) }),
 	confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
 	path: ["confirmPassword"],
-	message: "Пароли не совпадают",
+	message: i18n.t("auth.passwordMismatch"),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -47,6 +49,7 @@ interface IAuthRegisterProps {
 
 
 export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
+	const { t } = useTranslation()
 	const { handleRegister } = useRegister()
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -75,7 +78,7 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 		<>
 			<Card className='w-[350px]'>
 				<CardHeader>
-					<CardTitle className='text-center text-xl'>Регистрация</CardTitle>
+					<CardTitle className='text-center text-xl'>{t("auth.register")}</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<Form {...form}>
@@ -88,7 +91,7 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 								name="email"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Email</FormLabel>
+										<FormLabel>{t("auth.email")}</FormLabel>
 										<FormControl>
 											<Input placeholder="you@example.com" {...field} />
 										</FormControl>
@@ -101,7 +104,7 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 								name="username"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Имя пользователя</FormLabel>
+										<FormLabel>{t("auth.username")}</FormLabel>
 										<FormControl>
 											<Input placeholder="alex mason" {...field} />
 										</FormControl>
@@ -114,7 +117,7 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 								name="password"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Пароль</FormLabel>
+										<FormLabel>{t("auth.password")}</FormLabel>
 										<FormControl>
 											<Input type="password" placeholder="******" {...field} />
 										</FormControl>
@@ -127,7 +130,7 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 								name="confirmPassword"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Подтверждение пароля</FormLabel>
+										<FormLabel>{t("auth.confirmPassword")}</FormLabel>
 										<FormControl>
 											<Input type="password" placeholder="******" {...field} />
 										</FormControl>
@@ -136,16 +139,16 @@ export const AuthRegister: FC<IAuthRegisterProps> = ({ setHaveAccount }) => {
 								)}
 							/>
 							<Button type="submit" className="w-full">
-								Создать аккаунт
+								{t("auth.createAccount")}
 							</Button>
 							<div className="text-right">
-								<span className="mr-2">Уже есть аккаунт?</span>
+								<span className="mr-2">{t("auth.haveAccount")}</span>
 								<button
 									type="button"
 									onClick={setHaveAccount}
 									className="underline"
 								>
-									Вход
+									{t("auth.login")}
 								</button>
 							</div>
 						</form>

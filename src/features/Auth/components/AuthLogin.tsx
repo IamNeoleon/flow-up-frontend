@@ -23,10 +23,11 @@ import { useLogin } from '../hooks/useLogin';
 import { FieldSeparator } from '@/shared/ui/shadcn/field';
 import { GOOGLE_LOGIN_URL } from '../constants/google-login-url';
 import { useTranslation } from 'react-i18next';
+import i18n from "i18next";
 
 const formSchema = z.object({
-	email: z.string().trim().email({ message: "Введите корректный email" }),
-	password: z.string().min(6, { message: "Пароль должен быть минимум 6 символов" }),
+	email: z.string().trim().email({ message: i18n.t("errors.invalidEmail") }),
+	password: z.string().min(6, { message: i18n.t("errors.minLength", { count: 6 }) }),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -85,7 +86,7 @@ export const AuthLogin: FC<IAuthLoginProps> = ({ setHaveAccount }) => {
 						</div>
 
 						<FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-							Или продолжите здесь
+							{t("auth.orContinue")}
 						</FieldSeparator>
 
 						<div className='flex flex-col gap-2'>
@@ -116,16 +117,16 @@ export const AuthLogin: FC<IAuthLoginProps> = ({ setHaveAccount }) => {
 								)}
 							/>
 							<Button type="submit" className="w-full">
-								Войти
+								{t("auth.login")}
 							</Button>
 							<div className="text-right">
-								<span className="mr-2">Нет аккаунта?</span>
+								<span className="mr-2">{t("auth.noAccount")}</span>
 								<button
 									type="button"
 									onClick={setHaveAccount}
 									className="underline"
 								>
-									Регистрация
+									{t("auth.register")}
 								</button>
 							</div>
 						</div>

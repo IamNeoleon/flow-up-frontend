@@ -1,6 +1,8 @@
 import { type FC } from 'react';
 import { LayoutGrid } from 'lucide-react';
 import { Card, CardContent, CardTitle, } from "@/shared/ui/shadcn/card"
+import { cn } from '../utils/cn';
+import { useTranslation } from 'react-i18next';
 
 interface IBoardCardProps {
 	id: string,
@@ -9,24 +11,43 @@ interface IBoardCardProps {
 }
 
 export const BoardCard: FC<IBoardCardProps> = ({ title, image }) => {
+	const { t } = useTranslation()
+
 	return (
 		<>
-			<Card className='min-w-[250px] p-0 hover:-translate-y-1 transition-transform shadow-md'>
-				<CardContent className='px-0 py-0'>
-					{
-						image ? (
-							<div>
-								<img className='block max-w-full rounded-t-lg aspect-250/175 object-cover' src={image} alt="" />
-							</div>
-						) : (
-							<div className="aspect-250/175 rounded-lg bg-muted flex items-center justify-center">
-								<LayoutGrid className="size-10 text-muted-foreground" />
-							</div>
-						)
-					}
-					<div className='p-3'>
-						<CardTitle className='text-lg capitalize text-ellipsis overflow-hidden'>{title}</CardTitle>
-						<div className='text-sm text-muted-foreground mt-1'>Обновлен 2 дня назад</div>
+			<Card
+				className={cn(
+					"min-w-[250px] overflow-hidden p-0",
+					"bg-card text-card-foreground border border-border/60",
+					"shadow-sm transition-all duration-150 ease-out",
+					"hover:-translate-y-1 hover:shadow-md hover:border-primary/20",
+					"focus-within:ring-2 focus-within:ring-ring/40 focus-within:ring-offset-2 focus-within:ring-offset-background",
+					"dark:shadow-none dark:hover:border-primary/25"
+				)}
+			>
+				<CardContent className="p-0">
+					{image ? (
+						<div className="aspect-250/175 overflow-hidden">
+							<img
+								className="h-full w-full object-cover transition-transform duration-200 ease-out hover:scale-[1.03]"
+								src={image}
+								alt=""
+							/>
+						</div>
+					) : (
+						<div className="aspect-250/175 bg-muted/60 flex items-center justify-center">
+							<LayoutGrid className="size-10 text-muted-foreground" />
+						</div>
+					)}
+
+					<div className="p-3">
+						<CardTitle className="text-base font-semibold leading-tight truncate">
+							{title}
+						</CardTitle>
+
+						<div className="mt-1 text-sm text-muted-foreground">
+							{t("common.updatedDaysAgo", { count: 2 })}
+						</div>
 					</div>
 				</CardContent>
 			</Card>

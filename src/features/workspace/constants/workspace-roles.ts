@@ -1,5 +1,5 @@
 export const WORKSPACE_ROLE_LABELS = {
-   OWNER: 'Владелец',
-   EDITOR: "Редактор",
-   MEMBER: 'Наблюдатель'
+   OWNER: "workspaceRole.owner",
+   EDITOR: "workspaceRole.editor",
+   MEMBER: "workspaceRole.member"
 } as const

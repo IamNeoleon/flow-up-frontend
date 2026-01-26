@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { useLocation, useNavigate } from "react-router"
 import { useAppDispatch } from "@/shared/hooks/redux"
 import { setToken } from "@/store/slices/authSlice"
+import i18n from "i18next"
 
 export const useLogin = () => {
 	const [login, { isLoading, isError }] = useLoginMutation()
@@ -18,9 +19,9 @@ export const useLogin = () => {
 			const res = await login(formData).unwrap()
 			dispatch(setToken(res.accessToken))
 			navigate(from, { replace: true })
-			toast.success('Вы вошли в систему')
+			toast.success(i18n.t("auth.loginSuccess"))
 		} catch {
-			toast.error('Неверный email или пароль')
+			toast.error(i18n.t("auth.loginError"))
 		}
 	}
 

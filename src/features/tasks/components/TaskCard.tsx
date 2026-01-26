@@ -8,6 +8,7 @@ import { TaskDetails } from "./TaskDetails";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectPermissions } from "@/store/slices/boardSlice";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useTranslation } from "react-i18next";
 
 interface ITaskCardProps {
    task: ITaskPreview;
@@ -15,6 +16,7 @@ interface ITaskCardProps {
 }
 
 export const TaskCard = ({ task, color }: ITaskCardProps) => {
+   const { t } = useTranslation()
    const permissions = useAppSelector(selectPermissions)
    const [openSheet, setOpenSheet] = useState(false);
    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -55,7 +57,7 @@ export const TaskCard = ({ task, color }: ITaskCardProps) => {
          </SheetTrigger>
          <SheetContent style={{ width: "50%", maxWidth: '100%' }}>
             <SheetTitle>
-               <VisuallyHidden>Редактирование задачи</VisuallyHidden>
+               <VisuallyHidden>{t("task.editTitle")}</VisuallyHidden>
             </SheetTitle>
             <TaskDetails taskId={task.id} colId={task.colId} onClose={() => setOpenSheet(false)} />
          </SheetContent>

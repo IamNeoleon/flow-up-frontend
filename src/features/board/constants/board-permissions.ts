@@ -12,7 +12,8 @@ export const ROLE_PERMISSIONS: Record<TBoardRole, IBoardPermissions> = {
       canCreateTask: true,
       canUpdateTask: true,
       canMoveTask: true,
-      canDeleteTask: true
+      canDeleteTask: true,
+      canChangeRole: true
    },
    EDITOR: {
       canEditBoard: true,
@@ -24,7 +25,8 @@ export const ROLE_PERMISSIONS: Record<TBoardRole, IBoardPermissions> = {
       canCreateTask: true,
       canUpdateTask: true,
       canMoveTask: true,
-      canDeleteTask: true
+      canDeleteTask: true,
+      canChangeRole: false
    },
    VIEWER: {
       canEditBoard: false,
@@ -36,6 +38,7 @@ export const ROLE_PERMISSIONS: Record<TBoardRole, IBoardPermissions> = {
       canCreateTask: false,
       canUpdateTask: false,
       canMoveTask: false,
-      canDeleteTask: false
+      canDeleteTask: false,
+      canChangeRole: false
    },
 } as const

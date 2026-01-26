@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useModal } from "@/app/providers/ModalProvider";
 import { useGetWorkspacesQuery } from "@/features/workspace/api/workspaceApi";
 import { CreateWorkspace } from "@/features/workspace/components/CreateWorkspace";
-import { SidebarItemList } from "@/shared/ui/SidebarItemList";
+import { WorkspaceList } from "@/shared/ui/WorkspaceList";
 import {
 	Sidebar,
 	SidebarContent,
@@ -19,36 +19,48 @@ import { useAppDispatch, useAppSelector } from "@/shared/hooks/redux";
 import { selectUser, setUser } from "@/store/slices/userSlice";
 import { logout } from "@/store/slices/authSlice";
 import { UserProfile } from "@/features/user/components/UserProfile";
-
-const items = [
-	{
-		title: 'Home',
-		url: '/',
-		icon: Home
-	}
-]
+import { useTranslation } from "react-i18next";
+import type { IWorkspace } from "@/features/workspace/types/workspace";
+import { SettingsModal } from "./SettingsModal";
 
 export const AppSidebar = () => {
+	const { t } = useTranslation()
+	const items = [
+		{
+			title: t("sidebar.home"),
+			url: "/",
+			icon: Home
+		}
+	]
+
 	const user = useAppSelector(selectUser)
 	const { data } = useGetWorkspacesQuery()
 	const { open, close } = useModal()
-	const [workspaceItems, setWorkspaceItems] = useState<{ title: string, url: string }[]>([])
+	const [workspaceItems, setWorkspaceItems] = useState<IWorkspace[]>([])
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
 
 	const onCreateWorkspace = () => {
 		open({
-			title: 'Создание воркспейса',
-			description: "Введите название, а все остальное вы сможете отредактировать на самой странице воркспейса.",
+			title: t("workspace.create"),
+			description: t("workspace.createDescription"),
 			content: <CreateWorkspace close={close} />
 		})
 	}
 
 	const handleOpenProfile = () => {
 		open({
-			title: 'Мой профиль',
-			description: "Здесь вы можете редактировать настройки профиля, а также личную информацию о себе.",
+			title: t("profile.title"),
+			description: t("profile.description"),
 			content: <UserProfile close={close} />
+		})
+	}
+
+	const handleOpenSettings = () => {
+		open({
+			title: t("sidebar.settings"),
+			description: t("common.settingsDescription"),
+			content: <SettingsModal close={close} />
 		})
 	}
 
@@ -60,7 +72,7 @@ export const AppSidebar = () => {
 
 	useEffect(() => {
 		if (data) {
-			setWorkspaceItems(() => data.map(item => ({ title: item.name, url: item.id })))
+			setWorkspaceItems(data)
 		}
 	}, [data])
 
@@ -98,33 +110,33 @@ export const AppSidebar = () => {
 								))
 							}
 						</SidebarMenu>
-						<SidebarItemList
-							title="Workspaces"
+						<WorkspaceList
+							title={t("sidebar.workspaces")}
 							mainUrl="/workspaces"
 							items={workspaceItems}
 							createElement={{
-								createTitle: 'Create Workspace', createAction: onCreateWorkspace
+								createTitle: t("workspace.create"), createAction: onCreateWorkspace
 							}}
 						/>
 					</SidebarGroup>
 				</SidebarContent>
 				<SidebarFooter>
 					<SidebarMenuButton asChild>
-						<Link to={'/settings'} className="cursor-pointer flex justify-between">
+						<button onClick={handleOpenSettings} className="cursor-pointer flex justify-between">
 							<div className="flex items-center gap-2">
 								<Settings width={20} />
 								<span className="text-sm font-medium">
-									Settings
+									{t("sidebar.settings")}
 								</span>
 							</div>
-						</Link>
+						</button>
 					</SidebarMenuButton>
 					<SidebarMenuButton asChild>
 						<button onClick={handleLogout} className="cursor-pointer flex justify-between">
 							<div className="flex items-center gap-2">
 								<LogOut width={20} />
 								<span className="text-sm font-medium">
-									Log out
+									{t("sidebar.logout")}
 								</span>
 							</div>
 						</button>

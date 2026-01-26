@@ -6,6 +6,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { truncateFilename } from '@/shared/utils/truncate-filename';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskAttachmentProps {
    att: ITaskAttachment,
@@ -15,6 +16,7 @@ interface ITaskAttachmentProps {
 }
 
 export const TaskAttachment = ({ att, boardId, colId, onDownload, }: ITaskAttachmentProps) => {
+   const { t } = useTranslation()
    const [deleteAttachment] = useDeleteTaskAttachmentMutation();
    const [openAlert, setOpenAlert] = useState(false);
 
@@ -32,9 +34,9 @@ export const TaskAttachment = ({ att, boardId, colId, onDownload, }: ITaskAttach
             attachmentId: att.id
          }).unwrap()
 
-         toast.success("Вложение успешно удалено");
+         toast.success(t("task.attachments.deleteSuccess"));
       } catch (error) {
-         toast.error("Не удалось удалить вложение")
+         toast.error(t("task.attachments.deleteError"))
       }
    }
 
@@ -51,12 +53,12 @@ export const TaskAttachment = ({ att, boardId, colId, onDownload, }: ITaskAttach
          <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
             <AlertDialogContent>
                <AlertDialogHeader>
-                  <AlertDialogTitle>Вы действительно хотите удалить вложение?</AlertDialogTitle>
-                  <AlertDialogDescription>Это действие необратимо.</AlertDialogDescription>
+                  <AlertDialogTitle>{t("task.attachments.deleteConfirmTitle")}</AlertDialogTitle>
+                  <AlertDialogDescription>{t("task.attachments.deleteConfirmDescription")}</AlertDialogDescription>
                </AlertDialogHeader>
                <AlertDialogFooter>
-                  <AlertDialogCancel>Нет</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteAttachment}>Да</AlertDialogAction>
+                  <AlertDialogCancel>{t("common.no")}</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAttachment}>{t("common.yes")}</AlertDialogAction>
                </AlertDialogFooter>
             </AlertDialogContent>
          </AlertDialog>

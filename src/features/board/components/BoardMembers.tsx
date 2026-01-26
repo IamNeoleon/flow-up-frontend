@@ -19,7 +19,7 @@ export const BoardMembers = ({ workspaceId, boardId }: IBoardMembersProps) => {
                   <Spinner className="mx-auto" />
                ) : (
                   members?.map(member => (
-                     <BoardMember key={member.userId} workspaceId={workspaceId} member={member} />
+                     <BoardMember key={member.userId} workspaceId={workspaceId} boardId={boardId} member={member} />
                   ))
                )
             }

@@ -9,6 +9,7 @@ import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { useDeleteSubtaskMutation, useUpdateSubtaskMutation } from "@/features/tasks/api/taskApi";
 import { selectCurrentBoardId } from "@/store/slices/boardSlice";
 import { useAppSelector } from "@/shared/hooks/redux";
+import { useTranslation } from "react-i18next";
 
 interface ITaskSubtaskProps {
    taskId: string;
@@ -17,6 +18,7 @@ interface ITaskSubtaskProps {
 }
 
 export const TaskSubtask = ({ subtask, colId, taskId }: ITaskSubtaskProps) => {
+   const { t } = useTranslation()
    const boardId = useAppSelector(selectCurrentBoardId)
    const [localSubtask, setLocalSubtask] = useState(subtask);
    const [updateSubtask] = useUpdateSubtaskMutation();
@@ -34,7 +36,7 @@ export const TaskSubtask = ({ subtask, colId, taskId }: ITaskSubtaskProps) => {
                completed: updated.completed,
             }).unwrap();
          } catch {
-            toast.error("Ошибка при обновлении подзадачи");
+            toast.error(t("task.subtaskUpdateError"));
             setLocalSubtask(subtask);
          }
       },
@@ -60,7 +62,7 @@ export const TaskSubtask = ({ subtask, colId, taskId }: ITaskSubtaskProps) => {
             subtaskId: subtask.id
          }).unwrap()
       } catch (error) {
-         toast.error('Не удалось удалить подзадачу')
+         toast.error(t("task.subtaskDeleteError"))
       }
    }
 

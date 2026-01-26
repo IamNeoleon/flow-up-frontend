@@ -11,6 +11,7 @@ import { Label } from "@/shared/ui/shadcn/label";
 import { COLUMN_STATUS_LABELS } from "../constants/column-status";
 import { getErrorMessage } from "@/shared/utils/get-error-message";
 import type { TColumnStatus } from "../types/column-status";
+import { useTranslation } from "react-i18next";
 
 interface ICreateColumnProps {
    boardId: string,
@@ -18,6 +19,7 @@ interface ICreateColumnProps {
 }
 
 export const CreateColumn = ({ boardId, close }: ICreateColumnProps) => {
+   const { t } = useTranslation()
    const [name, setName] = useState('')
    const [status, setStatus] = useState<TColumnStatus>('TODO')
    const [color, setColor] = useState<string>('#3c3c3c');
@@ -33,11 +35,11 @@ export const CreateColumn = ({ boardId, close }: ICreateColumnProps) => {
             status,
             color
          }).unwrap()
-         toast.success('Успешное создание')
+         toast.success(t("column.createSuccess"))
       } catch (error: any) {
          const err = getErrorMessage(error)
          console.error(err)
-         toast.error('Произошла ошибка при создании колонки')
+         toast.error(t("column.createError"))
       }
       close()
    }
@@ -47,31 +49,31 @@ export const CreateColumn = ({ boardId, close }: ICreateColumnProps) => {
          <form onSubmit={handleSubmit}>
             <div className="mb-3 flex flex-col gap-2">
                <div>
-                  <Label htmlFor="create-column-name" className="text-base mb-1">Введите название колонки</Label>
-                  <Input required id="create-column-name" className="" value={name} onChange={(e) => setName(e.target.value)} placeholder="Пример: Тестирование" />
+                  <Label htmlFor="create-column-name" className="text-base mb-1">{t("column.createNameLabel")}</Label>
+                  <Input required id="create-column-name" className="" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("column.createNamePlaceholder")} />
                </div>
                <div>
                   <div className="flex items-center justify-between">
-                     <Label htmlFor="create-column-status" className="text-base mb-1">Выберите системный статус колонки</Label>
+                     <Label htmlFor="create-column-status" className="text-base mb-1">{t("column.createStatusLabel")}</Label>
                      <Tooltip>
                         <TooltipTrigger asChild>
                            <CircleQuestionMark size={20} className="text-[#8d8d8d]" />
                         </TooltipTrigger>
                         <TooltipContent side="top" className="max-w-[250px] space-y-2 font-medium">
                            <p>
-                              Системный статус колонки определяет, как система учитывает задачи внутри неё.
+                              {t("column.statusHelp1")}
                            </p>
                            <p>
-                              Он влияет на подсчёт прогресса, фильтрацию и автоматические действия на доске.
+                              {t("column.statusHelp2")}
                            </p>
                            <p>
-                              Колонки со статусом «Не начато» считаются исходными, «В работе» — активными, а «Готово» — завершёнными.
+                              {t("column.statusHelp3")}
                            </p>
                            <p>
-                              Вы можете менять название колонки, но сам системный статус определяет её роль в логике доски.
+                              {t("column.statusHelp4")}
                            </p>
                            <p>
-                              Изменение этого статуса может повлиять на отображение и обработку задач.
+                              {t("column.statusHelp5")}
                            </p>
                         </TooltipContent>
                      </Tooltip>
@@ -79,12 +81,12 @@ export const CreateColumn = ({ boardId, close }: ICreateColumnProps) => {
                   <div id="create-column-status">
                      <Select value={status} onValueChange={(value) => setStatus(value as TColumnStatus)}>
                         <SelectTrigger className="w-[180px]">
-                           <SelectValue placeholder="Статус" />
+                           <SelectValue placeholder={t("column.statusPlaceholder")} />
                         </SelectTrigger>
                         <SelectContent>
                            {
                               Object.entries(COLUMN_STATUS_LABELS).map(([value, label]) => (
-                                 <SelectItem key={value} value={value}>{label}</SelectItem>
+                                 <SelectItem key={value} value={value}>{t(label as any)}</SelectItem>
                               ))
                            }
                         </SelectContent>
@@ -92,11 +94,11 @@ export const CreateColumn = ({ boardId, close }: ICreateColumnProps) => {
                   </div>
                </div>
                <div>
-                  <Label htmlFor="create-color-picker" className="text-base mb-1">Выберите цвет колонки</Label>
+                  <Label htmlFor="create-color-picker" className="text-base mb-1">{t("column.colorLabel")}</Label>
                   <ColorPicker id="create-color-picker" style={{ width: "100%" }} color={color} onChange={setColor} />
                </div>
             </div>
-            <Button className="w-full" type="submit">Создать</Button>
+            <Button className="w-full" type="submit">{t("column.create")}</Button>
          </form>
       </>
    );

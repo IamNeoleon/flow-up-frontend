@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox"
+import { useTranslation } from "react-i18next";
 
 interface InlineSubtaskTextareaProps {
    onCreate: (title: string) => void;
@@ -8,6 +9,7 @@ interface InlineSubtaskTextareaProps {
 export const InlineSubtaskTextarea = ({
    onCreate,
 }: InlineSubtaskTextareaProps) => {
+   const { t } = useTranslation()
    const [value, setValue] = useState("");
    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -39,7 +41,7 @@ export const InlineSubtaskTextarea = ({
             ref={textareaRef}
             rows={1}
             value={value}
-            placeholder="Добавить подзадачу"
+            placeholder={t("task.subtaskPlaceholder")}
             onChange={e => {
                setValue(e.target.value);
                resize();

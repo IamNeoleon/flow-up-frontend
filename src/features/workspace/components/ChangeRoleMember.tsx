@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/shadcn/avatar";
 import { Button } from "@/shared/ui/shadcn/button";
 import { useChangeMemberRoleMutation } from "@/features/workspace/api/workspaceApi";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface IChangeRoleMemberProps {
    member: IWorkspaceMember,
@@ -15,6 +16,7 @@ interface IChangeRoleMemberProps {
 }
 
 export const ChangeRoleMember = ({ member, workspaceId, close }: IChangeRoleMemberProps) => {
+   const { t } = useTranslation()
    const [changeRole] = useChangeMemberRoleMutation()
    const [role, setRole] = useState<TWorkspaceRole>(member.role)
 
@@ -26,9 +28,9 @@ export const ChangeRoleMember = ({ member, workspaceId, close }: IChangeRoleMemb
             role
          }).unwrap()
 
-         toast.success('Успешно изменена роль')
+         toast.success(t("workspace.roleChangeSuccess"))
       } catch (error) {
-         toast.error('Не удалось изменить роль')
+         toast.error(t("workspace.roleChangeError"))
       }
 
       close()
@@ -37,7 +39,7 @@ export const ChangeRoleMember = ({ member, workspaceId, close }: IChangeRoleMemb
    return (
       <>
          <div>
-            <Label className="mb-1 text-sm">Участник</Label>
+            <Label className="mb-1 text-sm">{t("workspace.memberLabel")}</Label>
             <div className="flex items-center gap-3">
                <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" />
@@ -49,18 +51,18 @@ export const ChangeRoleMember = ({ member, workspaceId, close }: IChangeRoleMemb
             </div>
          </div>
          <div>
-            <Label className="mb-1 text-sm">Роль</Label>
+            <Label className="mb-1 text-sm">{t("workspace.roleLabel")}</Label>
             <Select value={role} onValueChange={(value: TWorkspaceRole) => setRole(value)}>
                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Выберите роль" />
+                  <SelectValue placeholder={t("workspace.selectRolePlaceholder")} />
                </SelectTrigger>
                <SelectContent className='text-lg'>
-                  <SelectItem value="MEMBER">Наблюдатель</SelectItem>
-                  <SelectItem value="EDITOR">Редактор</SelectItem>
+                  <SelectItem value="MEMBER">{t("workspaceRole.member")}</SelectItem>
+                  <SelectItem value="EDITOR">{t("workspaceRole.editor")}</SelectItem>
                </SelectContent>
             </Select>
          </div>
-         <Button onClick={handleChange}>Изменить</Button>
+         <Button onClick={handleChange}>{t("common.change")}</Button>
       </>
    );
 };

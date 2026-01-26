@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/shared/utils/get-error-message";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type { SerializedError } from "@reduxjs/toolkit";
+import { useTranslation } from "react-i18next";
 
 interface IDeleteColumnProps {
    boardId: string,
@@ -23,6 +24,7 @@ interface IDeleteColumnProps {
 }
 
 export const DeleteColumn = ({ boardId, colId }: IDeleteColumnProps) => {
+   const { t } = useTranslation()
    const [deleteCol] = useDeleteColumnMutation()
    const [open, setOpen] = useState(false)
 
@@ -30,29 +32,29 @@ export const DeleteColumn = ({ boardId, colId }: IDeleteColumnProps) => {
       setOpen(false)
       try {
          await deleteCol({ colId, boardId }).unwrap()
-         toast.success('Успешное удаление')
+         toast.success(t("column.deleteSuccess"))
       } catch (error) {
          const err = getErrorMessage(error as FetchBaseQueryError | SerializedError | undefined)
-         toast.error(`Произошла ошибка при удаление колонки: ${err}`)
+         toast.error(t("column.deleteError", { error: err }))
       }
    }
 
    return (
       <>
-         <Button onClick={() => setOpen(true)} size='icon' variant='ghost'>
-            <Trash2 />
+         <Button className="" onClick={() => setOpen(true)} size='icon' variant='ghost'>
+            <Trash2 className="text-white hover:text-black" />
          </Button>
          <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogContent>
                <AlertDialogHeader>
-                  <AlertDialogTitle>Вы действительно хотите удалить колонку?</AlertDialogTitle>
+                  <AlertDialogTitle>{t("column.deleteConfirmTitle")}</AlertDialogTitle>
                   <AlertDialogDescription>
-                     Это действие необратимо.
+                     {t("column.deleteConfirmDescription")}
                   </AlertDialogDescription>
                </AlertDialogHeader>
                <AlertDialogFooter>
-                  <AlertDialogCancel>Отмена</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>Да</AlertDialogAction>
+                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>{t("common.yes")}</AlertDialogAction>
                </AlertDialogFooter>
             </AlertDialogContent>
          </AlertDialog>

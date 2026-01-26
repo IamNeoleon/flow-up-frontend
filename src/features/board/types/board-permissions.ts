@@ -8,5 +8,6 @@ export interface IBoardPermissions {
    canCreateTask: boolean,
    canUpdateTask: boolean,
    canMoveTask: boolean,
-   canDeleteTask: boolean
+   canDeleteTask: boolean,
+   canChangeRole: boolean
 }

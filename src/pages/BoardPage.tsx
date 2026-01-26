@@ -1,4 +1,4 @@
-import { useGetBoardQuery } from '@/features/board/api/boardApi'
+import { useGetBoardQuery, useGetMyBoardRoleQuery } from '@/features/board/api/boardApi'
 import { BoardHeader } from '@/features/board/components/BoardHeader'
 import { ColumnList } from '@/features/column/components/ColumnList'
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/redux'
@@ -11,10 +11,20 @@ import { setCurrentBoardId, setPermissions } from '@/store/slices/boardSlice'
 import { useCurrentWorkspace } from '@/shared/hooks/use-current-workspace'
 import { useWsBoard } from '@/features/board/api/useWsBoard'
 import { useWsBoardEvents } from '@/shared/lib/use-ws-board-events'
+import { useTranslation } from 'react-i18next'
 
 const BoardPage: FC = () => {
+	const { t } = useTranslation()
 	const { boardId, workspaceId } = useParams()
 	const { currentWorkspace } = useCurrentWorkspace(workspaceId)
+
+	const { data: boardRole } = useGetMyBoardRoleQuery(boardId && workspaceId
+		? { boardId, workspaceId }
+		: skipToken
+	)
+
+	console.log(boardRole);
+
 
 	const dispatch = useAppDispatch()
 	const user = useAppSelector(selectUser)
@@ -28,7 +38,7 @@ const BoardPage: FC = () => {
 			: skipToken
 	)
 
-	const { permissions } = useBoardPermissions(
+	const { permissions, role } = useBoardPermissions(
 		workspaceId ?? '',
 		boardId ?? '',
 		user?.id ?? ''
@@ -41,8 +51,10 @@ const BoardPage: FC = () => {
 	}, [boardId])
 
 	useEffect(() => {
+		console.log(role)
+
 		dispatch(setPermissions(permissions))
-	}, [permissions])
+	}, [permissions, role])
 
 	useEffect(() => {
 		if (!ws || !boardId || !user) return
@@ -59,19 +71,19 @@ const BoardPage: FC = () => {
 	}, [ws, boardId, user?.id])
 
 	if (!user) {
-		return <div>Пользователь не авторизован</div>
+		return <div>{t("errors.unauthorized")}</div>
 	}
 
 	if (!boardId || !workspaceId) {
-		return <div>Не получено id</div>
+		return <div>{t("errors.missingId")}</div>
 	}
 
 	if (isLoading) {
-		return <div>Загрузка...</div>
+		return <div>{t("common.loading")}</div>
 	}
 
 	if (isError || !board) {
-		return <div>Ошибка загрузки доски</div>
+		return <div>{t("errors.boardLoad")}</div>
 	}
 
 	return (

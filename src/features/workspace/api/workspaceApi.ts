@@ -34,7 +34,10 @@ export const workspaceApi = baseApi.injectEndpoints({
 				method: 'PATCH',
 				body: { name: data.title, isArchived: data.isArchived, icon: data.icon }
 			}),
-			invalidatesTags: (_, __, arg) => [{ type: 'Workspace', id: arg.id }]
+			invalidatesTags: (_, __, arg) => [
+				{ type: 'Workspace', id: arg.id },
+				{ type: 'Workspace' }
+			]
 		}),
 		getWorkspaceMembers: builder.query<IWorkspaceMember[], string>({
 			query: (id) => ({
@@ -98,14 +101,24 @@ export const workspaceApi = baseApi.injectEndpoints({
 		}),
 		getActivity: builder.query<IWorkspaceActivity[], string>({
 			query: (id) => ({
-				url: `/workspaces/${id}/activity`
+				url: `/workspaces/${id}/activity`,
+				method: 'GET',
+
 			}),
 		}),
 		getStatistic: builder.query<IWorkspaceStat, string>({
 			query: (id) => ({
-				url: `/workspaces/${id}/statistic`
+				url: `/workspaces/${id}/statistic`,
+				method: 'GET',
 			}),
 		}),
+		leaveWorkspace: builder.mutation<IWorkspaceStat, string>({
+			query: (id) => ({
+				url: `/workspaces/${id}/leave`,
+				method: 'POST'
+			}),
+		}),
+
 	}),
 	overrideExisting: false
 })
@@ -124,5 +137,6 @@ export const {
 	useDeleteMemberMutation,
 	useGetActivityQuery,
 	useGetStatisticQuery,
-	useLazyGetWorkspaceMembersQuery
+	useLazyGetWorkspaceMembersQuery,
+	useLeaveWorkspaceMutation
 } = workspaceApi

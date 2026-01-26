@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ValuePicker } from "@/shared/ui/ValuePicker";
 import { formatDate } from "@/shared/utils/formate-date";
 import { Calendar } from "@/shared/ui/shadcn/calendar";
+import { useTranslation } from "react-i18next";
 
 interface ITaskDueDateProps {
    dueDate: string | undefined,
@@ -11,6 +12,7 @@ interface ITaskDueDateProps {
 }
 
 export const TaskDueDate = ({ dueDate, setDueDate }: ITaskDueDateProps) => {
+   const { t } = useTranslation()
    // TODO: сделай плавный апдейт даты
    const [open, setOpen] = useState(false)
 
@@ -24,7 +26,7 @@ export const TaskDueDate = ({ dueDate, setDueDate }: ITaskDueDateProps) => {
          <div>
             <div className="flex mb-1 gap-1 items-center text-base text-[#ada9a3] font-medium">
                <CalendarIcon width={18} />
-               <span>Дедлайн</span>
+               <span>{t("task.dueDate")}</span>
             </div>
             <DropdownMenu open={open} onOpenChange={setOpen}>
                <DropdownMenuTrigger asChild>

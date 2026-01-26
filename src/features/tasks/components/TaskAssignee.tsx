@@ -20,6 +20,7 @@ import { cn } from "@/shared/utils/cn";
 import { useLazyGetWorkspaceMembersQuery } from "@/features/workspace/api/workspaceApi";
 import { Spinner } from "@/shared/ui/shadcn/spinner";
 import { useParams } from "react-router";
+import { useTranslation } from "react-i18next";
 
 interface ITaskAssigneeProps {
    taskAssignee?: Pick<IUser, 'id' | 'username' | 'avatar'> | null;
@@ -27,6 +28,7 @@ interface ITaskAssigneeProps {
 }
 
 export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssigneeProps) => {
+   const { t } = useTranslation()
    const { workspaceId } = useParams()
 
    const [open, setOpen] = useState(false);
@@ -45,7 +47,7 @@ export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssign
          <div>
             <div className="flex mb-1 gap-1 items-center text-base text-[#ada9a3] font-medium">
                <Users width={18} />
-               <span>Исполнитель</span>
+               <span>{t("task.assignee")}</span>
             </div>
             <Popover open={open} onOpenChange={(nextOpen) => {
                setOpen(nextOpen)
@@ -72,9 +74,9 @@ export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssign
                </PopoverTrigger>
                <PopoverContent>
                   <Command>
-                     <CommandInput placeholder="Поиск участников..." className="h-9" />
+                     <CommandInput placeholder={t("workspace.membersSearchPlaceholder")} className="h-9" />
                      <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandEmpty>{t("common.noResults")}</CommandEmpty>
                         <CommandGroup>
                            {
                               isLoading ? (
@@ -89,7 +91,7 @@ export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssign
                                           }}
                                           className="text-red-500"
                                        >
-                                          Убрать исполнителя
+                                          {t("task.assigneeRemove")}
                                        </CommandItem>
                                        {
                                           members?.map(member => (
@@ -122,7 +124,7 @@ export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssign
                                        }
                                     </>
                                  ) : (
-                                    <div>Ошибка загрузки участников</div>
+                                    <div>{t("task.assigneeLoadError")}</div>
                                  )
                               )
                            }

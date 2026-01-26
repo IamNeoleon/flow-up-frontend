@@ -18,6 +18,7 @@ import { Ellipsis, Users, Plus } from "lucide-react";
 import { BoardMembers } from "./BoardMembers";
 import type { IWorkspace } from "@/features/workspace/types/workspace";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 
 interface IBoardHeaderProps {
    workspaceId: string;
@@ -28,6 +29,7 @@ interface IBoardHeaderProps {
 }
 
 export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription, currentWorkspace }: IBoardHeaderProps) => {
+   const { t } = useTranslation()
    const [editBoard] = useEditBoardMutation();
    const [title, setTitle] = useState(boardTitle);
    const [description, setDescription] = useState(boardDescription);
@@ -45,7 +47,7 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
             await editBoard({ workspaceId, boardId, name: title, description: value }).unwrap();
          }
       } catch (err) {
-         toast.error("Ошибка при сохранении изменений");
+         toast.error(t("board.saveError"));
          if (field === "title") setTitle(boardTitle);
          if (field === "description") setDescription(boardDescription);
       }
@@ -53,16 +55,16 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
 
    const handleCreateCol = () => {
       open({
-         title: 'Создать колонку',
-         description: 'Создание колонки',
+         title: t("column.create"),
+         description: t("column.createDescription"),
          content: <CreateColumn boardId={boardId} close={close} />,
       })
    }
 
    const handleOpenMembers = () => {
       open({
-         title: 'Участники доски',
-         description: 'Здесь отображаются участники всего воркспейса. По умолчанию все участники (кроме владельца воркспейса и доски) имеют роль участников (read-only права).',
+         title: t("board.membersTitle"),
+         description: t("board.membersDescription"),
          content: <BoardMembers workspaceId={workspaceId} boardId={boardId} close={close} />,
       })
    }
@@ -96,7 +98,7 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
                   <Button onClick={handleOpenMembers} variant='outline'>
                      <Users />
                      <span>
-                        Участники
+                        {t("board.membersButton")}
                      </span>
                   </Button>
                   <Button variant='outline' >
@@ -107,7 +109,7 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
                   permissions?.canCreateColumn && (
                      <Button onClick={handleCreateCol} className="flex items-center gap-1">
                         <Plus />
-                        <span> Создать колонку</span>
+                        <span> {t("column.create")}</span>
                      </Button>
                   )
                }

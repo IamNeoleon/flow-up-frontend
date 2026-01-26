@@ -10,8 +10,10 @@ import { WorkspaceRecent } from '@/features/workspace/components/WorkspaceRecent
 import { WorkspaceMembers } from '@/features/workspace/components/WorkspaceMembers';
 import { io, type Socket } from 'socket.io-client';
 import { getTokenFromLs } from '@/shared/lib/localStorage';
+import { useTranslation } from 'react-i18next';
 
 const WorkspacePage: FC = () => {
+	const { t } = useTranslation()
 	const token = getTokenFromLs()
 	const { workspaceId } = useParams()
 	const { data: workspace } = useGetWorkspaceQuery(workspaceId ?? skipToken)
@@ -53,13 +55,13 @@ const WorkspacePage: FC = () => {
 
 	if (!workspaceId) {
 		return (
-			<div>Не найден воркспейс с таким id</div>
+			<div>{t("errors.workspaceNotFound")}</div>
 		)
 	}
 
 	if (!workspace) {
 		return (
-			<div>Не найден воркспейс с таким id</div>
+			<div>{t("errors.workspaceNotFound")}</div>
 		)
 	}
 
@@ -68,7 +70,7 @@ const WorkspacePage: FC = () => {
 			<WorkspaceHeader workspace={workspace} permissions={permissions} />
 			<WorkspaceStats workspaceId={workspaceId} />
 			<div className='pb-10 border-b'>
-				<h2 className='text-2xl font-medium mb-5'>Доски</h2>
+				<h2 className='text-2xl font-medium mb-5'>{t("board.listTitle")}</h2>
 				<BoardList boards={workspace.boards} workspaceId={workspace.id} />
 			</div>
 			<div className='pt-5 flex gap-10'>

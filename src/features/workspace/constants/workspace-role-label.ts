@@ -1,7 +1,7 @@
 import type { TWorkspaceRole } from "../types/workspace-role";
 
 export const WORKSPACE_ROLE_LABEL: Record<TWorkspaceRole, string> = {
-   OWNER: 'Владелец',
-   EDITOR: 'Редактор',
-   MEMBER: 'Наблюдатель',
+   OWNER: "workspaceRole.owner",
+   EDITOR: "workspaceRole.editor",
+   MEMBER: "workspaceRole.member",
 } as const

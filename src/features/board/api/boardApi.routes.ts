@@ -10,4 +10,7 @@ export const boardRoutes = {
 
    members: (workspaceId: string, boardId: string) =>
       `/workspaces/${workspaceId}/boards/${boardId}/members`,
+
+   changeRole: (workspaceId: string, boardId: string) =>
+      `/workspaces/${workspaceId}/boards/${boardId}/members/change-role`
 } as const

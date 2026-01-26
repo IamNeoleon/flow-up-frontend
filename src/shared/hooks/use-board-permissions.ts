@@ -11,13 +11,19 @@ export const useBoardPermissions = (
    const { data: boardRole } = useGetMyBoardRoleQuery({ workspaceId, boardId })
    const workspaceRole = useWorkspaceRole(workspaceId, userId)
 
+   console.log(boardRole);
+
+
    let effectiveRole: TBoardRole = 'VIEWER'
 
    if (workspaceRole === 'OWNER') {
       effectiveRole = 'OWNER'
    } else if (boardRole) {
-      effectiveRole = boardRole
+      effectiveRole = boardRole.role
    }
+
+   console.log(effectiveRole);
+
 
    return {
       role: effectiveRole,

@@ -36,10 +36,20 @@ export const boardApi = baseApi.injectEndpoints({
 			}),
 			invalidatesTags: (_, __, { workspaceId }) => [{ type: 'Workspace', id: workspaceId }]
 		}),
-		getMyBoardRole: builder.query<TBoardRole, IBoardParams>({
+		getMyBoardRole: builder.query<{ role: TBoardRole }, IBoardParams>({
 			query: ({ workspaceId, boardId }) => ({
 				url: boardRoutes.role(workspaceId, boardId),
 				method: "GET"
+			}),
+		}),
+		changeBoardRole: builder.mutation<boolean, { workspaceId: string, boardId: string, targetUserId: string, targetRole: TBoardRole }>({
+			query: ({ workspaceId, boardId, targetRole, targetUserId }) => ({
+				url: boardRoutes.changeRole(workspaceId, boardId),
+				method: "POST",
+				body: {
+					targetRole,
+					targetUserId
+				}
 			}),
 		}),
 		getBoardMembers: builder.query<IBoardMember[], IBoardParams>({
@@ -57,5 +67,6 @@ export const {
 	useCreateBoardMutation,
 	useEditBoardMutation,
 	useGetMyBoardRoleQuery,
-	useGetBoardMembersQuery
+	useGetBoardMembersQuery,
+	useChangeBoardRoleMutation
 } = boardApi

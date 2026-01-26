@@ -19,7 +19,7 @@ export const WorkspaceActivityItem = ({ username, userAvatar, activityLabel, ent
                </Avatar>
                <div className="text-base flex gap-1 items-center">
                   <span className="font-semibold">{username}</span>
-                  <span>{activityLabel.toLowerCase()}</span>
+                  <span>{activityLabel}</span>
                   <span className="font-semibold">{entityName}</span>
                </div>
             </div>

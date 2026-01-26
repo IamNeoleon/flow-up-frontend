@@ -4,8 +4,10 @@ import { Button } from '@/shared/ui/shadcn/button';
 import { useCreateBoardMutation } from '@/features/board/api/boardApi';
 import { Spinner } from '@/shared/ui/shadcn/spinner';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 export const CreateBoard: FC<{ close: () => void, workspaceId: string }> = ({ close, workspaceId }) => {
+	const { t } = useTranslation()
 	const [create, { isLoading }] = useCreateBoardMutation()
 	const [boardData, setBoardData] = useState<{ name: string, description: string }>({
 		name: '',
@@ -26,19 +28,19 @@ export const CreateBoard: FC<{ close: () => void, workspaceId: string }> = ({ cl
 
 		try {
 			await create({ workspaceId, ...boardData }).unwrap()
-			toast.success('Успешное создание')
+			toast.success(t("board.createSuccess"))
 			close()
 		} catch {
-			toast.error('Ошибка при создании')
+			toast.error(t("board.createError"))
 		}
 	}
 
 	return (
 		<>
 			<form onSubmit={handleSubmit} className='flex flex-col gap-2'>
-				<Input name='name' onChange={handleChange} required value={boardData?.name} placeholder='Введите название доски' />
-				<Input name='description' onChange={handleChange} required value={boardData?.description} placeholder='Добавьте описание' />
-				<Button className='w-full' type='submit'>{isLoading ? <Spinner /> : 'Создать'}</Button>
+				<Input name='name' onChange={handleChange} required value={boardData?.name} placeholder={t("board.namePlaceholder")} />
+				<Input name='description' onChange={handleChange} required value={boardData?.description} placeholder={t("board.descriptionPlaceholder")} />
+				<Button className='w-full' type='submit'>{isLoading ? <Spinner /> : t("common.create")}</Button>
 			</form>
 		</>
 	);

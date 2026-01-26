@@ -8,4 +8,16 @@ declare module "i18next" {
          translation: typeof ru;
       };
    }
+
+   interface TFunction {
+      // строгие ключи (с подсказками)
+      <K extends keyof typeof ru>(
+         key: K,
+         options?: TOptions
+      ): string;
+
+      // 🔥 разрешаем любые строки
+      (key: string, options?: TOptions): string;
+   }
 }
+

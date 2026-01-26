@@ -7,6 +7,7 @@ import type { ITaskPriority } from "../types/task-priority";
 import { useGetPrioritiesQuery } from "@/features/tasks/api/taskApi";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectCurrentBoardId } from "@/store/slices/boardSlice";
+import { useTranslation } from "react-i18next";
 
 
 interface ITaskPriorityProps {
@@ -16,6 +17,7 @@ interface ITaskPriorityProps {
 }
 
 export const TaskPriority = ({ taskPriorityId, onChange, colId }: ITaskPriorityProps) => {
+   const { t } = useTranslation()
    const boardId = useAppSelector(selectCurrentBoardId)
    const { data: priorities } = useGetPrioritiesQuery({ boardId, colId });
    const [priority, setPriority] = useState<ITaskPriority | null>(null)
@@ -36,7 +38,7 @@ export const TaskPriority = ({ taskPriorityId, onChange, colId }: ITaskPriorityP
          <div>
             <div className="flex mb-1 gap-1 items-center text-base text-[#ada9a3] font-medium">
                <Goal width={18} />
-               <span>Приоритет</span>
+               <span>{t("task.priority")}</span>
             </div>
             <DropdownMenu open={open} onOpenChange={setOpen}>
                <DropdownMenuTrigger asChild>

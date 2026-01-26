@@ -8,12 +8,14 @@ import { useChangeOrderMutation, useGetAllColumnsQuery } from "../api/columnApi"
 import { ColumnSkeleton } from "./ColumnSkeleton";
 import { getErrorMessage } from "@/shared/utils/get-error-message";
 import { Column } from "./Column";
+import { useTranslation } from "react-i18next";
 
 interface IColumnListProps {
    boardId: string
 }
 
 export const ColumnList = ({ boardId }: IColumnListProps) => {
+   const { t } = useTranslation()
    const { data: columns, isLoading, isError, error } = useGetAllColumnsQuery(boardId)
    const [moveTask] = useMoveTaskMutation()
    const [changeOrderCol] = useChangeOrderMutation()
@@ -44,7 +46,7 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
                boardId: overCol.boardId
             }).unwrap()
          } catch (error) {
-            toast.error('Не удалось передвинуть задачу')
+            toast.error(t("column.moveTaskError"))
          }
          return;
       }
@@ -59,7 +61,7 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
                overId: over.id as string
             }).unwrap()
          } catch (error) {
-            toast.error('Не удалось передвинуть колонку')
+            toast.error(t("column.moveColumnError"))
          }
       }
    }
@@ -85,7 +87,7 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
                      </DndContext>
                   ) : (
                      <div className="text-center py-24 text-red-600 text-lg font-semibold">
-                        Произошла ошибке при загрузке колонок: {getErrorMessage(error)}
+                        {t("column.loadError", { error: getErrorMessage(error) })}
                      </div>
                   )
                )

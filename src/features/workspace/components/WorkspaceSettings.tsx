@@ -10,6 +10,7 @@ import { WORKSPACE_ICON_MAP } from "../constants/workspace-icon-map";
 
 import { useUpdateWorkspaceMutation } from "@/features/workspace/api/workspaceApi";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
    workspaceId: string;
@@ -20,6 +21,7 @@ interface IProps {
 }
 
 export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived, icon, close }: IProps) => {
+   const { t } = useTranslation();
    const [updateWorkspace] = useUpdateWorkspaceMutation();
    const [editTitle, setEditTitle] = useState(false);
    const [title, setTitle] = useState(workspaceName);
@@ -52,19 +54,19 @@ export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived,
             isArchived: payload.archived
          }).unwrap();
       } catch (error) {
-         toast.error("Ошибка при обновлении воркспейса");
+         toast.error(t("workspace.updateError"));
          close();
          return;
       }
 
-      toast.success("Воркспейс успешно обновлен");
+      toast.success(t("workspace.updateSuccess"));
       close()
    };
 
    return (
       <div className="flex flex-col gap-6">
          <div>
-            <Label className="mb-1 text-base">Название</Label>
+            <Label className="mb-1 text-base">{t("workspace.nameLabel")}</Label>
             <div className="relative">
                <Input
                   value={title}
@@ -89,11 +91,11 @@ export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived,
                   checked={archived}
                   onCheckedChange={(v) => setArchived(Boolean(v))}
                />
-               <Label className="text-base">Архивировать воркспейс</Label>
+               <Label className="text-base">{t("workspace.archiveLabel")}</Label>
             </div>
          </div>
          <div>
-            <Label className="mb-2 block">Иконка</Label>
+            <Label className="mb-2 block">{t("workspace.iconLabel")}</Label>
             <div className="grid grid-cols-5 gap-3">
                {Object.entries(WORKSPACE_ICON_MAP).map(([id, Icon]) => (
                   <button
@@ -114,10 +116,10 @@ export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived,
          <div className="flex justify-end">
             <div>
                <Button variant="outline" className="mr-3" onClick={() => close()}>
-                  Отмена
+                  {t("common.cancel")}
                </Button>
                <Button disabled={!isDirty} onClick={handleSave} className="self-start">
-                  Сохранить
+                  {t("common.save")}
                </Button>
             </div>
          </div>

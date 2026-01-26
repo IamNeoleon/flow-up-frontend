@@ -1,23 +1,29 @@
 import { Building2, ChevronDown, Plus } from "lucide-react"
-import { Link } from "react-router"
-import { CollapsibleContent, CollapsibleTrigger, Collapsible } from "../../shared/ui/shadcn/collapsible"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem } from "../../shared/ui/shadcn/sidebar"
+import { CollapsibleContent, CollapsibleTrigger, Collapsible } from "./shadcn/collapsible"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem } from "./shadcn/sidebar"
+import { useState } from "react"
+import type { IWorkspace } from "@/features/workspace/types/workspace"
+import { WorkspaceItem } from "./WorkspaceItem"
+import { useParams } from "react-router"
 
-interface ISidebarItemListProps {
+interface IWorkspaceListProps {
 	title: string,
 	mainUrl: string,
-	items: { title: string, url: string }[],
+	items: IWorkspace[],
 	createElement?: {
 		createTitle: string,
 		createAction: () => void
 	}
 }
 
-export const SidebarItemList = ({ title, items, createElement, mainUrl }: ISidebarItemListProps) => {
+export const WorkspaceList = ({ title, items, createElement, mainUrl }: IWorkspaceListProps) => {
+	const { workspaceId } = useParams()
+
+	const [open, setOpen] = useState(true)
 
 	return (
 		<SidebarMenu>
-			<Collapsible>
+			<Collapsible open={open} onOpenChange={setOpen}>
 				<SidebarMenuItem>
 					<CollapsibleTrigger asChild>
 						<SidebarMenuButton asChild className="group">
@@ -35,13 +41,12 @@ export const SidebarItemList = ({ title, items, createElement, mainUrl }: ISideb
 					<CollapsibleContent>
 						<SidebarMenuSub>
 							{items.map(item => (
-								<SidebarMenuSubItem key={item.url}>
-									<SidebarMenuButton asChild>
-										<Link className="font-medium" to={`${mainUrl}/${item.url}`}>
-											{item.title}
-										</Link>
-									</SidebarMenuButton >
-								</SidebarMenuSubItem>
+								<WorkspaceItem
+									key={item.id}
+									item={item}
+									mainUrl={mainUrl}
+									isActive={item.id === workspaceId}
+								/>
 							))}
 							{
 								createElement && (

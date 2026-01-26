@@ -23,6 +23,7 @@ import { Upload } from "lucide-react";
 import { MAX_SIZE, ALLOWED_MIME, ALLOWED_EXT } from "@/shared/files/file-types";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectPermissions } from "@/store/slices/boardSlice";
+import { useTranslation } from "react-i18next";
 
 type UploadState = "idle" | "selected" | "uploading" | "error" | "success";
 
@@ -39,6 +40,7 @@ export const TaskAttachments = ({
    taskId,
    attachments,
 }: ITaskAttachmentsProps) => {
+   const { t } = useTranslation()
    const permissions = useAppSelector(selectPermissions)
 
    const [getPresigned] = useGetTaskAttachmentPresignedUrlMutation();
@@ -62,7 +64,7 @@ export const TaskAttachments = ({
 
    const pickFile = (f: File, inputEl?: HTMLInputElement | null) => {
       if (f.size > MAX_SIZE) {
-         setErrorText("Файл больше 25 МБ");
+         setErrorText(t("task.attachments.fileTooLarge"));
          if (inputEl) inputEl.value = "";
          return;
       }
@@ -73,7 +75,7 @@ export const TaskAttachments = ({
       const isExtOk = !!ext && ALLOWED_EXT.has(ext);
 
       if (!isMimeOk && !isExtOk) {
-         setErrorText("Недопустимый тип файла");
+         setErrorText(t("task.attachments.invalidType"));
          if (inputEl) inputEl.value = "";
          return;
       }
@@ -203,12 +205,12 @@ export const TaskAttachments = ({
          setFile(null);
          setOpen(false);
 
-         toast.success("Вложение успешно загружено");
+         toast.success(t("task.attachments.uploadSuccess"));
       } catch (err: any) {
          setState("error");
-         setErrorText(err?.message ?? "Ошибка загрузки");
+         setErrorText(err?.message ?? t("task.attachments.uploadError"));
          xhrRef.current = null;
-         toast.error("Не удалось загрузить вложение");
+         toast.error(t("task.attachments.uploadFailed"));
       }
    }
 
@@ -258,7 +260,7 @@ export const TaskAttachments = ({
                   colId={colId}
                />
             )) : (
-               <div className="text-muted-foreground italic">Вложений нет</div>
+               <div className="text-muted-foreground italic">{t("task.attachments.empty")}</div>
             )}
          </div>
          <Dialog open={open} onOpenChange={onDialogOpenChange}>
@@ -270,7 +272,7 @@ export const TaskAttachments = ({
                         className="group gap-2 transition-all"
                      >
                         <Upload className="h-4 w-4 transition-transform group-hover:-translate-y-0.5" />
-                        Загрузить вложение
+                        {t("task.attachments.uploadButton")}
                      </Button>
                   </DialogTrigger>
                )
@@ -278,11 +280,11 @@ export const TaskAttachments = ({
 
             <DialogContent>
                <DialogHeader>
-                  <DialogTitle>Загрузка вложения</DialogTitle>
+                  <DialogTitle>{t("task.attachments.uploadTitle")}</DialogTitle>
                   <DialogDescription>
-                     Выберите файл для загрузки в качестве вложения к задаче.
-                     Максимальный размер файла: 25 МБ. <br />
-                     Допустимые типы файлов: .pdf, .word, .excel, .ppt, .jpg, .png, .webp, .zip, .txt
+                     {t("task.attachments.uploadDescriptionLine1")} <br />
+                     {t("task.attachments.uploadDescriptionLine2")} <br />
+                     {t("task.attachments.uploadDescriptionLine3")}
                   </DialogDescription>
                </DialogHeader>
 
@@ -312,13 +314,13 @@ export const TaskAttachments = ({
                      ].join(" ")}
                   >
                      <div className="flex flex-col gap-1 font-medium text-center">
-                        Перетащите файл сюда или нажмите, чтобы выбрать
+                        {t("task.attachments.dropzoneHint")}
                      </div>
                   </div>
 
                   {file && (
                      <p className="text-sm text-muted-foreground">
-                        Выбран файл: <span className="font-medium">{file.name}</span>
+                        {t("task.attachments.selectedFile")}: <span className="font-medium">{file.name}</span>
                      </p>
                   )}
 
@@ -340,7 +342,7 @@ export const TaskAttachments = ({
                      onClick={handleUpload}
                      disabled={!canUpload || isBusy}
                   >
-                     {isBusy ? "Загрузка..." : "Загрузить вложение"}
+                     {isBusy ? t("common.loading") : t("task.attachments.uploadAction")}
                   </Button>
 
                   {state === "uploading" && (
@@ -349,7 +351,7 @@ export const TaskAttachments = ({
                         variant="secondary"
                         onClick={cancelUpload}
                      >
-                        Отменить
+                        {t("common.cancel")}
                      </Button>
                   )}
 
@@ -360,7 +362,7 @@ export const TaskAttachments = ({
                         onClick={resetLocal}
                         disabled={isBusy}
                      >
-                        Сбросить
+                        {t("common.reset")}
                      </Button>
                   )}
                </DialogFooter>
