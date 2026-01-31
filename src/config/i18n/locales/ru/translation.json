@@ -16,11 +16,12 @@
       "settingsDescription": "Здесь вы можете отредактировать настройки приложения.",
       "yesterday": "Вчера",
       "notSet": "Не задано",
-      "updatedDaysAgo": "Обновлен {{count}} дня назад",
+      "updated": "Посл. изменение",
       "reset": "Сбросить",
       "noResults": "Ничего не найдено",
       "empty": "Пусто",
-      "you": "Вы"
+      "you": "Вы",
+      "edited": "Ред."
    },
    "language": {
       "language": "Язык"
@@ -287,5 +288,9 @@
       "toColumn": "в колонку",
       "taskDeleted": "удалил задачу",
       "boardCreated": "создал доску"
+   },
+   "comments": {
+      "title": "Комментарии",
+      "addComment": "Добавить комментарий"
    }
 }

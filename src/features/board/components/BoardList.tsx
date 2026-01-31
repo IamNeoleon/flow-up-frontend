@@ -19,7 +19,7 @@ export const BoardList: FC<IBoardListProps> = ({ boards, workspaceId }) => {
 					boards.length > 0 ? (
 						boards.map(board => (
 							<Link key={board.id} to={`/workspaces/${workspaceId}/boards/${board.id}`}>
-								<BoardCard id={board.id} title={board.name} />
+								<BoardCard id={board.id} title={board.name} updatedAt={board.updatedAt} />
 							</Link>
 						))
 					) : (

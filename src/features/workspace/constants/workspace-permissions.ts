@@ -15,7 +15,7 @@ export const WORKSPACE_ROLE_PERMISSIONS: Record<TWorkspaceRole, IWorkspacePermis
       canCreateBoard: true,
       canDeleteBoard: false,
       canInviteMember: true,
-      canDeleteMember: true,
+      canDeleteMember: false,
       canChangeRole: false,
       canEditWorkspace: true,
       canDeleteWorkspace: false

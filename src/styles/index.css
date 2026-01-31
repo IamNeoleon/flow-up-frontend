@@ -109,6 +109,15 @@ body {
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 

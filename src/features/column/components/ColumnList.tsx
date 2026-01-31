@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import clsx from "clsx";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { DndContext, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
 import { useMoveTaskMutation } from "@/features/tasks/api/taskApi";
 import { TaskList } from "@/features/tasks/components/TaskList";
 import { useChangeOrderMutation, useGetAllColumnsQuery } from "../api/columnApi";
@@ -9,6 +9,7 @@ import { ColumnSkeleton } from "./ColumnSkeleton";
 import { getErrorMessage } from "@/shared/utils/get-error-message";
 import { Column } from "./Column";
 import { useTranslation } from "react-i18next";
+import type { ITaskPreview } from "@/features/tasks/types/task-preview";
 
 interface IColumnListProps {
    boardId: string
@@ -17,12 +18,27 @@ interface IColumnListProps {
 export const ColumnList = ({ boardId }: IColumnListProps) => {
    const { t } = useTranslation()
    const { data: columns, isLoading, isError, error } = useGetAllColumnsQuery(boardId)
+
    const [moveTask] = useMoveTaskMutation()
    const [changeOrderCol] = useChangeOrderMutation()
+
    const sortedColumns = useMemo(() => {
       if (!columns) return [];
       return [...columns].sort((a, b) => a.order - b.order);
    }, [columns]);
+
+   const [activeTask, setActiveTask] = useState<(ITaskPreview & { color: string }) | null>(null)
+
+   const handleDragStart = (e: DragStartEvent) => {
+      const { active } = e;
+
+      const task = active.data.current?.task
+      const color = active.data.current?.color
+
+      if (task && color) {
+         setActiveTask({ ...task, color: color })
+      }
+   }
 
    const handleDragEnd = async (e: DragEndEvent) => {
       const { active, over } = e;
@@ -76,7 +92,7 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
                   ))
                ) : (
                   !isError ? (
-                     <DndContext onDragEnd={handleDragEnd}>
+                     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                         {
                            sortedColumns?.map((column) => (
                               <Column key={column.id} column={column}>

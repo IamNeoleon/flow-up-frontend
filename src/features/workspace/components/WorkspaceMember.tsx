@@ -19,6 +19,8 @@ import type { IWorkspaceMember } from "../types/workspace-member";
 import type { IWorkspacePermission } from "../types/workspace-permission";
 import { useTranslation } from "react-i18next";
 import { UserInfo } from "@/shared/ui/UserInfo";
+import { useAppSelector } from "@/shared/hooks/redux";
+import { selectUser } from "@/store/slices/userSlice";
 
 interface IWorkspaceMemberProps {
    member: IWorkspaceMember

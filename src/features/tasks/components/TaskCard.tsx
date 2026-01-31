@@ -23,7 +23,9 @@ export const TaskCard = ({ task, color }: ITaskCardProps) => {
       id: task.id,
       data: {
          type: 'task',
-         id: task.id
+         id: task.id,
+         color: color,
+         task: task
       }
    });
    const style = {
@@ -31,14 +33,18 @@ export const TaskCard = ({ task, color }: ITaskCardProps) => {
    }
 
    return (
-      <Sheet open={openSheet} onOpenChange={setOpenSheet}>
+      <Sheet open={openSheet} onOpenChange={setOpenSheet} >
          <SheetTrigger asChild>
             <div
                ref={setNodeRef}
-               style={style}
+               style={{
+                  ...style,
+                  position: "relative",
+                  zIndex: isDragging ? 9999 : 30,
+               }}
                className={clsx(
                   "p-3 mb-2 relative z-30 rounded-md cursor-pointer group",
-                  isDragging && "opacity-70"
+                  isDragging && "opacity-70 z-1000"
                )}
             >
                <div style={{ backgroundColor: color }} className="absolute inset-0 rounded-lg brightness-50" />
@@ -55,7 +61,7 @@ export const TaskCard = ({ task, color }: ITaskCardProps) => {
                }
             </div>
          </SheetTrigger>
-         <SheetContent style={{ width: "50%", maxWidth: '100%' }}>
+         <SheetContent className="overflow-y-auto" style={{ width: "50%", maxWidth: '100%' }}>
             <SheetTitle>
                <VisuallyHidden>{t("task.editTitle")}</VisuallyHidden>
             </SheetTitle>

@@ -8,6 +8,7 @@ import { Button } from "@/shared/ui/shadcn/button";
 import { useChangeMemberRoleMutation } from "@/features/workspace/api/workspaceApi";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { getUserInitials } from "@/shared/utils/get-user-initials";
 
 interface IChangeRoleMemberProps {
    member: IWorkspaceMember,
@@ -41,9 +42,9 @@ export const ChangeRoleMember = ({ member, workspaceId, close }: IChangeRoleMemb
          <div>
             <Label className="mb-1 text-sm">{t("workspace.memberLabel")}</Label>
             <div className="flex items-center gap-3">
-               <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
+               <Avatar className="w-10 h-10">
+                  <AvatarImage src={member.user.avatar} />
+                  <AvatarFallback>{getUserInitials(member.user.username)}</AvatarFallback>
                </Avatar>
                <div>
                   <div className="font-medium">{member.user.username}</div>
@@ -59,6 +60,7 @@ export const ChangeRoleMember = ({ member, workspaceId, close }: IChangeRoleMemb
                <SelectContent className='text-lg'>
                   <SelectItem value="MEMBER">{t("workspaceRole.member")}</SelectItem>
                   <SelectItem value="EDITOR">{t("workspaceRole.editor")}</SelectItem>
+                  <SelectItem value="OWNER">{t("workspaceRole.owner")}</SelectItem>
                </SelectContent>
             </Select>
          </div>

@@ -16,11 +16,12 @@
       "settingsDescription": "Here you can edit the application settings.",
       "yesterday": "Yesterday",
       "notSet": "Not set",
-      "updatedDaysAgo": "Updated {{count}} days ago",
+      "updated": "Last modified",
       "reset": "Reset",
       "noResults": "No results found",
       "empty": "Empty",
-      "you": "You"
+      "you": "You",
+      "edited": "Edited"
    },
    "language": {
       "language": "Language"
@@ -285,5 +286,9 @@
       "toColumn": "to column",
       "taskDeleted": "deleted a task",
       "boardCreated": "created a board"
+   },
+   "comments": {
+      "title": "Комментарии",
+      "addComment": "Add a comment"
    }
 }

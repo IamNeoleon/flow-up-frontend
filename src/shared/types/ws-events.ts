@@ -21,6 +21,12 @@ export interface IBoardEvents {
    JOIN_BOARD_ROOM: {
       boardId: string
    }
+   TASK_COMMENTED: {
+      boardId: string
+      colId: string
+      actorId: string,
+      taskId: string
+   }
 }
 
 export type BoardEventKey = keyof IBoardEvents

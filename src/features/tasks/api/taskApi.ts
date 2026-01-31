@@ -10,6 +10,7 @@ import type { IUser } from "@/features/user/types/user";
 
 import { columnApi } from "@/features/column/api/columnApi";
 import { moveTask } from "@/features/tasks/lib/move-task";
+import type { ITaskComment } from "../types/task-comment";
 
 export const taskApi = baseApi.injectEndpoints({
    endpoints: (builder) => ({
@@ -173,6 +174,48 @@ export const taskApi = baseApi.injectEndpoints({
          }),
          invalidatesTags: (_, __, { taskId }) => [{ type: "Task", id: taskId }],
       }),
+      getComments: builder.query<ITaskComment[], { boardId: string, colId: string, taskId: string }>({
+         query: ({ boardId, colId, taskId }) => ({
+            url: `/boards/${boardId}/columns/${colId}/tasks/${taskId}/comments`,
+            method: "GET",
+         }),
+         providesTags: (_, __, { taskId }) => [
+            { type: "TaskComments", id: taskId },
+         ],
+      }),
+      addComment: builder.mutation<ITaskComment, { boardId: string; colId: string; taskId: string, content: string }>({
+         query: ({ boardId, colId, taskId, content }) => ({
+            url: `/boards/${boardId}/columns/${colId}/tasks/${taskId}/comments`,
+            method: "POST",
+            body: {
+               content
+            }
+         }),
+         invalidatesTags: (_, __, { taskId }) => [
+            { type: "TaskComments", id: taskId },
+         ],
+      }),
+      editComment: builder.mutation<ITaskComment, { boardId: string; colId: string; taskId: string, comId: string, content: string }>({
+         query: ({ boardId, colId, taskId, comId, content }) => ({
+            url: `/boards/${boardId}/columns/${colId}/tasks/${taskId}/comments/${comId}`,
+            method: "PATCH",
+            body: {
+               content
+            }
+         }),
+         invalidatesTags: (_, __, { taskId }) => [
+            { type: "TaskComments", id: taskId },
+         ],
+      }),
+      deleteComment: builder.mutation<ITaskComment, { boardId: string; colId: string; taskId: string, comId: string }>({
+         query: ({ boardId, colId, taskId, comId }) => ({
+            url: `/boards/${boardId}/columns/${colId}/tasks/${taskId}/comments/${comId}`,
+            method: "DELETE",
+         }),
+         invalidatesTags: (_, __, { taskId }) => [
+            { type: "TaskComments", id: taskId },
+         ],
+      }),
    }),
    overrideExisting: false
 })
@@ -191,4 +234,8 @@ export const {
    useCompleteTaskAttachmentMutation,
    useLazyGetDownloadPresignedUrlQuery,
    useDeleteTaskAttachmentMutation,
+   useGetCommentsQuery,
+   useAddCommentMutation,
+   useEditCommentMutation,
+   useDeleteCommentMutation
 } = taskApi;

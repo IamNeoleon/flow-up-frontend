@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/features/workspace/api/workspaceApi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/shadcn/dialog"
@@ -20,6 +20,8 @@ const WorkspaceInvitePage: FC = () => {
 	const { data, isLoading: isLoadingInvite, isError: isErrorInvite } = useCheckInviteQuery(token)
 	const [join] = useJoinWorkspaceMutation()
 
+	const navigate = useNavigate()
+
 	const handleJoinWorkspace = () => {
 		toast.promise(
 			join(token).unwrap(),
@@ -27,9 +29,12 @@ const WorkspaceInvitePage: FC = () => {
 				loading: t("workspace.inviteLoading"),
 				success: (result) => {
 					setOpen(false)
+					navigate(`/workspaces/${data?.workspaceId}`)
+
 					if (typeof result === 'object' && 'message' in result) {
 						return result.message
 					}
+
 					return t("workspace.inviteSuccess")
 				},
 				error: t("workspace.inviteError"),
@@ -50,8 +55,8 @@ const WorkspaceInvitePage: FC = () => {
 					<div>
 						{data && (
 							<>
-								<div>{t("workspace.inviteWorkspaceLabel")}: </div>
-								<div>{t("workspace.inviteRoleLabel")}: {getWorkspaceRole(data.role)}</div>
+								<div>{t("workspace.inviteWorkspaceLabel")}: <span className='font-medium'>{data.workspaceName}</span></div>
+								<div>{t("workspace.inviteRoleLabel")}: <span className='font-medium'>{getWorkspaceRole(data.role)}</span></div>
 							</>
 						)}
 					</div>

@@ -16,7 +16,7 @@ export const Column = ({ column, children }: IColumnProps) => {
    const columnApiColor = column.color ? column.color : '#3c3c3c';
    const permissions = useAppSelector(selectPermissions)
 
-   const { setNodeRef: setDroppableRef } = useDroppable({
+   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
       id: column.id,
       data: {
          type: 'column',
@@ -45,8 +45,14 @@ export const Column = ({ column, children }: IColumnProps) => {
 
    return (
       <>
-         <div ref={setNodeRef} style={style}
-            className={clsx(`min-w-[300px] w-full p-5 relative shadow-2xl`, isDragging && 'opacity-90 z-20')}>
+         <div
+            ref={setNodeRef}
+            style={{ ...style, borderColor: !isOver ? 'transparent' : '#bb4d00' }}
+            className={clsx(`
+               min-w-[300px] w-full p-5 relative shadow-2xl border-2 borderam`,
+               isDragging && 'opacity-90 z-20',
+               isOver && 'border-2 rounded-lg'
+            )}>
             <div className={`absolute inset-0 rounded-lg brightness-[0.4] dark:brightness-[0.3]`} style={{ backgroundColor: columnApiColor }} />
             <div className="relative z-10">
                <div className="group flex items-center justify-between w-full border-b mb-2 pb-1" style={{ borderColor: columnApiColor }}>

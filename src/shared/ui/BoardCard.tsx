@@ -3,14 +3,16 @@ import { LayoutGrid } from 'lucide-react';
 import { Card, CardContent, CardTitle, } from "@/shared/ui/shadcn/card"
 import { cn } from '../utils/cn';
 import { useTranslation } from 'react-i18next';
+import { formatActivityTime } from '../lib/formate-activity-time';
 
 interface IBoardCardProps {
 	id: string,
 	title: string,
-	image?: string
+	image?: string,
+	updatedAt: string
 }
 
-export const BoardCard: FC<IBoardCardProps> = ({ title, image }) => {
+export const BoardCard: FC<IBoardCardProps> = ({ title, image, updatedAt }) => {
 	const { t } = useTranslation()
 
 	return (
@@ -45,8 +47,9 @@ export const BoardCard: FC<IBoardCardProps> = ({ title, image }) => {
 							{title}
 						</CardTitle>
 
-						<div className="mt-1 text-sm text-muted-foreground">
-							{t("common.updatedDaysAgo", { count: 2 })}
+						<div className="mt-1 text-sm text-muted-foreground flex flex-col">
+							<span>{t("common.updated")}:</span>
+							<span className='italic'>{formatActivityTime(updatedAt)}</span>
 						</div>
 					</div>
 				</CardContent>

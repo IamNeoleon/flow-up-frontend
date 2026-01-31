@@ -1,4 +1,4 @@
-import { useGetBoardQuery, useGetMyBoardRoleQuery } from '@/features/board/api/boardApi'
+import { useGetBoardQuery } from '@/features/board/api/boardApi'
 import { BoardHeader } from '@/features/board/components/BoardHeader'
 import { ColumnList } from '@/features/column/components/ColumnList'
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/redux'
@@ -18,19 +18,11 @@ const BoardPage: FC = () => {
 	const { boardId, workspaceId } = useParams()
 	const { currentWorkspace } = useCurrentWorkspace(workspaceId)
 
-	const { data: boardRole } = useGetMyBoardRoleQuery(boardId && workspaceId
-		? { boardId, workspaceId }
-		: skipToken
-	)
-
-	console.log(boardRole);
-
-
 	const dispatch = useAppDispatch()
 	const user = useAppSelector(selectUser)
 
 	const { ws } = useWsBoard(boardId)
-	const { onTaskCreated, onTaskDeleted, onTaskUpdated } = useWsBoardEvents(user?.id)
+	const { onTaskCreated, onTaskDeleted, onTaskUpdated, onTaskCommented } = useWsBoardEvents(user?.id)
 
 	const { data: board, isLoading, isError } = useGetBoardQuery(
 		boardId && workspaceId
@@ -51,8 +43,6 @@ const BoardPage: FC = () => {
 	}, [boardId])
 
 	useEffect(() => {
-		console.log(role)
-
 		dispatch(setPermissions(permissions))
 	}, [permissions, role])
 
@@ -62,11 +52,13 @@ const BoardPage: FC = () => {
 		ws.on("TASK_CREATED", onTaskCreated)
 		ws.on("TASK_UPDATED", onTaskUpdated)
 		ws.on("TASK_DELETED", onTaskDeleted)
+		ws.on("TASK_COMMENTED", onTaskCommented)
 
 		return () => {
 			ws.off("TASK_CREATED", onTaskCreated)
 			ws.off("TASK_UPDATED", onTaskUpdated)
 			ws.off("TASK_DELETED", onTaskDeleted)
+			ws.off("TASK_COMMENTED", onTaskCommented)
 		}
 	}, [ws, boardId, user?.id])
 

@@ -20,6 +20,8 @@ import { selectCurrentBoardId, selectPermissions } from "@/store/slices/boardSli
 import { TaskAttachments } from "./TaskAttachments";
 import { TaskAssignee } from "./TaskAssignee";
 import { useTranslation } from "react-i18next";
+import { TaskCommentsList } from "./TaskCommentsList";
+import { TaskCommentsAdd } from "./TaskCommentsAdd";
 
 interface ITaskDetailsProps {
    taskId: string;
@@ -109,7 +111,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
    }
 
    return (
-      <div className="py-14 px-16">
+      <div className="py-14 px-16 relative">
          <SheetHeader>
             <SheetTitle className="text-4xl mb-3">
                <ContentEditable
@@ -145,7 +147,14 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                />
             </div>
             <div className="mt-5">
-               <h2 className="text-2xl font-medium mb-2">{t("task.description")}</h2>
+               <h2 className="text-xl font-medium mb-2">{t("comments.title")}</h2>
+               <div>
+                  <TaskCommentsList boardId={boardId} colId={colId} taskId={taskId} />
+                  <TaskCommentsAdd boardId={boardId} colId={colId} taskId={taskId} />
+               </div>
+            </div>
+            <div className="mt-5">
+               <h2 className="text-xl font-medium mb-2">{t("task.description")}</h2>
                <ContentEditable
                   html={description || ""}
                   onChange={e => setDescription(e.target.value)}
@@ -165,7 +174,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                />
             </div>
             <div className="mt-5">
-               <h2 className="text-2xl font-medium mb-2">{t("task.subtasksTitle")}</h2>
+               <h2 className="text-xl font-medium mb-2">{t("task.subtasksTitle")}</h2>
                <div className="space-y-1">
                   {task.todos?.map(todo => (
                      <TaskSubtask
@@ -179,7 +188,7 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
                </div>
             </div>
             <div className="mt-5">
-               <h2 className="text-2xl font-medium mb-2">{t("task.attachmentsTitle")}</h2>
+               <h2 className="text-xl font-medium mb-2">{t("task.attachmentsTitle")}</h2>
                <div className="">
                   <TaskAttachments attachments={task.attachments} boardId={boardId} colId={colId} taskId={taskId} />
                </div>
@@ -187,8 +196,8 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
          </SheetHeader>
          {
             permissions?.canDeleteTask && (
-               <div onClick={() => setOpenAlert(true)} className="fixed bottom-20 right-20 z-10">
-                  <DeleteIcon size={48} className="hover:-translate-y-1 cursor-pointer transition-transform" />
+               <div onClick={() => setOpenAlert(true)} className="cursor-pointer absolute bottom-20 right-16 z-10 w-14 h-14 bg-red-700 rounded-full hover:bg-red-400 transition-colors">
+                  <DeleteIcon size={30} color="#fff" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform" />
                </div>
             )
          }

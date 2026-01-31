@@ -60,7 +60,7 @@ export const workspaceApi = baseApi.injectEndpoints({
 				{ type: 'WorkspaceMember', id }
 			]
 		}),
-		checkInvite: builder.query<{ workspaceId: string, role: TWorkspaceRole }, string>({
+		checkInvite: builder.query<{ workspaceId: string, role: TWorkspaceRole, workspaceName: string }, string>({
 			query: (token) => ({
 				url: `/workspaces/invite/${token}`
 			})

@@ -39,9 +39,21 @@ export const useWsBoardEvents = (userId: string | undefined) => {
       )
    }
 
+   const onTaskCommented = (event: IBoardEvents["TASK_COMMENTED"]) => {
+      console.log("TASK_COMMENTED", event)
+      if (event.actorId === userId) return
+
+
+      dispatch(
+         taskApi.util.invalidateTags([{ type: 'TaskComments', id: event.taskId }])
+      )
+   }
+
+
    return {
       onTaskCreated,
       onTaskUpdated,
-      onTaskDeleted
+      onTaskDeleted,
+      onTaskCommented
    }
 }
