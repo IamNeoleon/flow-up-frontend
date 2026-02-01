@@ -1,7 +1,7 @@
 import { useState, type FC } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { AuthLogin } from "@/features/auth/components/AuthLogin";
-import { AuthRegister } from "@/features/auth/components/AuthRegister";
+import { AuthLogin } from "@/services/auth/components/AuthLogin";
+import { AuthRegister } from "@/services/auth/components/AuthRegister";
 
 export const AuthWrapper: FC = () => {
 	const [haveAccount, setHaveAccount] = useState<boolean>(true)

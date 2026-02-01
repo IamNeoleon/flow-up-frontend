@@ -1,4 +1,4 @@
-import { useGetWorkspaceMembersQuery, useGetWorkspaceQuery } from "@/features/workspace/api/workspaceApi";
+import { useGetWorkspaceMembersQuery, useGetWorkspaceQuery } from "@/services/workspace/api/workspaceApi";
 
 export const useWorkspaceRole = (workspaceId: string, userId: string | undefined) => {
 	const { data: workspace } = useGetWorkspaceQuery(workspaceId)

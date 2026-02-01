@@ -1,8 +1,8 @@
 import { Home, Settings, LogOut, User } from "lucide-react"
 import { Link, useNavigate } from "react-router";
 import { useModal } from "@/app/providers/ModalProvider";
-import { useGetWorkspacesQuery } from "@/features/workspace/api/workspaceApi";
-import { CreateWorkspace } from "@/features/workspace/components/CreateWorkspace";
+import { useGetWorkspacesQuery } from "@/services/workspace/api/workspaceApi";
+import { CreateWorkspace } from "@/services/workspace/components/CreateWorkspace";
 import { WorkspaceList } from "@/shared/ui/WorkspaceList";
 import {
 	Sidebar,
@@ -18,9 +18,9 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/redux";
 import { selectUser, setUser } from "@/store/slices/userSlice";
 import { logout } from "@/store/slices/authSlice";
-import { UserProfile } from "@/features/user/components/UserProfile";
+import { UserProfile } from "@/services/user/components/UserProfile";
 import { useTranslation } from "react-i18next";
-import type { IWorkspace } from "@/features/workspace/types/workspace";
+import type { IWorkspace } from "@/services/workspace/types/workspace";
 import { SettingsModal } from "./SettingsModal";
 
 export const AppSidebar = () => {

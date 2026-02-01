@@ -1,4 +1,4 @@
-import { useGetMeQuery } from "@/features/user/api/userApi"
+import { useGetMeQuery } from "@/services/user/api/userApi"
 import { useAppDispatch } from "@/shared/hooks/redux"
 import { setUser } from "@/store/slices/userSlice"
 import { useEffect } from "react"

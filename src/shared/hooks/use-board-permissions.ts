@@ -1,7 +1,7 @@
-import { ROLE_PERMISSIONS } from '@/features/board/constants/board-permissions'
-import type { TBoardRole } from '@/features/board/types/board-role'
+import { ROLE_PERMISSIONS } from '@/services/board/constants/board-permissions'
+import type { TBoardRole } from '@/services/board/types/board-role'
 import { useWorkspaceRole } from './use-workspace-role'
-import { useGetMyBoardRoleQuery } from '@/features/board/api/boardApi'
+import { useGetMyBoardRoleQuery } from '@/services/board/api/boardApi'
 
 export const useBoardPermissions = (
    workspaceId: string,

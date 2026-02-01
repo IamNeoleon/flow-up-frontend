@@ -1,4 +1,4 @@
-import { useRefreshMutation } from "@/features/auth/api/authApi";
+import { useRefreshMutation } from "@/services/auth/api/authApi";
 import { useAppDispatch } from "@/shared/hooks/redux";
 import { setToken } from "@/store/slices/authSlice";
 import { useEffect } from "react";

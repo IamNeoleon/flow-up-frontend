@@ -1,7 +1,7 @@
 import { useState, type FC } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
-import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/features/workspace/api/workspaceApi';
+import { useCheckInviteQuery, useJoinWorkspaceMutation } from '@/services/workspace/api/workspaceApi';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/shadcn/dialog"
 import { Button } from '@/shared/ui/shadcn/button';
 import { Spinner } from '@/shared/ui/shadcn/spinner';

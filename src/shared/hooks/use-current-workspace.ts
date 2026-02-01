@@ -1,4 +1,4 @@
-import { useGetWorkspaceQuery } from "@/features/workspace/api/workspaceApi"
+import { useGetWorkspaceQuery } from "@/services/workspace/api/workspaceApi"
 import { skipToken } from "@reduxjs/toolkit/query"
 
 export const useCurrentWorkspace = (workspaceId: string | undefined) => {

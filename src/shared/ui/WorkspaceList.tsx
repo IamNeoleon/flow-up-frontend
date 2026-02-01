@@ -2,7 +2,7 @@ import { Building2, ChevronDown, Plus } from "lucide-react"
 import { CollapsibleContent, CollapsibleTrigger, Collapsible } from "./shadcn/collapsible"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem } from "./shadcn/sidebar"
 import { useState } from "react"
-import type { IWorkspace } from "@/features/workspace/types/workspace"
+import type { IWorkspace } from "@/services/workspace/types/workspace"
 import { WorkspaceItem } from "./WorkspaceItem"
 import { useParams } from "react-router"
 

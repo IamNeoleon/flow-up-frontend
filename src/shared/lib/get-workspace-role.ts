@@ -1,4 +1,4 @@
-import type { TWorkspaceRole } from "@/features/workspace/types/workspace-role"
+import type { TWorkspaceRole } from "@/services/workspace/types/workspace-role"
 import i18n from "i18next"
 
 export const getWorkspaceRole = (role: TWorkspaceRole) => {

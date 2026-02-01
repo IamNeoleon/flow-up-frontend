@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
-import type { IBoardPermissions } from '@/features/board/types/board-permissions';
+import type { IBoardPermissions } from '@/services/board/types/board-permissions';
 
 interface boardState {
    currrentBoardId: string,

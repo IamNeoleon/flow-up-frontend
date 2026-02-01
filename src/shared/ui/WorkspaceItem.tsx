@@ -1,4 +1,4 @@
-import type { IWorkspace } from "@/features/workspace/types/workspace"
+import type { IWorkspace } from "@/services/workspace/types/workspace"
 import { useGetIcon } from "../hooks/use-get-icon"
 import { SidebarMenuButton, SidebarMenuSubItem } from "./shadcn/sidebar"
 import { Link } from "react-router"

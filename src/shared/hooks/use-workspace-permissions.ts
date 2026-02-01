@@ -1,6 +1,6 @@
-import { useGetMyWorkspaceRoleQuery } from "@/features/workspace/api/workspaceApi"
-import { WORKSPACE_ROLE_PERMISSIONS } from "@/features/workspace/constants/workspace-permissions"
-import type { TWorkspaceRole } from "@/features/workspace/types/workspace-role"
+import { useGetMyWorkspaceRoleQuery } from "@/services/workspace/api/workspaceApi"
+import { WORKSPACE_ROLE_PERMISSIONS } from "@/services/workspace/constants/workspace-permissions"
+import type { TWorkspaceRole } from "@/services/workspace/types/workspace-role"
 import { skipToken } from "@reduxjs/toolkit/query"
 
 export const useWorkspacePermissions = (workspaceId: string | undefined) => {

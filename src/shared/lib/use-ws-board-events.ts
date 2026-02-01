@@ -1,7 +1,7 @@
-import { columnApi } from "@/features/column/api/columnApi"
+import { columnApi } from "@/services/column/api/columnApi"
 import type { IBoardEvents } from "../types/ws-events"
 import { useAppDispatch } from "../hooks/redux"
-import { taskApi } from "@/features/tasks/api/taskApi"
+import { taskApi } from "@/services/tasks/api/taskApi"
 
 export const useWsBoardEvents = (userId: string | undefined) => {
    const dispatch = useAppDispatch()
