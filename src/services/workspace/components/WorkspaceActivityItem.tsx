@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/shadcn/avatar"
+import { getUserInitials } from "@/shared/utils/get-user-initials";
 
 interface IWorkspaceActivityItemProps {
    username: string,
@@ -15,7 +16,7 @@ export const WorkspaceActivityItem = ({ username, userAvatar, activityLabel, ent
             <div className="flex gap-2 items-center">
                <Avatar>
                   <AvatarImage src={userAvatar ?? ''} />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>{getUserInitials(username)}</AvatarFallback>
                </Avatar>
                <div className="text-base flex gap-1 items-center">
                   <span className="font-semibold">{username}</span>

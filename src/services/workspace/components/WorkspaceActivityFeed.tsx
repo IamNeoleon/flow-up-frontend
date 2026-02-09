@@ -3,6 +3,7 @@ import type { IWorkspaceActivity } from "../types/workspace-activity"
 import { WorkspaceActivityItem } from "./WorkspaceActivityItem";
 import { formatActivityTime } from "@/shared/lib/formate-activity-time";
 import { useTranslation } from "react-i18next";
+import { getUserInitials } from "@/shared/utils/get-user-initials";
 
 type Props = {
    activities: IWorkspaceActivity[]
@@ -21,7 +22,7 @@ export const ActivityFeed = ({ activities }: Props) => {
                         return (
                            <WorkspaceActivityItem
                               key={activity.id}
-                              username={activity.user.username}
+                              username={activity.user.fullName}
                               userAvatar={activity.user.avatar ?? ''}
                               activityLabel={t("activity.taskCreated")}
                               entityName={activity.metadata.taskName ?? ''}
@@ -35,10 +36,10 @@ export const ActivityFeed = ({ activities }: Props) => {
                               <div className="flex gap-2 items-center">
                                  <Avatar>
                                     <AvatarImage src={activity.user.avatar ?? ''} />
-                                    <AvatarFallback>CN</AvatarFallback>
+                                    <AvatarFallback>{getUserInitials(activity.user.username)}</AvatarFallback>
                                  </Avatar>
                                  <div className="text-base flex gap-1 items-center">
-                                    <span className="font-semibold">{activity.user.username}</span>
+                                    <span className="font-semibold">{activity.user.fullName}</span>
                                     <span>{t("activity.taskMoved")}</span>
                                     <span className="font-semibold">{activity.metadata.taskName}</span>
                                     <span>{t("activity.toColumn")}</span>
@@ -52,7 +53,7 @@ export const ActivityFeed = ({ activities }: Props) => {
                         return (
                            <WorkspaceActivityItem
                               key={activity.id}
-                              username={activity.user.username}
+                              username={activity.user.fullName}
                               userAvatar={activity.user.avatar ?? ''}
                               activityLabel={t("activity.taskDeleted")}
                               entityName={activity.metadata.taskName ?? ''}

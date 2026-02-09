@@ -1,7 +1,8 @@
 export interface IRegisterBody {
 	email: string,
 	username: string,
-	password: string
+	password: string,
+	fullName: string
 }
 
 export interface ILoginBody {

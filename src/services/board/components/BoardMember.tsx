@@ -60,7 +60,7 @@ export const BoardMember = ({ member, workspaceId, boardId }: IBoardMemberProps)
                   <AvatarFallback>CN</AvatarFallback>
                </Avatar>
                <span className="font-medium">
-                  {member.user.username}
+                  {member.user.fullName}
                </span>
             </div>
             <Select disabled={disabledSelect} value={member.boardRole} onValueChange={(value) => onChangeRole(value as TBoardRole)}>

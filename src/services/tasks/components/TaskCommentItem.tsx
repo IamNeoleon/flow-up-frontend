@@ -1,21 +1,15 @@
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
+import { Ellipsis, ArrowUp, X } from "lucide-react";
 import type { ITaskComment } from "../types/task-comment";
 import { getUserInitials } from "@/shared/utils/get-user-initials";
 import { formatActivityTime } from "@/shared/lib/formate-activity-time";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/shadcn/avatar";
-import { Pencil, Trash2, Ellipsis, ArrowUp, X } from "lucide-react";
-import {
-   DropdownMenu,
-   DropdownMenuContent,
-   DropdownMenuItem,
-   DropdownMenuTrigger,
-} from "@/shared/ui/shadcn/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from "@/shared/ui/shadcn/dropdown-menu";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectUser } from "@/store/slices/userSlice";
-import { useTranslation } from "react-i18next";
 import { useDeleteCommentMutation, useEditCommentMutation } from "../api/taskApi";
-import { toast } from "sonner";
-import { useDeleteColumnMutation } from "@/services/column/api/columnApi";
 
 interface IProps {
    comment: ITaskComment;
@@ -127,7 +121,7 @@ export const TaskCommentItem = ({ comment, boardId, colId, taskId }: IProps) => 
          <div className="pt-1 shrink-0">
             <Avatar className="w-8 h-8">
                <AvatarImage src={comment.author.avatar} />
-               <AvatarFallback>{getUserInitials(comment.author.username)}</AvatarFallback>
+               <AvatarFallback>{getUserInitials(comment.author.fullName)}</AvatarFallback>
             </Avatar>
          </div>
 
@@ -135,7 +129,7 @@ export const TaskCommentItem = ({ comment, boardId, colId, taskId }: IProps) => 
             <div className="flex items-center justify-between gap-2">
                <div className="flex items-center gap-2 min-w-0">
                   <div className="font-medium text-sm truncate">
-                     {comment.author.username}
+                     {comment.author.fullName}
                   </div>
                   <div className="italic text-sm text-muted-foreground shrink-0">
                      {

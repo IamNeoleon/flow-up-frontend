@@ -13,12 +13,19 @@ interface ITaskDueDateProps {
 
 export const TaskDueDate = ({ dueDate, setDueDate }: ITaskDueDateProps) => {
    const { t } = useTranslation()
-   // TODO: сделай плавный апдейт даты
    const [open, setOpen] = useState(false)
+
+   const endOfDay = (d: Date | undefined) => {
+      if (!d) return
+
+      const x = new Date(d)
+      x.setHours(23, 59, 59, 999)
+      return x
+   }
 
    const onSelect = (value: Date | undefined) => {
       setOpen(false)
-      setDueDate(value)
+      setDueDate(endOfDay(value))
    }
 
    return (

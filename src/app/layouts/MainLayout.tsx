@@ -1,18 +1,24 @@
-import { Outlet, } from "react-router"
-import { AppSidebar } from "@/widgets/AppSidebar"
 import { Suspense } from "react";
+import { Outlet } from "react-router"
+import { AppSidebar } from "@/widgets/AppSidebar"
+import { useWsNotifications } from "@/shared/hooks/useWsNotifications";
+import { SidebarProvider, SidebarTrigger } from "@/shared/ui/shadcn/sidebar"
 
 export const MainLayout = () => {
+   useWsNotifications()
 
    return (
       <>
-         <Suspense fallback={null}>
-            <div className="flex min-h-screen w-full">
+         <Suspense fallback={<div>Loading...</div>}>
+            <SidebarProvider>
                <AppSidebar />
-               <main className="flex-1 py-6 px-16">
-                  <Outlet />
+               <main className="flex-1">
+                  <SidebarTrigger className="ml-2" />
+                  <div className="py-6 px-16">
+                     <Outlet />
+                  </div>
                </main>
-            </div>
+            </SidebarProvider>
          </Suspense>
       </>
    )

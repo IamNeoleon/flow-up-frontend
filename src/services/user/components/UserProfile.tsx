@@ -47,7 +47,7 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
       }
 
       const mimeType = file.type || "application/octet-stream";
-      console.log(loading);
+
       try {
          setLoading(true);
 
@@ -95,7 +95,7 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
                </Avatar>
                <div className="absolute bottom-0 right-0">
                   <label className="flex transition-colors items-center justify-center w-6 h-6 rounded-full bg-blue-700 cursor-pointer hover:bg-blue-800">
-                     <Camera size={16} />
+                     <Camera size={16} color="#fff" />
                      <input
                         type="file"
                         accept="image/*"

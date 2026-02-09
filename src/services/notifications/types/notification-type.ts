@@ -1,0 +1,5 @@
+export type TNotificationType = 'DEADLINE'
+   | 'STATUS_CHANGE'
+   | 'ADD_ASSIGMENT'
+   | 'REMOVE_ASSIGMENT'
+   | 'COMMENT'

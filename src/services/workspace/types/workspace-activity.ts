@@ -43,7 +43,7 @@ type UserMetadata = {
 
 export interface TaskActivity {
    id: string
-   user: Pick<IUser, "username" | "avatar">
+   user: Pick<IUser, "username" | 'fullName' | 'avatar'>
    workspaceId: string
    createdAt: string
    type: TaskActivityType
@@ -52,7 +52,7 @@ export interface TaskActivity {
 
 export interface ColumnActivity {
    id: string
-   user: Pick<IUser, "username">
+   user: Pick<IUser, "username" | 'fullName' | 'avatar'>
    workspaceId: string
    createdAt: string
    type: ColumnActivityType
@@ -61,7 +61,7 @@ export interface ColumnActivity {
 
 export interface UserActivity {
    id: string
-   user: Pick<IUser, "username">
+   user: Pick<IUser, "username" | 'fullName' | 'avatar'>
    workspaceId: string
    createdAt: string
    type: UserActivityType

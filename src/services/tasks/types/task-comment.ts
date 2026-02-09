@@ -5,7 +5,7 @@ export interface ITaskComment {
    content: string;
    taskId: string;
    authorId: string;
-   author: Pick<IUser, 'id' | 'username' | 'avatar'>
+   author: Pick<IUser, 'id' | 'username' | 'avatar' | 'fullName'>
    createdAt: string;
    updatedAt: string;
 }

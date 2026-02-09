@@ -17,6 +17,12 @@ export interface IBoardEvents {
       boardId: string
       colId: string
       actorId: string
+   },
+   TASK_MOVED: {
+      boardId: string
+      colId: string
+      taskId: string
+      actorId: string
    }
    JOIN_BOARD_ROOM: {
       boardId: string

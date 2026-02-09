@@ -103,14 +103,19 @@ export const workspaceApi = baseApi.injectEndpoints({
 			query: (id) => ({
 				url: `/workspaces/${id}/activity`,
 				method: 'GET',
-
 			}),
+			providesTags: (_, __, workspaceId) => [
+				{ type: 'WorkspaceActivity', id: workspaceId }
+			]
 		}),
-		getStatistic: builder.query<IWorkspaceStat, string>({
+		getStatistics: builder.query<IWorkspaceStat, string>({
 			query: (id) => ({
-				url: `/workspaces/${id}/statistic`,
+				url: `/workspaces/${id}/statistics`,
 				method: 'GET',
 			}),
+			providesTags: (_, __, workspaceId) => [
+				{ type: 'WorkspaceStatistics', id: workspaceId }
+			]
 		}),
 		leaveWorkspace: builder.mutation<IWorkspaceStat, string>({
 			query: (id) => ({
@@ -136,7 +141,7 @@ export const {
 	useChangeMemberRoleMutation,
 	useDeleteMemberMutation,
 	useGetActivityQuery,
-	useGetStatisticQuery,
+	useGetStatisticsQuery,
 	useLazyGetWorkspaceMembersQuery,
 	useLeaveWorkspaceMutation
 } = workspaceApi

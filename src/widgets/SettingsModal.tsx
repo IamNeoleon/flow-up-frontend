@@ -1,5 +1,7 @@
+import i18n from "i18next";
+import { useTranslation } from "react-i18next";
+import { Laptop, Moon, Sun } from "lucide-react";
 import { Label } from "@/shared/ui/shadcn/label";
-
 import {
    Select,
    SelectContent,
@@ -7,15 +9,10 @@ import {
    SelectTrigger,
    SelectValue,
 } from "@/shared/ui/shadcn/select"
-import { useTranslation } from "react-i18next";
-
-import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "@/shared/lib/theme-context";
-import type { ThemeMode } from "@/shared/lib/theme";
 import { LANGUAGES, type LanguageCode } from "@/shared/config/languages";
-import i18n from "i18next";
 import { Button } from "@/shared/ui/shadcn/button";
-
+import type { ThemeMode } from "@/shared/lib/theme";
 
 const THEMES: Array<{ value: ThemeMode; icon: typeof Sun; labelKey: string }> = [
    { value: "light", icon: Sun, labelKey: "theme.light" },
@@ -24,12 +21,8 @@ const THEMES: Array<{ value: ThemeMode; icon: typeof Sun; labelKey: string }> = 
 ];
 
 export const SettingsModal = ({ close }: { close: () => void }) => {
-   // "Close" added for future user settings
-
    const { t } = useTranslation()
    const { theme, setTheme } = useTheme();
-
-   console.log(theme);
 
    const current = i18n.language.split("-")[0] as LanguageCode;
 
@@ -49,7 +42,7 @@ export const SettingsModal = ({ close }: { close: () => void }) => {
                   <SelectContent>
                      {
                         THEMES.map(theme => (
-                           <SelectItem value={theme.value}>{t(theme.labelKey as any)}</SelectItem>
+                           <SelectItem key={theme.value} value={theme.value}>{t(theme.labelKey as any)}</SelectItem>
                         ))
                      }
                   </SelectContent>
@@ -63,7 +56,7 @@ export const SettingsModal = ({ close }: { close: () => void }) => {
                   </SelectTrigger>
                   <SelectContent>
                      {LANGUAGES.map(item => (
-                        <SelectItem value={item.code}>{item.label}</SelectItem>
+                        <SelectItem key={item.code} value={item.code}>{item.label}</SelectItem>
                      ))}
                   </SelectContent>
                </Select>

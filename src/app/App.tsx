@@ -1,21 +1,21 @@
-import { SidebarProvider } from "@/shared/ui/shadcn/sidebar"
 import { ModalProvider } from "./providers/ModalProvider"
 import { AppRouter } from "./routes"
 import { Toaster } from "sonner"
 import { ThemeProvider } from "./providers/ThemeProvider"
+import { WsProvider } from "./providers/WsProvider"
 
 function App() {
 
   return (
     <>
-      <ThemeProvider>
-        <ModalProvider>
-          <SidebarProvider>
+      <WsProvider>
+        <ThemeProvider>
+          <ModalProvider>
             <AppRouter />
             <Toaster theme="system" />
-          </SidebarProvider>
-        </ModalProvider>
-      </ThemeProvider>
+          </ModalProvider>
+        </ThemeProvider>
+      </WsProvider>
     </>
   )
 }

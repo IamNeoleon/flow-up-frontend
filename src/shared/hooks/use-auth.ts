@@ -5,18 +5,14 @@ import { useEffect } from "react"
 
 export const useAuth = () => {
 	const dispatch = useAppDispatch();
-
 	const { data, isLoading, isError, isSuccess } = useGetMeQuery();
 
 	useEffect(() => {
 		if (data && !isError) {
-			dispatch(setUser(data))
+			dispatch(setUser(data));
 		}
 	}, [data, isError, dispatch]);
 
-	return {
-		isAuthenticated: isSuccess,
-		isLoading,
-	};
+	return { isAuthenticated: isSuccess, isLoading };
 };
 

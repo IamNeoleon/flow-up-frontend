@@ -21,7 +21,8 @@
       "noResults": "No results found",
       "empty": "Empty",
       "you": "You",
-      "edited": "Edited"
+      "edited": "Edited",
+      "open": "Open"
    },
    "language": {
       "language": "Language"
@@ -31,6 +32,7 @@
       "logout": "Logout",
       "register": "Register",
       "email": "Email",
+      "fullName": "Full name",
       "password": "Password",
       "username": "Username",
       "confirmPassword": "Confirm password",
@@ -64,6 +66,8 @@
       "description": "Here you can edit your profile settings and personal information."
    },
    "workspace": {
+      "error": "There was an error loading workspaces.",
+      "empty": "There are no workspaces",
       "title": "Workspace",
       "create": "Create workspace",
       "createDescription": "Enter a name, and you can edit the rest on the workspace page.",
@@ -288,7 +292,48 @@
       "boardCreated": "created a board"
    },
    "comments": {
-      "title": "Комментарии",
+      "title": "Comments",
       "addComment": "Add a comment"
+   },
+   "notifications": {
+      "title": "Notifications",
+      "empty": "No recent notifications",
+      "error": "There was an error loading notifications. Try again",
+      "markAsRead": "Mark as a read",
+      "notTitle": {
+         "deadlineSoon": "Deadline soon",
+         "deadlineOverdue": "Deadline overdue",
+         "statusChanged": "Status updated",
+         "assigned": "Assigned",
+         "unassigned": "Removed from task",
+         "commentMention": "New mention",
+         "default": "New notification"
+      },
+      "notDesc": {
+         "deadlineSoon": "Task “{{taskName}}” is due today.",
+         "deadlineOverdue": "Task “{{taskName}}” is overdue.",
+         "statusChanged": "The status of task “{{taskName}}” has changed.",
+         "assigned": "You have been assigned to task “{{taskName}}”.",
+         "unassigned": "You are no longer assigned to task “{{taskName}}”.",
+         "commentMention": "You were mentioned in a comment to the task “{{taskName}}”."
+      }
+   },
+   "date": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+   },
+   "statistics": {
+      "title": "Statistics",
+      "titlePage": "Workspace statistics",
+      "viewAll": "View all statistics",
+      "barChart": "Completed tasks for the week/month",
+      "all": "All",
+      "remaining": "Remaining",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "lineChart": "Completed & created",
+      "created": "Created",
+      "completed": "Completed"
    }
 }

@@ -48,8 +48,7 @@ export const Column = ({ column, children }: IColumnProps) => {
          <div
             ref={setNodeRef}
             style={{ ...style, borderColor: !isOver ? 'transparent' : '#bb4d00' }}
-            className={clsx(`
-               min-w-[300px] w-full p-5 relative shadow-2xl border-2 borderam`,
+            className={clsx(`min-w-[300px] w-full p-5 relative shadow-2xl border-2`,
                isDragging && 'opacity-90 z-20',
                isOver && 'border-2 rounded-lg'
             )}>

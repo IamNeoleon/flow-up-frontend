@@ -34,7 +34,6 @@ input,
 button,
 textarea,
 select {
-  font: inherit;
   outline: none;
 }
 
@@ -120,6 +119,7 @@ body {
 
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin 'tailwind-scrollbar';
 
 @custom-variant dark (&:is(.dark *));
 

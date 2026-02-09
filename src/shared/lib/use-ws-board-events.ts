@@ -49,11 +49,21 @@ export const useWsBoardEvents = (userId: string | undefined) => {
       )
    }
 
+   const onTaskMoved = (event: IBoardEvents["TASK_MOVED"]) => {
+      console.log("TASK_MOVED", event)
+
+      if (event.actorId === userId) return
+      dispatch(
+         columnApi.util.invalidateTags([{ type: "Columns", id: `LIST-${event.boardId}` }])
+      )
+   }
+
 
    return {
       onTaskCreated,
       onTaskUpdated,
       onTaskDeleted,
-      onTaskCommented
+      onTaskCommented,
+      onTaskMoved
    }
 }

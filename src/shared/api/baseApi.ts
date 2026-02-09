@@ -6,15 +6,24 @@ import {
 	type FetchArgs,
 	type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
+import type { RootState } from "@/store";
+import { getTokenFromLs } from "../lib/localStorage";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const rawBaseQuery = fetchBaseQuery({
 	baseUrl: `${API_URL}/api`,
 	credentials: "include",
-	prepareHeaders: (headers) => {
-		const token = localStorage.getItem("accessToken");
-		if (token) headers.set("Authorization", `Bearer ${token}`);
+	prepareHeaders: (headers, { getState }) => {
+		const tokenFromState = (getState() as RootState).auth.token;
+		const tokenFromLs = getTokenFromLs()
+
+		if (tokenFromState) {
+			headers.set("Authorization", `Bearer ${tokenFromState}`);
+		} else if (tokenFromLs) {
+			headers.set("Authorization", `Bearer ${tokenFromLs}`);
+		}
+
 		return headers;
 	},
 });
@@ -40,7 +49,7 @@ const baseQueryWithReauth: BaseQueryFn<
 
 			result = await rawBaseQuery(args, api, extraOptions);
 		} else {
-			api.dispatch(logout)
+			api.dispatch(logout())
 		}
 	}
 
@@ -50,6 +59,18 @@ const baseQueryWithReauth: BaseQueryFn<
 export const baseApi = createApi({
 	reducerPath: "api",
 	baseQuery: baseQueryWithReauth,
-	tagTypes: ["Board", "User", "Auth", "Workspace", "WorkspaceMember", "Columns", "Task", "TaskComments"],
+	tagTypes: [
+		"Board",
+		"User",
+		"Auth",
+		"Workspace",
+		"WorkspaceMember",
+		"Columns",
+		"Task",
+		"TaskComments",
+		'Notifications',
+		'WorkspaceActivity',
+		'WorkspaceStatistics'
+	],
 	endpoints: () => ({}),
 });

@@ -26,10 +26,10 @@ import { TaskCommentsAdd } from "./TaskCommentsAdd";
 interface ITaskDetailsProps {
    taskId: string;
    colId: string;
-   onClose: () => void;
+   close: () => void;
 }
 
-export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
+export const TaskDetails = ({ taskId, colId, close }: ITaskDetailsProps) => {
    const { t } = useTranslation()
    const permissions = useAppSelector(selectPermissions)
    const boardId = useAppSelector(selectCurrentBoardId)
@@ -105,6 +105,8 @@ export const TaskDetails = ({ taskId, colId }: ITaskDetailsProps) => {
             taskId: task.id
          }).unwrap();
          toast.success(t("task.deleteSuccess"));
+
+         close()
       } catch (error) {
          toast.error(t("task.deleteError"));
       }

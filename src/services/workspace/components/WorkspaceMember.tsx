@@ -61,7 +61,7 @@ export const WorkspaceMember = ({ member, permissions, workspaceId }: IWorkspace
             <UserInfo
                userId={member.user.id}
                role={member.role}
-               username={member.user.username}
+               username={member.user.fullName}
                userAvatar={member.user.avatar}
             />
             {permissions.canChangeRole && currentUser?.id !== member.user.id && (

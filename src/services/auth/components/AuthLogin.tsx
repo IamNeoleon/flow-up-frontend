@@ -58,7 +58,7 @@ export const AuthLogin: FC<IAuthLoginProps> = ({ setHaveAccount }) => {
 	}
 
 	return (
-		<Card className='w-[380px]'>
+		<Card className='w-[380px] shadow-2xl'>
 			<CardHeader className='text-center'>
 				<CardTitle className="text-xl">{t('common.welcome')}</CardTitle>
 				<CardDescription>
