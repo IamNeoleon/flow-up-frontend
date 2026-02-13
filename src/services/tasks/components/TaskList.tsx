@@ -6,6 +6,7 @@ import type { ITaskPreview } from "../types/task-preview";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectPermissions } from "@/store/slices/boardSlice";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/shared/utils/cn";
 
 interface ITaskListProps {
    tasks: ITaskPreview[];
@@ -30,7 +31,7 @@ export const TaskList = ({ tasks, colId, color }: ITaskListProps) => {
    }
 
    return (
-      <>
+      <div>
          {
             tasks.map((task) => (
                <TaskCard key={task.id} task={task} color={color} />
@@ -45,6 +46,6 @@ export const TaskList = ({ tasks, colId, color }: ITaskListProps) => {
                </button>
             )
          }
-      </>
+      </div>
    );
 };

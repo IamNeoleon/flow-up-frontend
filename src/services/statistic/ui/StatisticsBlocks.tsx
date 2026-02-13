@@ -10,8 +10,6 @@ interface IProps {
 export const StatisticBlocks = ({ workspaceId }: IProps) => {
    const { data } = useGetFullStatQuery(workspaceId ?? skipToken);
 
-   console.log(data);
-
    return (
       <div className="flex flex-col gap-5">
          <BarStatistics data={data?.cumulative} />

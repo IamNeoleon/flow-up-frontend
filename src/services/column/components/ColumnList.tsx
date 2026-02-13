@@ -1,15 +1,20 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { toast } from "sonner";
-import clsx from "clsx";
-import { DndContext, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
+import { useTranslation } from "react-i18next";
+import {
+   DndContext,
+   useSensor,
+   useSensors,
+   PointerSensor,
+   type DragEndEvent,
+} from "@dnd-kit/core";
 import { useMoveTaskMutation } from "@/services/tasks/api/taskApi";
 import { TaskList } from "@/services/tasks/components/TaskList";
 import { useChangeOrderMutation, useGetAllColumnsQuery } from "../api/columnApi";
 import { ColumnSkeleton } from "./ColumnSkeleton";
 import { getErrorMessage } from "@/shared/utils/get-error-message";
 import { Column } from "./Column";
-import { useTranslation } from "react-i18next";
-import type { ITaskPreview } from "@/services/tasks/types/task-preview";
+import { cn } from "@/shared/utils/cn";
 
 interface IColumnListProps {
    boardId: string
@@ -27,18 +32,12 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
       return [...columns].sort((a, b) => a.order - b.order);
    }, [columns]);
 
-   const [activeTask, setActiveTask] = useState<(ITaskPreview & { color: string }) | null>(null)
 
-   const handleDragStart = (e: DragStartEvent) => {
-      const { active } = e;
-
-      const task = active.data.current?.task
-      const color = active.data.current?.color
-
-      if (task && color) {
-         setActiveTask({ ...task, color: color })
-      }
-   }
+   const sensors = useSensors(
+      useSensor(PointerSensor, {
+         activationConstraint: { distance: 8 },
+      })
+   );
 
    const handleDragEnd = async (e: DragEndEvent) => {
       const { active, over } = e;
@@ -82,32 +81,50 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
       }
    }
 
+   const content = (() => {
+      if (isLoading) {
+         return (
+            Array.from({ length: 4 }).map((_, index) => (
+               <ColumnSkeleton key={index} />
+            ))
+         )
+      }
+
+      if (isError) {
+         return (
+            <div className="text-center py-24 text-red-600 text-lg font-semibold">
+               {t("column.loadError", { error: getErrorMessage(error) })}
+            </div>
+         )
+      }
+
+      if (sortedColumns.length === 0) {
+         return (
+            <div>No columns</div>
+         )
+      }
+
+      return (
+         sortedColumns?.map((column) => (
+            <Column key={column.id} column={column}>
+               <TaskList tasks={column.tasks} colId={column.id} color={column.color ? column.color : '#3c3c3c'} />
+            </Column>
+         ))
+      )
+   })()
+
    return (
       <>
-         <div style={{ display: isError ? 'block' : 'grid' }} className={clsx("grid grid-cols-4 gap-10 items-start")}>
-            {
-               isLoading ? (
-                  Array.from({ length: 4 }).map((_, index) => (
-                     <ColumnSkeleton key={index} />
-                  ))
-               ) : (
-                  !isError ? (
-                     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                        {
-                           sortedColumns?.map((column) => (
-                              <Column key={column.id} column={column}>
-                                 <TaskList tasks={column.tasks} colId={column.id} color={column.color ? column.color : '#3c3c3c'} />
-                              </Column>
-                           ))
-                        }
-                     </DndContext>
-                  ) : (
-                     <div className="text-center py-24 text-red-600 text-lg font-semibold">
-                        {t("column.loadError", { error: getErrorMessage(error) })}
-                     </div>
-                  )
-               )
-            }
+         <div
+            className={cn(
+               "gap-5 items-start grid-flow-col auto-cols-[350px] overflow-x-auto",
+               "overscroll-x-contain scrollbar-gutter-stable",
+               "scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent hover:scrollbar-thumb-border pb-5",
+               isError ? 'block' : 'grid'
+            )}>
+            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+               {content}
+            </DndContext>
          </div>
       </>
    );

@@ -15,7 +15,7 @@ interface BoardViewProps {
 
 export const BoardView = React.memo(({ board, currentWorkspace }: BoardViewProps) => {
    return (
-      <div className="px-8 py-5">
+      <>
          <BoardHeader
             workspaceId={board.workspaceId}
             boardId={board.id}
@@ -24,6 +24,6 @@ export const BoardView = React.memo(({ board, currentWorkspace }: BoardViewProps
             currentWorkspace={currentWorkspace}
          />
          <ColumnList boardId={board.id} />
-      </div>
+      </>
    );
 });

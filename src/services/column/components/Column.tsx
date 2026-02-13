@@ -47,10 +47,11 @@ export const Column = ({ column, children }: IColumnProps) => {
       <>
          <div
             ref={setNodeRef}
-            style={{ ...style, borderColor: !isOver ? 'transparent' : '#bb4d00' }}
-            className={clsx(`min-w-[300px] w-full p-5 relative shadow-2xl border-2`,
+            style={{ ...style, border: !isOver ? 'none' : '2px solid #bb4d00' }}
+            className={clsx(
+               `min-w-[300px] w-full p-5 relative shadow-2xl border-2`,
                isDragging && 'opacity-90 z-20',
-               isOver && 'border-2 rounded-lg'
+               isOver && 'border-2 rounded-lg',
             )}>
             <div className={`absolute inset-0 rounded-lg brightness-[0.4] dark:brightness-[0.3]`} style={{ backgroundColor: columnApiColor }} />
             <div className="relative z-10">
