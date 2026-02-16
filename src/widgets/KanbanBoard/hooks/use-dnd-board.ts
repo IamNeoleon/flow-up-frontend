@@ -1,45 +1,22 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
-import {
-   DndContext,
-   useSensor,
-   useSensors,
-   PointerSensor,
-   DragOverlay,
-   type DragStartEvent,
-   type DragOverEvent,
-   type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-   arrayMove,
-   SortableContext,
-   horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
-
+import { useChangeOrderMutation, useGetAllColumnsQuery } from "@/services/column/api/columnApi";
+import type { IColumn } from "@/services/column/types/column";
 import { useMoveTaskMutation } from "@/services/tasks/api/taskApi";
-import { useChangeOrderMutation, useGetAllColumnsQuery } from "../api/columnApi";
-
-import { ColumnSkeleton } from "./ColumnSkeleton";
-import { Column } from "./Column";
-import { TaskCard } from "@/services/tasks/components/TaskCard";
-import { getErrorMessage } from "@/shared/utils/get-error-message";
-
 import type { ITaskPreview } from "@/services/tasks/types/task-preview";
-import type { IColumn } from "../types/column";
-
-interface IColumnListProps {
-   boardId: string;
-}
+import { PointerSensor, useSensor, useSensors, type DragEndEvent, type DragOverEvent, type DragStartEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface ITaskPreviewWithColor extends ITaskPreview {
    color: string;
 }
 
-export const ColumnList = ({ boardId }: IColumnListProps) => {
-   const { t } = useTranslation();
-   const { data: columns, isLoading, isError, error } = useGetAllColumnsQuery(boardId);
+export const useDndBoard = (boardId: string | undefined) => {
+   const { t } = useTranslation()
+
+   const { data: columns, isLoading, isError, error } = useGetAllColumnsQuery(boardId ?? skipToken);
 
    const [moveTask] = useMoveTaskMutation();
    const [changeOrderCol] = useChangeOrderMutation();
@@ -67,10 +44,6 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
       return map;
    }, [tasks]);
 
-   const sensors = useSensors(
-      useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
-   );
-
    const recalculateTaskOrders = useCallback((allTasks: ITaskPreview[], affectedColIds: string[]) => {
       const result = [...allTasks];
       affectedColIds.forEach((colId) => {
@@ -83,6 +56,12 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
       });
       return result;
    }, []);
+
+   const sensors = useSensors(
+      useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+   );
+
+   // Drag Events
 
    const onDragStart = useCallback((event: DragStartEvent) => {
       const data = event.active.data.current;
@@ -161,6 +140,8 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
    }, [recalculateTaskOrders]);
 
    const onDragEnd = useCallback(async (event: DragEndEvent) => {
+      if (!boardId) return
+
       const { active, over } = event;
 
       setActiveTask(null);
@@ -220,7 +201,8 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
          taskFromCol.current = null;
          taskOrderSnapshot.current = [];
       }
-   }, [localColumns, tasks, boardId, changeOrderCol, moveTask, t]);
+   }, [localColumns, tasks, boardId, changeOrderCol, moveTask]);
+
 
    useEffect(() => {
       if (!columns) return;
@@ -235,35 +217,19 @@ export const ColumnList = ({ boardId }: IColumnListProps) => {
       setTasks(allTasks);
    }, [columns]);
 
-   const content = useMemo(() => {
-      if (isLoading) return Array.from({ length: 4 }).map((_, i) => <ColumnSkeleton key={i} />);
-      if (isError) return <div className="text-center py-24 text-red-600 text-lg font-semibold">{t("column.loadError", { error: getErrorMessage(error) })}</div>;
-      if (localColumns.length === 0) return <div className="text-center py-24 text-gray-500 text-lg">{t("column.noColumns")}</div>;
-
-      return localColumns.map((column) => (
-         <Column
-            key={column.id}
-            column={column}
-            tasks={tasksByColumn[column.id] ?? []}
-         />
-      ));
-   }, [isLoading, isError, localColumns, tasksByColumn, t, error]);
-
-   return (
-      <div className="flex gap-5 items-start">
-         <DndContext sensors={sensors} onDragStart={onDragStart} onDragOver={onDragOver} onDragEnd={onDragEnd}>
-            <SortableContext items={colIds} strategy={horizontalListSortingStrategy}>
-               {content}
-            </SortableContext>
-
-            {createPortal(
-               <DragOverlay>
-                  {activeTask && <TaskCard task={activeTask} color={activeTask.color} />}
-                  {activeColumn && <Column column={activeColumn} tasks={tasksByColumn[activeColumn.id] ?? []} />}
-               </DragOverlay>,
-               document.body
-            )}
-         </DndContext>
-      </div>
-   );
-};
+   return {
+      isLoading,
+      isError,
+      localColumns,
+      tasksByColumn,
+      error,
+      onDragStart,
+      onDragOver,
+      onDragEnd,
+      columns,
+      activeTask,
+      activeColumn,
+      colIds,
+      sensors
+   }
+}

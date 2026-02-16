@@ -86,27 +86,15 @@ export const taskApi = baseApi.injectEndpoints({
             { type: 'Columns', id: colId }
          ]
       }),
-      moveTask: builder.mutation<ITask, { boardId: string, colId: string, targetColId: string, taskId: string }>({
-         query: ({ boardId, colId, targetColId, taskId }) => ({
+      moveTask: builder.mutation<ITask, { boardId: string, colId: string, targetColId: string, newOrder: number, taskId: string }>({
+         query: ({ boardId, colId, targetColId, taskId, newOrder }) => ({
             url: taskRoutes.move(boardId, colId, taskId),
             method: "PATCH",
             body: {
-               targetColId
+               targetColId,
+               newOrder
             }
-         }),
-         async onQueryStarted({ boardId, taskId, targetColId }, { dispatch, queryFulfilled }) {
-            const patch = dispatch(
-               columnApi.util.updateQueryData("getAllColumns", boardId, (draft) => {
-                  moveTask(taskId, targetColId, draft);
-               })
-            );
-
-            try {
-               await queryFulfilled;
-            } catch {
-               patch.undo();
-            }
-         },
+         })
       }),
       getPriorities: builder.query<ITaskPriority[], { boardId: string, colId: string }>({
          query: ({ boardId, colId }) => ({

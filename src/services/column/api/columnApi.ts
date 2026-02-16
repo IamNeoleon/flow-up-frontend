@@ -39,19 +39,6 @@ export const columnApi = baseApi.injectEndpoints({
                newOrder
             }
          }),
-         async onQueryStarted({ boardId, activeId, overId }, { dispatch, queryFulfilled }) {
-            const patch = dispatch(
-               columnApi.util.updateQueryData("getAllColumns", boardId, (draft) => {
-                  reorderColumns(draft, activeId, overId);
-               })
-            );
-
-            try {
-               await queryFulfilled;
-            } catch {
-               patch.undo();
-            }
-         },
       }),
       editColumn: builder.mutation<IColumn, IEditColumnArgs>({
          query: ({ boardId, colId, name, color, status }) => ({

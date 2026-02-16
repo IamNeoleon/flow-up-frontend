@@ -24,6 +24,4 @@ export interface IChangeOrderColumnArgs {
    boardId: string,
    colId: string,
    newOrder: number,
-   activeId: string,
-   overId: string
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { BoardHeader } from "@/services/board/components/BoardHeader";
-import { ColumnList } from "@/services/column/components/ColumnList";
+import { KanbanBoard } from "./KanbanBoard/ui/KanbanBoard";
 import type { IWorkspace } from "@/services/workspace/types/workspace";
 
 interface BoardViewProps {
@@ -23,7 +23,7 @@ export const BoardView = React.memo(({ board, currentWorkspace }: BoardViewProps
             boardDescription={board.description ?? ''}
             currentWorkspace={currentWorkspace}
          />
-         <ColumnList boardId={board.id} />
+         <KanbanBoard boardId={board.id} />
       </>
    );
 });

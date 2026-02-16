@@ -71,7 +71,7 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
 
    return (
       <>
-         <div className="flex items-center justify-between mb-8">
+         <div className="flex items-center justify-between mb-4">
             <div>
                <div className="mb-3">
                   <ContentEditable
