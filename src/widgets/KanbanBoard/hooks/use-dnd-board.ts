@@ -7,215 +7,231 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import debounce from 'debounce';
 import { toast } from "sonner";
 
 interface ITaskPreviewWithColor extends ITaskPreview {
    color: string;
 }
 
+type TasksByColumn = Record<string, ITaskPreview[]>;
+
 export const useDndBoard = (boardId: string | undefined) => {
    const { t } = useTranslation()
-
    const { data: columns, isLoading, isError, error } = useGetAllColumnsQuery(boardId ?? skipToken);
-
-   const [moveTask] = useMoveTaskMutation();
-   const [changeOrderCol] = useChangeOrderMutation();
 
    const [activeTask, setActiveTask] = useState<ITaskPreviewWithColor | null>(null);
    const [activeColumn, setActiveColumn] = useState<IColumn | null>(null);
 
-   const [tasks, setTasks] = useState<ITaskPreview[]>([]);
-   const [localColumns, setLocalColumns] = useState<IColumn[]>([]);
+   const [tasksByColumn, setTasksByColumn] = useState<TasksByColumn>({});
+   const [tasksByColumnSnapshot, setTasksByColumnSnapshot] = useState<TasksByColumn>({})
 
-   const taskFromCol = useRef<string | null>(null);
-   const taskOrderSnapshot = useRef<ITaskPreview[]>([]);
+   const [localColumns, setLocalColumns] = useState<IColumn[]>([]);
+   const [localColumnsSnapshot, setLocalColumnsSnapshot] = useState<IColumn[]>([]);
 
    const colIds = useMemo(() => localColumns.map((c) => c.id), [localColumns]);
 
-   const tasksByColumn = useMemo(() => {
-      const map: Record<string, ITaskPreview[]> = {};
-      for (const task of tasks) {
-         if (!map[task.colId]) map[task.colId] = [];
-         map[task.colId].push(task);
-      }
-      Object.keys(map).forEach((key) => {
-         map[key].sort((a, b) => a.order - b.order);
-      });
-      return map;
-   }, [tasks]);
-
-   const recalculateTaskOrders = useCallback((allTasks: ITaskPreview[], affectedColIds: string[]) => {
-      const result = [...allTasks];
-      affectedColIds.forEach((colId) => {
-         const colTasksWithIndices = result
-            .map((task, index) => ({ task, index }))
-            .filter(({ task }) => task.colId === colId);
-         colTasksWithIndices.forEach(({ index }, position) => {
-            result[index] = { ...result[index], order: position + 1 };
-         });
-      });
-      return result;
-   }, []);
+   const [moveTask] = useMoveTaskMutation();
+   const [changeOrderCol] = useChangeOrderMutation();
 
    const sensors = useSensors(
       useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
    );
 
-   // Drag Events
+   const debouncedOnDragOver = useRef(
+      debounce((event: DragOverEvent) => {
+         console.log('Call')
+         const { active, over } = event;
+         if (!over) return;
 
-   const onDragStart = useCallback((event: DragStartEvent) => {
-      const data = event.active.data.current;
-      if (!data) return;
+         const activeId = active.id;
+         const overId = over.id;
 
-      if (data.type === "Task") {
-         setActiveTask({
-            ...data.task,
-            color: data.taskColor
-         });
-         taskFromCol.current = data.task.colId;
-         taskOrderSnapshot.current = [...tasks];
-      }
+         if (activeId === overId) return;
 
-      if (data.type === "Column") {
-         setActiveColumn(data.column);
-      }
-   }, [tasks]);
+         const isActiveATask = active.data.current?.type === "Task";
+         if (!isActiveATask) return;
+
+         const isOverATask = over.data.current?.type === "Task";
+         const isOverAColumn = over.data.current?.type === "Column";
+
+         if (isOverATask) {
+            setTasksByColumn(prev => {
+               const sourceColId = Object.keys(prev).find(colId =>
+                  prev[colId].some(t => t.id === activeId)
+               );
+               if (!sourceColId) return prev;
+
+               const targetColId = Object.keys(prev).find(colId =>
+                  prev[colId].some(t => t.id === overId)
+               );
+               if (!targetColId) return prev;
+
+               const source = [...prev[sourceColId]];
+               const target = sourceColId === targetColId ? source : [...prev[targetColId]];
+
+               const activeIndex = source.findIndex(t => t.id === activeId);
+               const overIndex = target.findIndex(t => t.id === overId);
+
+               if (activeIndex === -1 || overIndex === -1) return prev;
+
+               const [moved] = source.splice(activeIndex, 1);
+
+               if (sourceColId === targetColId) {
+                  source.splice(overIndex, 0, moved);
+                  const normalized = source.map((t, i) => ({ ...t, order: i + 1, }));
+                  return { ...prev, [sourceColId]: normalized };
+               }
+
+               target.splice(overIndex, 0, moved);
+
+               return {
+                  ...prev,
+                  [sourceColId]: source.map((t, i) => ({ ...t, order: i + 1 })),
+                  [targetColId]: target.map((t, i) => ({ ...t, order: i + 1 })),
+               };
+            });
+         }
+
+         if (isOverAColumn) {
+            setTasksByColumn(prev => {
+               const sourceColId = Object.keys(prev).find(colId =>
+                  prev[colId].some(t => t.id === activeId)
+               );
+               if (!sourceColId) return prev;
+
+               const targetColId = String(overId);
+               if (!prev[targetColId] || sourceColId === targetColId) return prev;
+
+               const source = [...prev[sourceColId]];
+               const target = [...prev[targetColId]];
+
+               const activeIndex = source.findIndex(t => t.id === activeId);
+               if (activeIndex === -1) return prev;
+
+               const [moved] = source.splice(activeIndex, 1);
+               target.push(moved);
+
+               return {
+                  ...prev,
+                  [sourceColId]: source.map((t, i) => ({ ...t, order: i + 1 })),
+                  [targetColId]: target.map((t, i) => ({ ...t, order: i + 1 })),
+               };
+            });
+         }
+      }, 250)
+   ).current;
 
    const onDragOver = useCallback((event: DragOverEvent) => {
-      const { active, over } = event;
-      if (!over) return;
-      if (active.id === over.id) return;
+      debouncedOnDragOver(event);
+   }, [debouncedOnDragOver]);
 
-      const activeData = active.data.current;
-      const overData = over.data.current;
+   const onDragStart = (event: DragStartEvent) => {
+      const data = event.active.data.current;
+      if (!data) return;
+      if (data.type === "Task") {
+         setActiveTask({ ...data.task, color: data.taskColor })
 
-      if (activeData?.type === "Task") {
-         const isOverTask = overData?.type === "Task";
-         const isOverColumn = overData?.type === "Column";
-         if (!isOverTask && !isOverColumn) return;
-
-         setTasks((prevTasks) => {
-            const activeTask = prevTasks.find((t) => t.id === active.id);
-            if (!activeTask) return prevTasks;
-
-            const activeIndex = prevTasks.findIndex((t) => t.id === active.id);
-
-            if (isOverTask) {
-               const overTask = prevTasks.find((t) => t.id === over.id);
-               if (!overTask) return prevTasks;
-               const overIndex = prevTasks.findIndex((t) => t.id === over.id);
-
-               if (activeTask.colId !== overTask.colId) {
-                  const tasksWithoutActive = prevTasks.filter((t) => t.id !== active.id);
-                  const newOverIndex = tasksWithoutActive.findIndex((t) => t.id === over.id);
-                  tasksWithoutActive.splice(newOverIndex, 0, { ...activeTask, colId: overTask.colId });
-                  return recalculateTaskOrders(tasksWithoutActive, [activeTask.colId, overTask.colId]);
-               }
-
-               if (activeIndex === overIndex) return prevTasks;
-               return recalculateTaskOrders(arrayMove(prevTasks, activeIndex, overIndex), [activeTask.colId]);
-            }
-
-            if (isOverColumn) {
-               const overColId = over.id as string;
-               if (activeTask.colId === overColId) return prevTasks;
-
-               const tasksWithoutActive = prevTasks.filter((t) => t.id !== active.id);
-               const targetColTasks = tasksWithoutActive.filter((t) => t.colId === overColId);
-               const updatedTask = { ...activeTask, colId: overColId };
-
-               if (targetColTasks.length === 0) {
-                  tasksWithoutActive.push(updatedTask);
-               } else {
-                  const lastIndex = tasksWithoutActive.findIndex((t) => t.id === targetColTasks[targetColTasks.length - 1].id);
-                  tasksWithoutActive.splice(lastIndex + 1, 0, updatedTask);
-               }
-
-               return recalculateTaskOrders(tasksWithoutActive, [activeTask.colId, overColId]);
-            }
-
-            return prevTasks;
-         });
+         setTasksByColumnSnapshot(tasksByColumn)
       }
-   }, [recalculateTaskOrders]);
+      if (data.type === "Column") {
+         setActiveColumn(data.column);
 
-   const onDragEnd = useCallback(async (event: DragEndEvent) => {
-      if (!boardId) return
+         setLocalColumnsSnapshot(localColumns)
+      }
+   };
+
+   const onDragEnd = async (event: DragEndEvent) => {
+      if (!boardId) return;
 
       const { active, over } = event;
 
       setActiveTask(null);
       setActiveColumn(null);
 
-      if (!over) {
-         if (taskOrderSnapshot.current.length > 0) {
-            setTasks(taskOrderSnapshot.current);
-            taskOrderSnapshot.current = [];
+      if (!over) return;
+
+      if (active.data.current?.type === "Task") {
+         const taskId = String(active.id);
+         const sourceColId = active.data.current.task.colId;
+
+         const targetColId = Object.keys(tasksByColumn).find(colId =>
+            tasksByColumn[colId].some(t => t.id === taskId)
+         );
+         if (!targetColId) return;
+
+         const columnTasks = tasksByColumn[targetColId];
+         const newIndex = columnTasks.findIndex(t => t.id === taskId);
+         if (newIndex === -1) return;
+
+         const newOrder = newIndex + 1;
+
+         if (sourceColId === targetColId && newOrder === active.data.current.task.order) {
+            return;
          }
-         taskFromCol.current = null;
+
+         try {
+            await moveTask({
+               boardId,
+               colId: sourceColId,
+               targetColId,
+               taskId,
+               newOrder,
+            }).unwrap();
+         } catch {
+            toast.error(t("task.moveTaskError"));
+
+            setTasksByColumn(tasksByColumnSnapshot)
+         }
+
          return;
       }
 
       if (active.data.current?.type === "Column" && over.data.current?.type === "Column") {
-         const oldIndex = localColumns.findIndex((c) => c.id === active.id);
-         const newIndex = localColumns.findIndex((c) => c.id === over.id);
+         const oldIndex = localColumns.findIndex(c => c.id === active.id);
+         const newIndex = localColumns.findIndex(c => c.id === over.id);
+
          if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
 
-         setLocalColumns((prev) => {
-            const reordered = arrayMove(prev, oldIndex, newIndex).map((c, i) => ({ ...c, order: i + 1 }));
-
-            changeOrderCol({
-               boardId,
-               colId: active.id as string,
-               newOrder: newIndex + 1,
-            }).catch(() => toast.error(t("column.moveColumnError")));
+         setLocalColumns(prev => {
+            const reordered = arrayMove(prev, oldIndex, newIndex)
+               .map((c, i) => ({ ...c, order: i + 1 }));
 
             return reordered;
          });
 
-         return;
-      }
+         try {
+            await changeOrderCol({
+               boardId,
+               colId: active.id as string,
+               newOrder: newIndex + 1,
+            }).unwrap()
+         } catch (error) {
+            toast.error(t("column.moveColumnError"))
 
-      if (active.data.current?.type === "Task") {
-         const taskId = active.id as string;
-         const updatedTask = tasks.find((t) => t.id === taskId);
-         const originalColId = taskFromCol.current;
-
-         if (updatedTask && originalColId) {
-            try {
-               await moveTask({
-                  taskId,
-                  colId: originalColId,
-                  targetColId: updatedTask.colId,
-                  boardId,
-                  newOrder: updatedTask.order,
-               }).unwrap();
-
-               toast.success(t("column.moveTaskSuccess"));
-            } catch {
-               toast.error(t("column.moveTaskError"));
-               setTasks(taskOrderSnapshot.current);
-            }
+            setLocalColumns(localColumnsSnapshot)
          }
-
-         taskFromCol.current = null;
-         taskOrderSnapshot.current = [];
       }
-   }, [localColumns, tasks, boardId, changeOrderCol, moveTask]);
-
+   };
 
    useEffect(() => {
       if (!columns) return;
 
-      setLocalColumns((prev) => {
-         if (prev.length === 0) return [...columns].sort((a, b) => a.order - b.order);
-         return prev;
-      });
+      const sortedColumns = [...columns].sort((a, b) => a.order - b.order);
+      setLocalColumns(sortedColumns);
 
-      const allTasks: ITaskPreview[] = [];
-      columns.forEach((col) => allTasks.push(...col.tasks));
-      setTasks(allTasks);
+      const grouped: TasksByColumn = {};
+      sortedColumns.forEach(col => {
+         grouped[col.id] = [...col.tasks].sort((a, b) => a.order - b.order);
+      });
+      setTasksByColumn(grouped);
    }, [columns]);
+
+   useEffect(() => {
+      return () => {
+         debouncedOnDragOver.clear?.();
+      };
+   }, [debouncedOnDragOver]);
 
    return {
       isLoading,

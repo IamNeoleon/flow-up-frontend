@@ -42,7 +42,7 @@ export const TaskCard = memo(({ task, color }: IProps) => {
          <div style={{ backgroundColor: color }} className="absolute inset-0 rounded-lg brightness-50 dark:brightness-40" />
 
          <div className="relative z-10 pr-5">
-            <h3 className="font-medium text-white">{task.name}</h3>
+            <h3 className="font-medium text-white">{task.name} {task.order}</h3>
          </div>
 
          {permissions?.canMoveTask && (

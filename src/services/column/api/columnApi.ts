@@ -39,6 +39,9 @@ export const columnApi = baseApi.injectEndpoints({
                newOrder
             }
          }),
+         invalidatesTags: (_, __, { boardId }) => [
+            { type: 'Columns', id: `LIST-${boardId}` }
+         ]
       }),
       editColumn: builder.mutation<IColumn, IEditColumnArgs>({
          query: ({ boardId, colId, name, color, status }) => ({

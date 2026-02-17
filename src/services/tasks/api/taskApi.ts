@@ -1,15 +1,11 @@
 import { baseApi } from "../../../shared/api/baseApi";
 import { taskRoutes } from "./taskApi.routes";
-
 import type { ITask } from "../types/task";
 import type { ITaskPriority } from "../types/task-priority";
 import type { ITaskTodo } from "../types/task-todo";
 import type { IUpdateTaskDto } from "@/services/tasks/types";
 import type { ITaskPresignedAtchBody, ITaskPresignedAtchResponse } from "../types/task-attachments";
 import type { IUser } from "@/services/user/types/user";
-
-import { columnApi } from "@/services/column/api/columnApi";
-import { moveTask } from "@/services/tasks/lib/move-task";
 import type { ITaskComment } from "../types/task-comment";
 
 export const taskApi = baseApi.injectEndpoints({
@@ -94,7 +90,7 @@ export const taskApi = baseApi.injectEndpoints({
                targetColId,
                newOrder
             }
-         })
+         }),
       }),
       getPriorities: builder.query<ITaskPriority[], { boardId: string, colId: string }>({
          query: ({ boardId, colId }) => ({

@@ -14,24 +14,14 @@ import { useWs } from "@/app/providers/WsProvider";
 
 const BoardPage = () => {
    const dispatch = useAppDispatch();
-
    const { boardId, workspaceId } = useParams();
-
    const { data: board, isError } = useGetBoardQuery(
       boardId && workspaceId ? { boardId, workspaceId } : skipToken,
    );
-
    const { socket, joinBoard, leaveBoard, status } = useWs();
-
-   console.log("WS CONNECT STATE", status);
-
    const { t } = useTranslation();
-
    const { currentWorkspace } = useCurrentWorkspace(workspaceId);
-
    const user = useAppSelector(selectUser);
-
-   console.log(user?.id);
 
    const {
       onTaskCreated,

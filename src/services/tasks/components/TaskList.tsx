@@ -39,7 +39,6 @@ export const TaskList = memo(({ tasks, colId, color }: ITaskListProps) => {
 
    return (
       <div className="flex flex-col h-full">
-         {/* Скроллируемая область с задачами */}
          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden
             [&::-webkit-scrollbar]:w-1.5
             [&::-webkit-scrollbar-track]:bg-transparent

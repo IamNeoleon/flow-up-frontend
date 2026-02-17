@@ -14,6 +14,7 @@ interface IProps {
    boardId: string
 }
 
+
 export const KanbanBoard = ({ boardId }: IProps) => {
    const { t } = useTranslation();
    const {
