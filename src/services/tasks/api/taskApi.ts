@@ -91,6 +91,9 @@ export const taskApi = baseApi.injectEndpoints({
                newOrder
             }
          }),
+         invalidatesTags: (_, __, { boardId }) => [
+            { type: 'Columns', id: `LIST-${boardId}` }
+         ]
       }),
       getPriorities: builder.query<ITaskPriority[], { boardId: string, colId: string }>({
          query: ({ boardId, colId }) => ({

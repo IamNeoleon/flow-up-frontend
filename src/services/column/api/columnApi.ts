@@ -1,6 +1,5 @@
 import { baseApi } from "@/shared/api/baseApi";
 import { columnRoutes } from "./columnApi.routes";
-import { reorderColumns } from "@/services/column/lib/reorder-columns";
 import type { IColumn } from "../types/column";
 import type { IChangeOrderColumnArgs, ICreateColumnArgs, IDeleteColumnArgs, IEditColumnArgs } from "./columnApi.types";
 

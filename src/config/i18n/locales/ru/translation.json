@@ -242,7 +242,8 @@
          "deleteConfirmDescription": "Это действие необратимо.",
          "deleteSuccess": "Вложение успешно удалено",
          "deleteError": "Не удалось удалить вложение"
-      }
+      },
+      "open": "Открыть задачу"
    },
    "priority": {
       "low": "Низкий",
