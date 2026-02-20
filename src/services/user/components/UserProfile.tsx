@@ -24,7 +24,7 @@ interface IUserProfileProps {
 export const UserProfile = ({ close }: IUserProfileProps) => {
    const { t } = useTranslation()
    const { data: user, isLoading, isError, error } = useGetMeQuery()
-   const [loading, setLoading] = useState(false);
+   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
 
    const [presignAvatar] = usePresignUploadAvatarMutation();
    const [completeAvatar] = useCompleteUploadAvatarMutation();
@@ -49,7 +49,7 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
       const mimeType = file.type || "application/octet-stream";
 
       try {
-         setLoading(true);
+         setIsLoadingAvatar(true);
 
          const presigned = await presignAvatar({ mimeType }).unwrap();
 
@@ -70,7 +70,7 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
          console.error(err);
          toast.error(t("user.avatarUpdateError"));
       } finally {
-         setLoading(false);
+         setIsLoadingAvatar(false);
          e.currentTarget.value = "";
       }
    }
@@ -90,8 +90,18 @@ export const UserProfile = ({ close }: IUserProfileProps) => {
          <div className="flex justify-center gap-5">
             <div className="relative">
                <Avatar className="block w-20 h-20 relative">
-                  <AvatarImage src={user.avatar} />
-                  <AvatarFallback>{getUserInitials(user.username)}</AvatarFallback>
+                  {
+                     isLoadingAvatar ? (
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                           <Spinner />
+                        </div>
+                     ) : (
+                        <>
+                           <AvatarImage src={user.avatar} />
+                           <AvatarFallback>{getUserInitials(user.username)}</AvatarFallback>
+                        </>
+                     )
+                  }
                </Avatar>
                <div className="absolute bottom-0 right-0">
                   <label className="flex transition-colors items-center justify-center w-6 h-6 rounded-full bg-blue-700 cursor-pointer hover:bg-blue-800">

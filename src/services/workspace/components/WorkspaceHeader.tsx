@@ -9,7 +9,7 @@ import { useGetIcon } from "@/shared/hooks/use-get-icon";
 import clsx from "clsx";
 import type { IWorkspacePermission } from "../types/workspace-permission";
 import { useTranslation } from "react-i18next";
-import { useLeaveWorkspaceMutation } from "../api/workspaceApi";
+import { useDeleteWorkspaceMutation, useLeaveWorkspaceMutation } from "../api/workspaceApi";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/shared/utils/get-error-message";
 
@@ -27,6 +27,7 @@ export const WorkspaceHeader = ({
    permissions,
 }: IWorkspaceHeaderProps) => {
    const [leaveWorkspace] = useLeaveWorkspaceMutation();
+   const [deleteWorkspace] = useDeleteWorkspaceMutation()
 
    const navigate = useNavigate();
 
@@ -43,6 +44,20 @@ export const WorkspaceHeader = ({
       });
    };
 
+   const handleDeleteWorkspace = async () => {
+      try {
+         await deleteWorkspace({
+            id: workspace.id
+         }).unwrap()
+
+         toast.success(t('workspace.deleteSuccess'))
+         navigate('/')
+      } catch (error) {
+         toast.success(t('workspace.deleteError'))
+      }
+   }
+
+
    const handleOpenSettings = () => {
       open({
          title: t("workspace.settingsTitle"),
@@ -54,6 +69,7 @@ export const WorkspaceHeader = ({
                isArchived={workspace.isArchived}
                icon={workspace.icon}
                close={close}
+               onDeleteWorkspace={handleDeleteWorkspace}
             />
          ),
       });

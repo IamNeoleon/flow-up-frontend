@@ -5,9 +5,13 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ExternalLink, Trash2 } from "lucide-react";
 import { useAppSelector } from "@/shared/hooks/redux";
-import { selectPermissions } from "@/store/slices/boardSlice";
+import { selectCurrentBoardId, selectPermissions } from "@/store/slices/boardSlice";
 import { cn } from "@/shared/utils/cn";
 import type { ITaskPreview } from "../types/task-preview";
+import dayjs from '@/shared/lib/day-js'
+import { useDeleteTaskMutation } from "../api/taskApi";
+import { toast } from "sonner";
+import { AlertDialogBlock } from "@/shared/ui/AlertDialogBlock";
 
 interface IProps {
    task: ITaskPreview;
@@ -17,8 +21,11 @@ interface IProps {
 export const TaskCard = memo(({ task, color }: IProps) => {
    const { t } = useTranslation()
 
+   const [deleteTask] = useDeleteTaskMutation()
+
    const navigate = useNavigate();
    const permissions = useAppSelector(selectPermissions);
+   const currentBoardId = useAppSelector(selectCurrentBoardId)
 
    const { setNodeRef, attributes, listeners, isDragging, transition, transform } = useSortable({
       id: task.id,
@@ -35,18 +42,26 @@ export const TaskCard = memo(({ task, color }: IProps) => {
       navigate(`${task.colId}/tasks/${task.id}`);
    };
 
-   const handleDelete = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      console.log('Delete Click');
+   const handleDelete = async () => {
+      try {
+         await deleteTask({
+            boardId: currentBoardId,
+            colId: task.colId,
+            taskId: task.id
+         }).unwrap()
+      } catch (error) {
+         toast.error(`${t('task.deleteError')}`)
+      }
    };
 
    return (
       <div
          style={style}
          ref={setNodeRef}
-         className={cn("p-3 mb-2 relative cursor-grab group", isDragging && "opacity-60 cursor-grabbing")}
+         className={cn("p-3 mb-2 relative cursor-pointer group", isDragging && "opacity-60 cursor-grabbing")}
          {...(permissions?.canMoveTask ? attributes : {})}
          {...(permissions?.canMoveTask ? listeners : {})}
+         onClick={navigateToDetails}
       >
          <div style={{ backgroundColor: color }} className="absolute inset-0 rounded-sm brightness-50 dark:brightness-40" />
          <div className="relative z-10">
@@ -54,23 +69,49 @@ export const TaskCard = memo(({ task, color }: IProps) => {
                {task.name}
             </h3>
             <div className="pt-1 flex justify-between items-center text-[11px] brightness-100 text-white">
-               <div className="flex gap-3">
+               <div className="flex gap-3 font-medium">
                   <div>
                      <div className="">{t('task.priority')}</div>
                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 bg-amber-700 rounded-full"></div>
-                        <span className="">Medium</span>
+                        <div style={{ backgroundColor: task.priority?.color ?? '#9CA3AF' }} className="w-3 h-3 bg-amber-700 rounded-full"></div>
+                        <span className="">
+                           {
+                              task.priority?.name ? (
+                                 t(`priority.${task.priority.name.toLowerCase()}`)
+                              ) : (
+                                 <span className="font-normal">{t('priority.without')}</span>
+                              )
+                           }
+                        </span>
                      </div>
                   </div>
                   <div>
-                     <div className="">{t('task.dueDate')}</div>
-                     <div>13/04/2022</div>
+                     <div>{t('task.dueDate')}</div>
+                     <div>
+                        {
+                           task.dueDate ? (
+                              dayjs(task.dueDate).format("L")
+                           ) : (
+                              <span className="font-normal">{t('common.notSet')}</span>
+                           )
+                        }
+                     </div>
                   </div>
                </div>
-               <div className="flex items-center gap-2">
-                  <button onClick={handleDelete} className="cursor-pointer hover:text-white/70 transition-colors">
-                     <Trash2 size={16} />
-                  </button>
+               <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                  <AlertDialogBlock
+                     title={t('task.deleteConfirmTitle')}
+                     description={t('task.deleteConfirmDescription')}
+                     cancelLabel={t('common.cancel')}
+                     actionLabel={t('common.yes')}
+                     onClickAction={handleDelete}
+                  >
+                     <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="cursor-pointer hover:text-white/70 transition-colors">
+                        <Trash2 size={16} />
+                     </button>
+                  </AlertDialogBlock>
                   <button title={t('task.open')} onClick={navigateToDetails} className="cursor-pointer hover:text-white/70 transition-colors">
                      <ExternalLink size={16} />
                   </button>

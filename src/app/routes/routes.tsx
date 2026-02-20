@@ -14,6 +14,7 @@ const BoardPage = lazy(() => import('@/pages/BoardPage'))
 const AuthCallback = lazy(() => import('@/pages/AuthCallback'))
 const TaskSheetPage = lazy(() => import('@/pages/TaskSheetPage'))
 const WorkspaceStaticPage = lazy(() => import('@/pages/WorkspaceStatisticPage'))
+const AuthConfirmPage = lazy(() => import('@/pages/AuthConfirmPage'))
 
 export const routes: RouteObject[] = [
    {
@@ -26,6 +27,10 @@ export const routes: RouteObject[] = [
          {
             path: '/auth/callback',
             element: <AuthCallback />
+         },
+         {
+            path: '/auth/confirm-email',
+            element: <AuthConfirmPage />
          },
          {
             element: <ProtectedRoute />,

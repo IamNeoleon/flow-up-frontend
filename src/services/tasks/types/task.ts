@@ -9,7 +9,7 @@ export interface ITask {
    colId: string,
    description?: string,
    assigneeId?: string
-   assignee: Pick<IUser, 'id' | 'username' | 'avatar'> | null,
+   assignee: Pick<IUser, 'id' | 'username' | 'avatar' | 'fullName'> | null,
    order: number
    priorityId?: string
    priority?: ITaskPriority

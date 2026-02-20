@@ -39,6 +39,15 @@ export const workspaceApi = baseApi.injectEndpoints({
 				{ type: 'Workspace' }
 			]
 		}),
+		deleteWorkspace: builder.mutation<IWorkspace, { id: string }>({
+			query: ({ id }) => ({
+				url: `/workspaces/${id}`,
+				method: 'DELETE',
+			}),
+			invalidatesTags: (_, __) => [
+				{ type: 'Workspace' }
+			]
+		}),
 		getWorkspaceMembers: builder.query<IWorkspaceMember[], string>({
 			query: (id) => ({
 				url: `/workspaces/${id}/members`
@@ -143,5 +152,6 @@ export const {
 	useGetActivityQuery,
 	useGetStatisticsQuery,
 	useLazyGetWorkspaceMembersQuery,
-	useLeaveWorkspaceMutation
+	useLeaveWorkspaceMutation,
+	useDeleteWorkspaceMutation
 } = workspaceApi

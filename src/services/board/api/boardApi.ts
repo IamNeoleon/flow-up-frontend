@@ -36,6 +36,13 @@ export const boardApi = baseApi.injectEndpoints({
 			}),
 			invalidatesTags: (_, __, { workspaceId }) => [{ type: 'Workspace', id: workspaceId }]
 		}),
+		deleteBoard: builder.mutation<IBoard, { workspaceId: string, boardId: string }>({
+			query: ({ workspaceId, boardId }) => ({
+				url: boardRoutes.byId(workspaceId, boardId),
+				method: "DELETE"
+			}),
+			invalidatesTags: (_, __, { workspaceId }) => [{ type: 'Workspace', id: workspaceId }]
+		}),
 		getMyBoardRole: builder.query<{ role: TBoardRole }, IBoardParams>({
 			query: ({ workspaceId, boardId }) => ({
 				url: boardRoutes.role(workspaceId, boardId),
@@ -68,5 +75,6 @@ export const {
 	useEditBoardMutation,
 	useGetMyBoardRoleQuery,
 	useGetBoardMembersQuery,
-	useChangeBoardRoleMutation
+	useChangeBoardRoleMutation,
+	useDeleteBoardMutation
 } = boardApi

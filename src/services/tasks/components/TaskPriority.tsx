@@ -45,7 +45,9 @@ export const TaskPriority = ({ taskPriorityId, onChange, colId }: ITaskPriorityP
                   <div>
                      <ValuePicker>
                         {priority && (
-                           <Badge style={{ backgroundColor: priority.color }} className="capitalize text-sm text-white">{priority.name}</Badge>
+                           <Badge style={{ backgroundColor: priority.color }} className="capitalize text-sm text-white">
+                              {t(`priority.${priority.name.toLowerCase()}`)}
+                           </Badge>
                         )}
                      </ValuePicker>
                   </div>
@@ -58,7 +60,7 @@ export const TaskPriority = ({ taskPriorityId, onChange, colId }: ITaskPriorityP
                            onChange(priority)
                         }}
                      >
-                        {priority.name}
+                        {t(`priority.${priority.name.toLowerCase()}`)}
                      </DropdownMenuItem>
                   ))}
                </DropdownMenuContent>

@@ -1,16 +1,16 @@
 import clsx from "clsx";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { Pencil, Check } from "lucide-react";
 import { Input } from "@/shared/ui/shadcn/input";
 import { Label } from "@/shared/ui/shadcn/label";
 import { Checkbox } from "@/shared/ui/shadcn/checkbox";
 import { Button } from "@/shared/ui/shadcn/button";
-import type { TWorkspaceIcon } from "../types/workspace-icon";
 import { WORKSPACE_ICON_MAP } from "../constants/workspace-icon-map";
-
 import { useUpdateWorkspaceMutation } from "@/services/workspace/api/workspaceApi";
-import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { AlertDialogBlock } from "@/shared/ui/AlertDialogBlock";
+import type { TWorkspaceIcon } from "../types/workspace-icon";
 
 interface IProps {
    workspaceId: string;
@@ -18,11 +18,13 @@ interface IProps {
    isArchived: boolean;
    icon: TWorkspaceIcon | null;
    close: () => void;
+   onDeleteWorkspace: () => void;
 }
 
-export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived, icon, close }: IProps) => {
+export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived, icon, close, onDeleteWorkspace }: IProps) => {
    const { t } = useTranslation();
    const [updateWorkspace] = useUpdateWorkspaceMutation();
+
    const [editTitle, setEditTitle] = useState(false);
    const [title, setTitle] = useState(workspaceName);
    const [archived, setArchived] = useState(isArchived);
@@ -93,6 +95,20 @@ export const WorkspaceSettingsModal = ({ workspaceId, workspaceName, isArchived,
                />
                <Label className="text-base">{t("workspace.archiveLabel")}</Label>
             </div>
+            <AlertDialogBlock
+               title={t('workspace.deleteTitle')}
+               description={t('workspace.deleteDescription')}
+               cancelLabel={t('common.cancel')}
+               actionLabel={t('common.yes')}
+               onClickAction={() => {
+                  close()
+                  onDeleteWorkspace()
+               }}
+            >
+               <Button className="bg-red-700 dark:bg-red-800 hover:bg-red-400 dark:hover:bg-red-400 transition-colors">
+                  Удалить воркспейс
+               </Button>
+            </AlertDialogBlock>
          </div>
          <div>
             <Label className="mb-2 block">{t("workspace.iconLabel")}</Label>

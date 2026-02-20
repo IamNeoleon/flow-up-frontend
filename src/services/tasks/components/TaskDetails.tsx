@@ -87,7 +87,7 @@ export const TaskDetails = ({ taskId, colId, close }: ITaskDetailsProps) => {
       }
    };
 
-   const handleUpdateDetails = (fields: Partial<IUpdateTaskDto>, assignee?: Pick<IUser, 'id' | 'username' | 'avatar'> | null) => {
+   const handleUpdateDetails = (fields: Partial<IUpdateTaskDto>, assignee?: Pick<IUser, 'id' | 'username' | 'avatar' | 'fullName'> | null) => {
       updateTask({
          boardId,
          colId: task.colId,

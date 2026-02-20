@@ -30,7 +30,28 @@ export const authApi = baseApi.injectEndpoints({
 				url: '/auth/google/login',
 				method: "GET",
 			}),
-		})
+		}),
+		logout: builder.mutation<boolean, void>({
+			query: () => ({
+				url: '/auth/logout',
+				method: "POST",
+			}),
+		}),
+		sendCode: builder.mutation<boolean, void>({
+			query: () => ({
+				url: '/mail/send-code',
+				method: "POST",
+			}),
+		}),
+		verifyCode: builder.mutation<boolean, { code: string }>({
+			query: ({ code }) => ({
+				url: '/mail/verify-code',
+				method: "POST",
+				body: {
+					code
+				}
+			}),
+		}),
 	}),
 	overrideExisting: false
 })
@@ -39,5 +60,8 @@ export const {
 	useRegisterMutation,
 	useLoginMutation,
 	useRefreshMutation,
-	useLazyGoogleLoginQuery
+	useLazyGoogleLoginQuery,
+	useLogoutMutation,
+	useSendCodeMutation,
+	useVerifyCodeMutation
 } = authApi

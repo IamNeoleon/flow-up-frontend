@@ -3,19 +3,33 @@ import { toast } from "sonner"
 import { Button } from "@/shared/ui/shadcn/button"
 import { Input } from "@/shared/ui/shadcn/input"
 import { Label } from "@/shared/ui/shadcn/label"
-import { useCreateWorkspace } from "../hooks/useCreateWorkspace"
 import { useTranslation } from "react-i18next"
+import { useCreateWorkspaceMutation } from "../api/workspaceApi"
+import { Spinner } from "@/shared/ui/shadcn/spinner"
 
 export const CreateWorkspace: FC<{ close: () => void }> = ({ close }) => {
 	const { t } = useTranslation()
-	const { handleCreate } = useCreateWorkspace()
+
+	const [create, { isLoading }] = useCreateWorkspaceMutation()
+
 	const [workspaceName, setWorkspaceName] = useState<string>('')
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		handleCreate({ name: workspaceName })
+
+		if (isLoading) return
+
+		try {
+			await create({
+				name: workspaceName
+			}).unwrap()
+
+			toast.success(t("workspace.createSuccess"))
+		} catch (error) {
+			toast.error(t("workspace.createError"))
+		}
+
 		close()
-		toast.success(t("workspace.createSuccess"))
 	}
 
 	return (
@@ -25,7 +39,15 @@ export const CreateWorkspace: FC<{ close: () => void }> = ({ close }) => {
 					<Label htmlFor="name-1">{t("workspace.nameLabel")}</Label>
 					<Input id="name-1" name="Workspace name" value={workspaceName} onChange={e => setWorkspaceName(e.target.value)} />
 				</div>
-				<Button type="submit">{t("common.create")}</Button>
+				<Button disabled={isLoading} type="submit">
+					{
+						!isLoading ? (
+							t("common.create")
+						) : (
+							<Spinner />
+						)
+					}
+				</Button>
 			</div>
 		</form>
 	)

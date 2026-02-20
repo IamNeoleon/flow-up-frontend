@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ContentEditable from "react-contenteditable";
-import { useEditBoardMutation } from "@/services/board/api/boardApi";
+import { useDeleteBoardMutation, useEditBoardMutation } from "@/services/board/api/boardApi";
 import { toast } from "sonner";
 import { useAppSelector } from "@/shared/hooks/redux";
 import { selectPermissions } from "@/store/slices/boardSlice";
@@ -14,11 +14,12 @@ import {
    BreadcrumbSeparator,
 } from "@/shared/ui/shadcn/breadcrumb"
 import { Button } from "@/shared/ui/shadcn/button";
-import { Ellipsis, Users, Plus } from "lucide-react";
+import { Trash2, Users, Plus } from "lucide-react";
 import { BoardMembers } from "./BoardMembers";
 import type { IWorkspace } from "@/services/workspace/types/workspace";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import { AlertDialogBlock } from "@/shared/ui/AlertDialogBlock";
 
 interface IBoardHeaderProps {
    workspaceId: string;
@@ -31,10 +32,12 @@ interface IBoardHeaderProps {
 export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription, currentWorkspace }: IBoardHeaderProps) => {
    const { t } = useTranslation()
    const [editBoard] = useEditBoardMutation();
+   const [deleteBoard] = useDeleteBoardMutation();
    const [title, setTitle] = useState(boardTitle);
    const [description, setDescription] = useState(boardDescription);
    const permissions = useAppSelector(selectPermissions)
    const { open, close } = useModal()
+   const navigate = useNavigate()
 
 
    const handleSave = async (field: "title" | "description", e: React.FocusEvent<HTMLDivElement>) => {
@@ -69,6 +72,20 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
       })
    }
 
+   const handleDeleteBoard = async () => {
+      try {
+         await deleteBoard({
+            workspaceId,
+            boardId
+         }).unwrap()
+
+         toast.success(t('board.deleteBoardSuccess'))
+         navigate(`/workspaces/${workspaceId}`)
+      } catch (error) {
+         toast.error(t('board.deleteBoardError'))
+      }
+   }
+
    return (
       <>
          <div className="flex items-center justify-between mb-4">
@@ -101,9 +118,21 @@ export const BoardHeader = ({ workspaceId, boardId, boardTitle, boardDescription
                         {t("board.membersButton")}
                      </span>
                   </Button>
-                  <Button variant='outline' >
-                     <Ellipsis />
-                  </Button>
+                  {
+                     permissions?.canDeleteBoard && (
+                        <AlertDialogBlock
+                           title={t('board.deleteTitle')}
+                           description={t('board.deleteDescription')}
+                           cancelLabel={t('common.cancel')}
+                           actionLabel={t('common.yes')}
+                           onClickAction={handleDeleteBoard}
+                        >
+                           <Button variant='outline' className="bg-red-700 hover:bg-red-500">
+                              <Trash2 color="#fff" />
+                           </Button>
+                        </AlertDialogBlock>
+                     )
+                  }
                </div>
                {
                   permissions?.canCreateColumn && (

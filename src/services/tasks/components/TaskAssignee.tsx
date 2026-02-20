@@ -23,8 +23,8 @@ import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
 interface ITaskAssigneeProps {
-   taskAssignee?: Pick<IUser, 'id' | 'username' | 'avatar'> | null;
-   handleAssigneeChange: (assignee: Pick<IUser, 'id' | 'username' | 'avatar'> | null) => void;
+   taskAssignee?: Pick<IUser, 'id' | 'username' | 'avatar' | 'fullName'> | null;
+   handleAssigneeChange: (assignee: Pick<IUser, 'id' | 'username' | 'avatar' | 'fullName'> | null) => void;
 }
 
 export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssigneeProps) => {
@@ -64,7 +64,7 @@ export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssign
                                     <AvatarFallback className="text-[10px]">CN</AvatarFallback>
                                  </Avatar>
                                  <span className="font-medium">
-                                    {taskAssignee.username}
+                                    {taskAssignee.fullName}
                                  </span>
                               </div>
                            </>
@@ -110,7 +110,7 @@ export const TaskAssignee = ({ taskAssignee, handleAssigneeChange }: ITaskAssign
                                                       <AvatarFallback className="text-[10px]">CN</AvatarFallback>
                                                    </Avatar>
                                                    <span className="font-medium">
-                                                      {member.user.username}
+                                                      {member.user.fullName}
                                                    </span>
                                                 </div>
                                                 <Check

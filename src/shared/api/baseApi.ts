@@ -1,4 +1,4 @@
-import { logout, setToken } from "@/store/slices/authSlice";
+import { logout, setEmailVerified, setToken } from "@/store/slices/authSlice";
 import {
 	createApi,
 	fetchBaseQuery,
@@ -52,6 +52,14 @@ const baseQueryWithReauth: BaseQueryFn<
 			api.dispatch(logout())
 		}
 	}
+
+	if (result.error?.status === 403) {
+		const errorData = result.error.data as { code?: string };
+		if (errorData?.code === 'EMAIL_NOT_VERIFIED') {
+			api.dispatch(setEmailVerified(false));
+		}
+	}
+
 
 	return result;
 };

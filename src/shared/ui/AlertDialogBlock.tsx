@@ -26,7 +26,7 @@ export const AlertDialogBlock = ({ children, title, description, cancelLabel, ac
             <AlertDialogTrigger asChild>
                {children}
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent onClick={(e) => e.stopPropagation()}>
                <AlertDialogHeader>
                   <AlertDialogTitle>{title}</AlertDialogTitle>
                   <AlertDialogDescription>

@@ -3,12 +3,14 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import i18n from "@/config/i18n/i18n"
 import isToday from "dayjs/plugin/isToday"
 import isYesterday from "dayjs/plugin/isYesterday"
+import localizedFormat from "dayjs/plugin/localizedFormat"
 import "dayjs/locale/ru"
 import "dayjs/locale/en"
 
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 dayjs.extend(relativeTime)
+dayjs.extend(localizedFormat)
 
 dayjs.locale(i18n.resolvedLanguage)
 

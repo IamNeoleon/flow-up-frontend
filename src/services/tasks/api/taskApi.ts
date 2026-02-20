@@ -31,7 +31,7 @@ export const taskApi = baseApi.injectEndpoints({
             { type: 'Columns', id: colId }
          ]
       }),
-      updateTask: builder.mutation<ITask, { boardId: string, colId: string, taskId: string, assignee: Pick<IUser, 'id' | 'username' | 'avatar'> | null | undefined, data: IUpdateTaskDto }>({
+      updateTask: builder.mutation<ITask, { boardId: string, colId: string, taskId: string, assignee: Pick<IUser, 'id' | 'username' | 'avatar' | 'fullName'> | null | undefined, data: IUpdateTaskDto }>({
          query: ({ boardId, colId, taskId, data, assignee }) => ({
             url: taskRoutes.byId(boardId, colId, taskId),
             method: "PATCH",

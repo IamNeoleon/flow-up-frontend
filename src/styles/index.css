@@ -46,26 +46,19 @@ button:disabled {
   opacity: 0.6;
 }
 
-/* ===================== */
-/* THEME TOKENS */
-/* ===================== */
-
 :root {
   color-scheme: light dark;
   --radius: 0.625rem;
 
-  /* ✅ Light: не белый лист, а мягкий холодный фон */
   --background: oklch(0.985 0.006 255);
   --foreground: oklch(0.18 0.02 255);
 
-  /* карточки чуть “выше” фона */
   --card: oklch(0.995 0.002 255);
   --card-foreground: oklch(0.18 0.02 255);
 
   --popover: oklch(0.995 0.002 255);
   --popover-foreground: oklch(0.18 0.02 255);
 
-  /* 🟦 BLUE (#1D4ED8) */
   --primary: oklch(0.55 0.22 264);
   --primary-foreground: oklch(0.985 0 0);
 
@@ -75,20 +68,16 @@ button:disabled {
   --muted: oklch(0.97 0.005 255);
   --muted-foreground: oklch(0.54 0.02 255);
 
-  /* hover/selected фон (заметный, но не кислотный) */
   --accent: oklch(0.90 0.08 264);
   --accent-foreground: oklch(0.22 0.02 255);
 
   --destructive: oklch(0.577 0.245 27.325);
 
-  /* ✅ чуть заметнее границы (для объёма) */
   --border: oklch(0.91 0.01 255);
   --input: oklch(0.91 0.01 255);
 
-  /* ✅ фокус-обводка в цвет акцента */
   --ring: oklch(0.55 0.22 264);
 
-  /* Sidebar */
   --sidebar: oklch(0.99 0.003 255);
   --sidebar-foreground: oklch(0.18 0.02 255);
 
@@ -112,9 +101,21 @@ body {
   display: none;
 }
 
-/* Firefox */
 .scrollbar-none {
   scrollbar-width: none;
+}
+
+#nprogress .bar {
+  background: var(--color-primary) !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  display: none !important;
+}
+
+#nprogress .spinner {
+  display: none !important;
 }
 
 @import "tailwindcss";
@@ -163,12 +164,7 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ===================== */
-/* DARK */
-/* ===================== */
-
 .dark {
-  /* ✅ Dark: не чёрный, а slate — приятнее и “дороже” */
   --background: oklch(0.18 0.01 255);
   --foreground: oklch(0.97 0.01 255);
 
@@ -178,7 +174,6 @@ body {
   --popover: oklch(0.215 0.01 255);
   --popover-foreground: oklch(0.97 0.01 255);
 
-  /* 🟦 BLUE (dark) */
   --primary: oklch(0.72 0.18 264);
   --primary-foreground: oklch(0.205 0 0);
 
@@ -193,11 +188,9 @@ body {
 
   --destructive: oklch(0.704 0.191 22.216);
 
-  /* ✅ границы чуть заметнее, чтобы читались слои */
   --border: oklch(1 0 0 / 14%);
   --input: oklch(1 0 0 / 18%);
 
-  /* ✅ ring чуть ярче — красивый фокус */
   --ring: oklch(0.78 0.20 264);
 
   --sidebar: oklch(0.205 0.01 255);
@@ -222,10 +215,6 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-/* ===================== */
-/* SUBTLE DEPTH (НЕ КРИЧИТ, НО ДАЁТ ОБЪЁМ) */
-/* ===================== */
 
 @layer base {
   body {

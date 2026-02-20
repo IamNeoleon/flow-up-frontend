@@ -25,9 +25,12 @@ import {
 } from "@/shared/ui/shadcn/sidebar";
 import { WorkspaceList } from "@/services/workspace/components/WorkspaceList";
 import { cn } from "@/shared/utils/cn";
+import { useLogoutMutation } from "@/services/auth/api/authApi";
 
 export const AppSidebar = () => {
    const { t } = useTranslation();
+
+   const [logoutFromServer] = useLogoutMutation()
 
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
@@ -79,9 +82,16 @@ export const AppSidebar = () => {
       });
    };
 
-   const handleLogout = () => {
+   const handleLogout = async () => {
       dispatch(setUser(null));
       dispatch(logout());
+
+      try {
+         await logoutFromServer().unwrap()
+      } catch (error) {
+         console.error(error)
+      }
+
       navigate("/auth", { replace: true });
    };
 

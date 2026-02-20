@@ -3,10 +3,12 @@ import type { RootState } from ".."
 
 interface AuthState {
    token: string | null,
+   isEmailVerified: boolean
 }
 
 const initialState: AuthState = {
    token: null,
+   isEmailVerified: true
 }
 
 const authSlice = createSlice({
@@ -20,11 +22,14 @@ const authSlice = createSlice({
       logout: (state) => {
          state.token = null
          localStorage.removeItem("accessToken")
-      }
+      },
+      setEmailVerified: (state, action: PayloadAction<boolean>) => {
+         state.isEmailVerified = action.payload
+      },
    }
 })
 
-export const { setToken, logout } = authSlice.actions
+export const { setToken, logout, setEmailVerified } = authSlice.actions
 export const selectToken = (state: RootState) => state.auth.token
 export const selectAuth = (state: RootState) => state.auth
 
