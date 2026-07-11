@@ -2,7 +2,7 @@ import { BarChart3, LineChart, PieChart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { StatisticBlocks } from '@/services/statistic/components/StatisticsBlocks';
-import { useCurrentWorkspace } from '@/shared/hooks/use-current-workspace';
+// import { useCurrentWorkspace } from '@/shared/hooks/use-current-workspace';
 import { Card, CardContent } from '@/shared/ui/shadcn/card';
 
 const WorkspaceStaticPage = () => {
@@ -10,7 +10,7 @@ const WorkspaceStaticPage = () => {
 
     const { workspaceId } = useParams();
 
-    const { currentWorkspace } = useCurrentWorkspace(workspaceId);
+    // const { currentWorkspace } = useCurrentWorkspace(workspaceId);
 
     return (
         <div className="pt-5">
@@ -21,7 +21,7 @@ const WorkspaceStaticPage = () => {
                             {t('statistics.titlePage')}
                         </h2>
                         <h1 className="text-primary text-2xl font-medium capitalize">
-                            {currentWorkspace?.name}
+                            {/* {currentWorkspace?.name} */}
                         </h1>
                     </div>
                     <div className="flex gap-6 opacity-40">

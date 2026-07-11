@@ -24,7 +24,7 @@ export const BoardCard = ({
     workspaceId,
 }: IProps) => {
     const { t } = useTranslation();
-    const { permissions } = useWorkspacePermissions({ workspaceId });
+    const { permissions } = useWorkspacePermissions({  });
 
     return (
         <Card
