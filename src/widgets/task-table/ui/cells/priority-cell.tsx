@@ -1,4 +1,3 @@
-import { formatActivityTime } from '@/shared/lib/formate-activity-time';
 import { useTranslation } from 'react-i18next';
 
 export const PriorityCell = ({ value }: { value: string | undefined }) => {
