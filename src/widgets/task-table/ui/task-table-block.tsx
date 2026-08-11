@@ -2,6 +2,7 @@ import { useGetTaskListQuery } from '@/services/board/api/hooks';
 import { TaskTableList } from './task-table-list';
 import { getColumns } from '@/widgets/task-table/ui/table-columns';
 import { useTranslation } from 'react-i18next';
+import { TableSkeleton } from './table-skeleton';
 
 interface Props {
     workspaceId: string;
@@ -10,9 +11,13 @@ interface Props {
 
 export const TaskTableBlock = ({ workspaceId, boardId }: Props) => {
     const { t } = useTranslation();
-    const { data: taskList } = useGetTaskListQuery({ workspaceId, boardId });
 
-    if (!taskList) return null;
+    const { data: tasks, isLoading } = useGetTaskListQuery({
+        workspaceId,
+        boardId,
+    });
+
+    if (isLoading) return <TableSkeleton />;
 
     return (
         <div className="relative">
@@ -20,7 +25,7 @@ export const TaskTableBlock = ({ workspaceId, boardId }: Props) => {
                 workspaceId={workspaceId}
                 boardId={boardId}
                 columns={getColumns(t)}
-                tasks={taskList}
+                tasks={tasks ?? []}
             />
         </div>
     );

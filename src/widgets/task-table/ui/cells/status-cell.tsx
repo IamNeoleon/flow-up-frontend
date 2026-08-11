@@ -61,16 +61,23 @@ export const StatusCell = ({ task }: Props) => {
 
     return (
         <Select value={selectedColId} onValueChange={handleChange}>
-            <SelectTrigger className="w-full max-w-48">
+            <SelectTrigger
+                disabled={selectedColumn ? false : true}
+                className="flex w-full max-w-48"
+            >
                 <SelectValue>
-                    <Badge
-                        style={{ backgroundColor: selectedColumn?.color }}
-                        className="relative flex items-center gap-1"
-                    >
-                        <span className="text-white">
-                            {selectedColumn?.name}
-                        </span>
-                    </Badge>
+                    {selectedColumn ? (
+                        <Badge
+                            style={{ backgroundColor: selectedColumn?.color }}
+                            className="relative flex items-center gap-1"
+                        >
+                            <span className="text-white">
+                                {selectedColumn?.name}
+                            </span>
+                        </Badge>
+                    ) : (
+                        <span>...</span>
+                    )}
                 </SelectValue>
             </SelectTrigger>
 

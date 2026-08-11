@@ -21,7 +21,7 @@ import {
 import { Input } from '@/shared/ui/shadcn/input';
 import type { TableTask } from '@/services/task/types/table-task';
 import { useTranslation } from 'react-i18next';
-import { Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useWorkspacePermissions } from '@/services/workspace/hooks/use-workspace-permissions';
 import { useModal } from '@/app/providers/ModalProvider';
 import { CreateTask } from '@/services/task/components/CreateTask';
@@ -93,7 +93,11 @@ export const TaskTableList = ({ columns, tasks, boardId }: Props) => {
                     />
                 </div>
                 {permissions?.canCreateTask && (
-                    <Button onClick={handleCreateTask} className="flex-0">
+                    <Button
+                        onClick={handleCreateTask}
+                        className="flex flex-0 items-center gap-1"
+                    >
+                        <Plus />
                         {t('task.create')}
                     </Button>
                 )}
