@@ -83,14 +83,14 @@ const BoardPage = () => {
                         className="flex items-center gap-1"
                     >
                         <ListTodo />
-                        <span>List</span>
+                        <span>{t('common.list')}</span>
                     </TabsTrigger>
                     <TabsTrigger
                         value="kanban"
                         className="flex items-center gap-1"
                     >
                         <Kanban />
-                        <span>Kanban</span>
+                        <span>{t('common.kanban')}</span>
                     </TabsTrigger>
                 </TabsList>
                 <TabsContent value="list">

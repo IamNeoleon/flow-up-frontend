@@ -53,16 +53,17 @@ export const AuthRegister = ({ setHaveAccount, className }: IProps) => {
                     username: values.username,
                     password: values.password,
                 },
-            });
+            }).unwrap();
 
             toast.success(t('auth.registerSuccess'));
+
+            setHaveAccount();
         } catch (err) {
             toast.error(
                 `${t('auth.registerError')}: ${getErrorMessage(error)}`,
             );
         }
 
-        setHaveAccount();
     };
 
     const loginGoogle = () => {

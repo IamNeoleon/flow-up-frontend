@@ -35,7 +35,9 @@
         "getStarted": "Get started",
         "slogan": "Structured Work. Real Progress.",
         "name": "Name",
-        "deleting": "Deleting..."
+        "deleting": "Deleting...",
+        "list": "List",
+        "kanban": "Kanban"
     },
     "intro": {
         "title": "Flow Up — Task & Project Management Platform",
@@ -540,5 +542,9 @@
             "privacy": "Privacy Policy",
             "terms": "Terms of Service"
         }
+    },
+    "taskList": {
+        "search": "Enter task name",
+        "selectColumn": "Select column"
     }
 }

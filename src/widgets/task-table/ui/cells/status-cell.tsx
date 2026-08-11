@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { skipToken } from '@reduxjs/toolkit/query';
 import { useParams } from 'react-router';
 
-import { useGetAllColumnsQuery } from '@/services/column/api/hooks';
 import { Badge } from '@/shared/ui/shadcn/badge';
 import {
     Select,
@@ -16,6 +14,7 @@ import {
 } from '@/shared/ui/shadcn/select';
 import { useMoveTaskMutation } from '@/services/task/api/hooks';
 import type { TableTask } from '@/services/task/types/table-task';
+import { useGetFilteredColumns } from '../../hooks/use-get-filtered-columns';
 
 interface Props {
     task: TableTask;
@@ -25,7 +24,8 @@ export const StatusCell = ({ task }: Props) => {
     const { t } = useTranslation();
     const { boardId } = useParams();
 
-    const { data: columns } = useGetAllColumnsQuery(boardId ?? skipToken);
+    const { columns, todoCols, inProgressCols, doneCols } =
+        useGetFilteredColumns(boardId);
     const [moveTask] = useMoveTaskMutation();
 
     const [selectedColId, setSelectedColId] = useState(task.colId);
@@ -38,15 +38,9 @@ export const StatusCell = ({ task }: Props) => {
         (column) => column.id === selectedColId,
     );
 
-    const todoCols = columns?.filter((col) => col.status === 'TODO') ?? [];
-    const inProgressCols =
-        columns?.filter((col) => col.status === 'IN_PROGRESS') ?? [];
-    const doneCols = columns?.filter((col) => col.status === 'DONE') ?? [];
-
     const handleChange = async (newColId: string) => {
         const previousColId = selectedColId;
 
-        // оптимистичное обновление
         setSelectedColId(newColId);
 
         try {
@@ -59,11 +53,8 @@ export const StatusCell = ({ task }: Props) => {
                         targetColId: newColId,
                     },
                 });
-
-                console.log('Moved to column:', newColId);
             }
         } catch {
-            // откат
             setSelectedColId(previousColId);
         }
     };

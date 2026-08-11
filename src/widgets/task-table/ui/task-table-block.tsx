@@ -15,13 +15,13 @@ export const TaskTableBlock = ({ workspaceId, boardId }: Props) => {
     if (!taskList) return null;
 
     return (
-        <>
+        <div className="relative">
             <TaskTableList
                 workspaceId={workspaceId}
                 boardId={boardId}
                 columns={getColumns(t)}
                 tasks={taskList}
             />
-        </>
+        </div>
     );
 };

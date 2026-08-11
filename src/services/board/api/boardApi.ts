@@ -104,7 +104,7 @@ export const boardApi = baseApi.injectEndpoints({
                 method: 'GET',
             }),
             providesTags: (_, __, { boardId }) => [
-                { type: 'Board', id: boardId },
+                { type: 'TaskList', id: boardId },
             ],
         }),
     }),

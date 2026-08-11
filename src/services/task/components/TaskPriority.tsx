@@ -16,9 +16,14 @@ import type { ITaskPriority } from '../types/task-priority';
 interface IProps {
     taskPriorityId?: string;
     onChange: (value: ITaskPriority) => void;
+    hasLabel?: boolean;
 }
 
-export const TaskPriority = ({ taskPriorityId, onChange }: IProps) => {
+export const TaskPriority = ({
+    taskPriorityId,
+    onChange,
+    hasLabel = true,
+}: IProps) => {
     const { t } = useTranslation();
     const { data: priorities } = useGetAllPrioritiesQuery();
     const [priority, setPriority] = useState<ITaskPriority | null>(null);
@@ -38,10 +43,12 @@ export const TaskPriority = ({ taskPriorityId, onChange }: IProps) => {
 
     return (
         <div>
-            <div className="mb-1 flex items-center gap-1 text-base font-medium text-[#ada9a3]">
-                <Goal width={18} />
-                <span>{t('task.priority')}</span>
-            </div>
+            {hasLabel && (
+                <div className="mb-1 flex items-center gap-1 text-base font-medium text-[#ada9a3]">
+                    <Goal width={18} />
+                    <span>{t('task.priority')}</span>
+                </div>
+            )}
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
                     <div>

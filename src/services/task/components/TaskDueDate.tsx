@@ -13,9 +13,10 @@ import { formatDate } from '@/shared/utils/formate-date';
 interface IProps {
     dueDate: string | undefined;
     setDueDate: (value: Date | undefined) => void;
+    showLabel?: boolean;
 }
 
-export const TaskDueDate = ({ dueDate, setDueDate }: IProps) => {
+export const TaskDueDate = ({ dueDate, setDueDate, showLabel }: IProps) => {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
 
@@ -34,10 +35,12 @@ export const TaskDueDate = ({ dueDate, setDueDate }: IProps) => {
 
     return (
         <div>
-            <div className="mb-1 flex items-center gap-1 text-base font-medium text-[#ada9a3]">
-                <CalendarIcon width={18} />
-                <span>{t('task.dueDate')}</span>
-            </div>
+            {showLabel && (
+                <div className="mb-1 flex items-center gap-1 text-base font-medium text-[#ada9a3]">
+                    <CalendarIcon width={18} />
+                    <span>{t('task.dueDate')}</span>
+                </div>
+            )}
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
                     <div>

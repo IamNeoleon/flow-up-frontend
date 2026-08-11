@@ -81,6 +81,7 @@ export const baseApi = createApi({
         'WorkspaceStatistics',
         'TasksRecent',
         'Priorities',
+        'TaskList',
     ],
     endpoints: () => ({}),
 });

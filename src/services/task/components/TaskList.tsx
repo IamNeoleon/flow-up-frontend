@@ -44,7 +44,12 @@ export const TaskList = ({ tasks, colId, color }: IProps) => {
             title: t('task.create'),
             description: t('task.createDescription'),
             content: (
-                <CreateTask close={close} boardId={boardId} colId={colId} />
+                <CreateTask
+                    close={close}
+                    boardId={boardId}
+                    colId={colId}
+                    withColumnChoice={true}
+                />
             ),
         });
     }, [boardId, colId, open, close, t]);

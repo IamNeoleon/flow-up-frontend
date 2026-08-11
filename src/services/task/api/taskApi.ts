@@ -79,8 +79,9 @@ export const taskApi = baseApi.injectEndpoints({
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: (_, __, { colId }) => [
+            invalidatesTags: (_, __, { colId, boardId }) => [
                 { type: 'Columns', id: colId },
+                { type: 'TaskList', id: boardId },
             ],
         }),
 
@@ -129,9 +130,10 @@ export const taskApi = baseApi.injectEndpoints({
                     patch.undo();
                 }
             },
-            invalidatesTags: (_, __, { colId, taskId }) => [
+            invalidatesTags: (_, __, { colId, taskId, boardId }) => [
                 { type: 'Columns', id: colId },
                 { type: 'Task', id: taskId },
+                { type: 'TaskList', id: boardId },
             ],
         }),
 
@@ -140,8 +142,9 @@ export const taskApi = baseApi.injectEndpoints({
                 url: taskRoutes.byId(boardId, colId, taskId),
                 method: 'DELETE',
             }),
-            invalidatesTags: (_, __, { colId }) => [
+            invalidatesTags: (_, __, { colId, boardId }) => [
                 { type: 'Columns', id: colId },
+                { type: 'TaskList', id: boardId },
             ],
         }),
 
@@ -151,6 +154,9 @@ export const taskApi = baseApi.injectEndpoints({
                 method: 'PATCH',
                 body,
             }),
+            invalidatesTags: (_, __, { boardId }) => [
+                { type: 'TaskList', id: boardId },
+            ],
         }),
 
         createSubtask: builder.mutation<

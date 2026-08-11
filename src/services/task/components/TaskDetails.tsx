@@ -26,7 +26,6 @@ import {
     useCreateSubtaskMutation,
     useDeleteTaskMutation,
     useGetTaskByIdQuery,
-    useUpdateTaskMutation,
 } from '../api/hooks';
 import { InlineSubtaskTextarea } from './InlineSubtaskTextarea';
 import { TaskAssignee } from './TaskAssignee';
@@ -37,8 +36,7 @@ import { TaskDueDate } from './TaskDueDate';
 import { TaskPriority } from './TaskPriority';
 import { TaskSubtask } from './TaskSubtask';
 
-import type { IUser } from '@/services/user/types/user';
-import type { IUpdateTaskDto } from '../types';
+import { useUpdateTaskDetails } from '../api/hooks/use-update-task-details';
 
 interface IProps {
     taskId: string;
@@ -59,9 +57,9 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
         error,
     } = useGetTaskByIdQuery({ boardId, colId, taskId });
     const [createTrack] = useCreateTrackTaskMutation();
-    const [updateTask] = useUpdateTaskMutation();
     const [deleteTask] = useDeleteTaskMutation();
     const [createSubtask] = useCreateSubtaskMutation();
+    const { handleUpdateDetails } = useUpdateTaskDetails();
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState<string | undefined>('');
@@ -84,7 +82,7 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
         return () => {
             close();
         };
-    }, [taskId]);
+    }, [close, createTrack, taskId]);
 
     if (isLoading) {
         return (
@@ -129,22 +127,6 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
         }
     };
 
-    const handleUpdateDetails = (
-        fields: Partial<IUpdateTaskDto>,
-        assignee?: Pick<
-            IUser,
-            'id' | 'username' | 'avatar' | 'fullName'
-        > | null,
-    ) => {
-        updateTask({
-            boardId,
-            colId: task.colId,
-            taskId: task.id,
-            assignee: assignee,
-            body: fields,
-        });
-    };
-
     const handleDeleteTask = async () => {
         try {
             await deleteTask({
@@ -171,7 +153,13 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
                             const value =
                                 e.currentTarget.textContent?.trim() || '';
                             if (value !== task.name) {
-                                handleUpdateDetails({ name: value });
+                                handleUpdateDetails(
+                                    {
+                                        name: value,
+                                    },
+                                    colId,
+                                    taskId,
+                                );
                             }
                         }}
                         className="line-clamp-4 border-b border-transparent font-bold outline-none focus:border-blue-500"
@@ -183,6 +171,8 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
                         handleAssigneeChange={(assignee) => {
                             handleUpdateDetails(
                                 { assigneeId: assignee?.id },
+                                colId,
+                                taskId,
                                 assignee,
                             );
                         }}
@@ -190,13 +180,22 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
                     <TaskPriority
                         taskPriorityId={task.priorityId}
                         onChange={(p) => {
-                            handleUpdateDetails({ priorityId: p.id });
+                            handleUpdateDetails(
+                                { priorityId: p.id },
+                                colId,
+                                taskId,
+                            );
                         }}
                     />
                     <TaskDueDate
+                        showLabel
                         dueDate={task.dueDate}
                         setDueDate={(d) => {
-                            handleUpdateDetails({ dueDate: d?.toISOString() });
+                            handleUpdateDetails(
+                                { dueDate: d?.toISOString() },
+                                colId,
+                                taskId,
+                            );
                         }}
                     />
                 </div>
@@ -231,7 +230,11 @@ export const TaskDetails = ({ taskId, colId, close }: IProps) => {
                             const prev = (task.description ?? '').trim();
 
                             if (next !== prev) {
-                                handleUpdateDetails({ description: next });
+                                handleUpdateDetails(
+                                    { description: next },
+                                    colId,
+                                    taskId,
+                                );
                             }
                         }}
                         className={cn(
